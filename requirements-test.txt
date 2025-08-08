@@ -1,0 +1,39 @@
+# Testing requirements for Screen Translator v2.0
+
+# Core testing framework
+pytest>=7.4.0
+pytest-cov>=4.1.0
+pytest-mock>=3.11.1
+pytest-asyncio>=0.21.1
+pytest-timeout>=2.1.0
+pytest-xdist>=3.3.1  # For parallel test execution
+
+# Mocking and fixtures
+mock>=5.1.0
+faker>=19.6.1  # For generating test data
+factory-boy>=3.3.0  # For test factories
+
+# Coverage tools
+coverage[toml]>=7.3.0
+coverage-badge>=1.1.0
+
+# Code quality for tests
+pytest-flake8>=1.1.1
+pytest-mypy>=0.10.3
+pytest-black>=0.3.12
+pytest-isort>=3.1.0
+
+# Debugging
+pytest-sugar>=0.9.7  # Better test output
+pytest-clarity>=1.0.1  # Clearer assertion messages
+pytest-benchmark>=4.0.0  # Performance benchmarking
+
+# Test reporting
+pytest-html>=3.2.0
+pytest-json-report>=1.5.0
+allure-pytest>=2.13.2  # For Allure reports
+
+# Additional utilities
+freezegun>=1.2.2  # For time-based testing
+responses>=0.23.3  # For mocking HTTP requests
+pytest-env>=1.0.1  # Environment variable handling

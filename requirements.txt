@@ -1,0 +1,56 @@
+# Screen Translator v2.0 - Production Dependencies
+# Compatible with Python 3.8-3.13 (conditional dependencies)
+
+# Core dependencies
+Pillow>=10.0.0
+# Translation service (conditional for Python version compatibility)
+googletrans==4.0.0-rc1; python_version < '3.13'
+deep-translator>=1.11.4; python_version >= '3.13'  # Alternative for Python 3.13+
+pyttsx3>=2.90
+pynput>=1.7.6
+pytesseract>=0.3.10
+
+# GUI framework - tkinter is built into Python
+
+# Configuration and data  
+pydantic>=2.0.0
+python-dotenv>=1.0.0
+
+# Networking and API
+requests>=2.31.0
+urllib3>=2.0.4
+fastapi>=0.100.0
+uvicorn>=0.23.0
+
+# Utilities
+click>=8.1.6
+colorama>=0.4.6
+platformdirs>=3.10.0
+
+# Audio device management (for TTS)
+sounddevice>=0.4.6
+
+# Monitoring and logging
+structlog>=23.1.0
+
+# Performance optimization (when available)
+numba>=0.57.1; python_version < '3.12'
+cython>=3.0.0; python_version < '3.13'
+
+# Development testing (move to requirements-dev.txt)
+# pytest>=7.4.0
+# pytest-cov>=4.1.0  
+# pytest-mock>=3.11.1
+
+# Image processing (conditional)
+opencv-python>=4.8.0.76; python_version < '3.13'
+
+# Performance (universal numpy - should work on Python 3.13+)
+numpy>=1.26.0,<3.0.0
+
+# Async HTTP client (conditional - avoid conflict with googletrans)
+httpx>=0.25.0; python_version >= '3.13'
+httpx==0.13.3; python_version < '3.13'  # Required by googletrans
+
+# Monitoring (conditional)
+prometheus-client>=0.17.1; python_version < '3.13'

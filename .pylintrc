@@ -1,0 +1,53 @@
+[MASTER]
+# Python code to execute (deprecated, use PYTHONPATH instead)
+# init-hook='import sys; sys.path.append(".")'
+
+# Files or directories to be skipped
+ignore=CVS,build,dist,.venv,docs
+
+# Use multiple processes to speed up Pylint
+jobs=4
+
+[MESSAGES CONTROL]
+# Disable specific warnings
+disable=
+    C0111,  # missing-docstring (we use pydocstyle for this)
+    C0103,  # invalid-name (sometimes we want short names like 'x', 'y')
+    R0903,  # too-few-public-methods (sometimes valid for data classes)
+    R0913,  # too-many-arguments (sometimes necessary)
+    R0914,  # too-many-locals (can be valid in complex functions)
+    W0212,  # protected-access (sometimes necessary for testing)
+    W0703,  # broad-except (sometimes we want to catch all exceptions)
+    E1101,  # no-member (false positives with dynamic attributes)
+
+[FORMAT]
+# Maximum number of characters on a single line
+max-line-length=120
+
+# String used as indentation unit
+indent-string='    '
+
+[BASIC]
+# Good variable names which should always be accepted
+good-names=i,j,k,ex,x,y,_,app,ui,id
+
+[DESIGN]
+# Maximum number of arguments for function / method
+max-args=10
+
+# Maximum number of return statements in function / method body
+max-returns=6
+
+# Maximum number of public methods for a class
+max-public-methods=20
+
+# Maximum number of attributes for a class
+max-attributes=15
+
+[CLASSES]
+# List of method names used to declare instance attributes
+defining-attr-methods=__init__,__new__,setUp,__post_init__
+
+[EXCEPTIONS]
+# Exceptions that will emit a warning when being caught
+overgeneral-exceptions=Exception

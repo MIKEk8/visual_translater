@@ -1,0 +1,72 @@
+output-format: grouped
+
+strictness: medium
+
+test-warnings: false
+
+# Tools to run
+uses:
+  - django
+  - celery
+  
+# Additional tools
+with-tools:
+  - vulture
+  - pyroma
+
+# Disable some warnings
+ignore-paths:
+  - docs
+  - build
+  - dist
+  - .venv
+  - .tox
+  - __pycache__
+
+ignore-patterns:
+  - '.*'
+  - '**/test_*.py'
+  - '**/tests/*.py'
+
+# Tool-specific settings
+pylint:
+  disable:
+    - missing-docstring
+    - invalid-name
+    - too-few-public-methods
+    - too-many-arguments
+    - too-many-locals
+  options:
+    max-line-length: 120
+
+pep8:
+  options:
+    max-line-length: 120
+  disable:
+    - E501  # line too long
+    - E203  # whitespace before ':'
+
+pyflakes:
+  disable:
+    - F401  # imported but unused
+    - F841  # local variable assigned but never used
+
+mccabe:
+  options:
+    max-complexity: 10
+
+pydocstyle:
+  disable:
+    - D100  # Missing docstring in public module
+    - D104  # Missing docstring in public package
+    - D203  # 1 blank line required before class docstring
+    - D213  # Multi-line docstring summary should start at the second line
+
+vulture:
+  min-confidence: 80
+
+mypy:
+  run: true
+  options:
+    ignore-missing-imports: true
+    follow-imports: skip

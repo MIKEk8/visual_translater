@@ -1,0 +1,163 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Testing
+.coverage
+.pytest_cache/
+htmlcov/
+.tox/
+.nox/
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# PEP 582
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# Application specific
+config.json
+debug_*.png
+*.log
+temp/
+tmp/
+logs/
+cache/
+data/audit/
+data/critical_alerts.jsonl
+coverage.json
+performance_analysis.json
+quality_reports/
+
+# Build artifacts  
+ScreenTranslator-*.exe
+ScreenTranslator-*.app
+ScreenTranslator-*.dmg
+*.spec
+build/
+dist/
+*.egg-info/
+
+# Virtual environments
+venv/
+wenv/
+test_venv/
+test_env/
+
+# Backup files
+*.backup
+*.bak
+
+# Test reports and temporary scripts
+test_report.md
+fix_*.py
+fix_*.ps1
+setup_*.py
+install_*.py
+patch_*.py
+quick_test.py
+test_setup.py
+build_wrapper.py
+
+# Documentation that was auto-generated
+FINAL_*.md
+FINAL_*.json
+*_REPORT.md
+*_SUMMARY.md
+*_STATUS.md
+*_GUIDE.md
+*_PLAN.md
+*_ANALYSIS.md
+*_CHECKLIST.md
+
+# Windows/Python temporary files
+python
+
+# Development specific
+sonar-project.properties
+screen_translator.egg-info/
+
+# Language files (keep only if needed)
+languages/
+
+# Temporary Markdown files in Russian
+ИТОГИ_*.md
+ИСПРАВЛЕНИЕ_*.md
+ОТЧЕТ_*.md
+ПРОВЕРКА_*.md
+КАЧЕСТВО_*.md

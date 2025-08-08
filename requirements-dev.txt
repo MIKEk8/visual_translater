@@ -1,0 +1,43 @@
+# Development requirements for Screen Translator v2.0
+
+# Code quality tools
+black>=23.7.0
+isort>=5.12.0
+flake8>=6.1.0
+mypy>=1.5.0
+pylint>=2.17.5
+
+# Security scanning
+bandit>=1.7.5
+safety>=2.3.5
+
+# Documentation
+sphinx>=7.1.2
+sphinx-rtd-theme>=1.3.0
+myst-parser>=2.0.0
+
+# Development utilities
+ipython>=8.14.0
+ipdb>=0.13.13
+watchdog>=3.0.0  # File system monitoring
+python-lsp-server>=1.7.4  # Language server
+
+# Build tools
+pyinstaller>=5.13.2
+wheel>=0.41.2
+setuptools>=68.1.2
+build>=0.10.0
+
+# Code analysis
+radon>=6.0.1  # Code complexity
+vulture>=2.9.1  # Dead code detection
+prospector>=1.10.2  # Meta-linter
+pydocstyle>=6.3.0  # Docstring checker
+
+# Performance profiling
+memory-profiler>=0.61.0
+line-profiler>=4.1.1
+py-spy>=0.3.14
+
+# Code formatting and cleanup
+autoflake>=2.2.1  # Remove unused imports/variables

@@ -1,0 +1,14 @@
+{
+  "application": {
+    "name": "ScreenTranslator",
+    "version": "2.0",
+    "environment": "production"
+  },
+  "logging": {
+    "level": "INFO"
+  },
+  "performance": {
+    "profiling_enabled": true,
+    "cache_enabled": true
+  }
+}
