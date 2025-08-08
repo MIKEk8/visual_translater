@@ -315,17 +315,20 @@ def run_security_scan() -> bool:
         ([sys.executable, "-m", "bandit", "-r", "src/", "-f", "json"], "Bandit security scan"),
         ([sys.executable, "-m", "safety", "check", "--json"], "Safety vulnerability check"),
     ]
-    
+
     all_passed = True
-    
+
     for cmd, name in scans:
         try:
             colored_print(f"  Running {name}...", Colors.CYAN)
-            run_command(cmd, check=False, capture=True)
+            run_command(cmd, check=True, capture=True)
             colored_print(f"  ✅ {name} completed", Colors.GREEN)
+        except subprocess.CalledProcessError:
+            all_passed = False
+            colored_print(f"  ❌ {name} found issues", Colors.RED)
         except FileNotFoundError:
             colored_print(f"  ⚠️ {name} skipped (tool not installed)", Colors.YELLOW)
-    
+
     return all_passed
 
 def clean_project() -> None:
