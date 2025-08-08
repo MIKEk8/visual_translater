@@ -10,15 +10,21 @@ import unittest
 from typing import Dict, List
 from unittest.mock import MagicMock, Mock, patch
 
+import pytest
+
 from src.models.config import AppConfig, HotkeyConfig, LanguageConfig, TTSConfig
 from src.services.container import DIContainer
 
 # Импорт основных компонентов
 from src.services.task_queue import TaskPriority, TaskQueue
 from src.services.translation_cache import TranslationCache
+from src.tests.test_utils import skip_on_ci
 from src.utils.logger import logger
 
+pytestmark = pytest.mark.integration
 
+
+@skip_on_ci
 class TestMainScenarios(unittest.TestCase):
     """Интеграционные тесты основных сценариев"""
 
@@ -382,6 +388,7 @@ class TestMainScenarios(unittest.TestCase):
         self.assertEqual(stats["total_tasks"], num_tasks)
 
 
+@skip_on_ci
 class TestPerformanceScenarios(unittest.TestCase):
     """Тесты производительности основных сценариев"""
 

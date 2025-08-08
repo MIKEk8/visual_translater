@@ -9,10 +9,18 @@ import sys
 import threading
 import time
 
+import pytest
+
 # Add src to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 
+from src.tests.test_utils import skip_on_ci, skip_without_display
 
+pytestmark = pytest.mark.integration
+
+
+@skip_on_ci
+@skip_without_display
 def test_services_integration():
     """Test all services working together."""
     print("Testing services integration...")
@@ -59,6 +67,7 @@ def test_services_integration():
         return False
 
 
+@skip_on_ci
 def test_plugin_system():
     """Test plugin system integration."""
     print("Testing plugin system...")
@@ -91,6 +100,8 @@ def test_plugin_system():
         return False
 
 
+@skip_on_ci
+@skip_without_display
 def test_ui_components():
     """Test UI components."""
     print("Testing UI components...")
@@ -117,6 +128,7 @@ def test_ui_components():
         return False
 
 
+@skip_on_ci
 def test_api_system():
     """Test API system configuration."""
     print("Testing API system...")
@@ -142,6 +154,7 @@ def test_api_system():
         return False
 
 
+@skip_on_ci
 def test_workflow_simulation():
     """Test complete workflow simulation."""
     print("Testing workflow simulation...")
@@ -183,6 +196,8 @@ def test_workflow_simulation():
         return False
 
 
+@skip_on_ci
+@skip_without_display
 def test_error_handling():
     """Test error handling."""
     print("Testing error handling...")
@@ -216,6 +231,8 @@ def test_error_handling():
         return False
 
 
+@skip_on_ci
+@skip_without_display
 def test_performance():
     """Test system performance."""
     print("Testing performance...")

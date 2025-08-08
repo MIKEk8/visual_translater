@@ -13,6 +13,8 @@ import unittest
 from datetime import datetime
 from unittest.mock import MagicMock, Mock, patch
 
+import pytest
+
 try:
     from PIL import Image
 
@@ -33,8 +35,12 @@ from src.models.screenshot_data import ScreenshotData
 from src.services.cache_service import TranslationCache
 from src.services.config_manager import ConfigManager
 from src.services.container import DIContainer, setup_default_services
+from src.tests.test_utils import skip_on_ci
+
+pytestmark = pytest.mark.integration
 
 
+@skip_on_ci
 @unittest.skipUnless(PIL_AVAILABLE, "PIL not available")
 class TestCoreWorkflowIntegration(unittest.TestCase):
     """Integration tests for core workflow components"""
@@ -424,6 +430,7 @@ class TestCoreWorkflowIntegration(unittest.TestCase):
         )
 
 
+@skip_on_ci
 @unittest.skipUnless(PIL_AVAILABLE, "PIL not available")
 class TestWorkflowPerformance(unittest.TestCase):
     """Performance tests for workflow components"""

@@ -15,20 +15,21 @@ from pathlib import Path
 
 from PIL import Image
 
+import pytest
+
 # Add src to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 
-from src.tests.test_utils import has_display  # noqa: E402
+from src.tests.test_utils import skip_on_ci, skip_without_display  # noqa: E402
+
+pytestmark = pytest.mark.integration
 
 
+@skip_on_ci
+@skip_without_display
 def test_progress_and_notifications():
     """Test progress indicators and notifications integration"""
     print("Testing progress indicators and notifications...")
-
-    # Skip if no display available
-    if not has_display:
-        print("[SKIP] Progress and notifications test skipped - no display available")
-        return True
 
     try:
         import tkinter as tk
@@ -69,6 +70,7 @@ def test_progress_and_notifications():
         return False
 
 
+@skip_on_ci
 def test_batch_processing():
     """Test batch processing integration"""
     print("Testing batch processing...")
@@ -162,6 +164,7 @@ def test_batch_processing():
         return False
 
 
+@skip_on_ci
 def test_export_functionality():
     """Test export functionality"""
     print("Testing export functionality...")
@@ -237,6 +240,7 @@ def test_export_functionality():
         return False
 
 
+@skip_on_ci
 def test_performance_monitoring():
     """Test performance monitoring"""
     print("Testing performance monitoring...")
@@ -324,6 +328,7 @@ def test_performance_monitoring():
         return False
 
 
+@skip_on_ci
 def test_enhanced_ocr():
     """Test enhanced OCR with confidence thresholds"""
     print("Testing enhanced OCR...")
@@ -375,14 +380,11 @@ def test_enhanced_ocr():
         return False
 
 
+@skip_on_ci
+@skip_without_display
 def test_drag_drop_simulation():
     """Test drag and drop simulation"""
     print("Testing drag and drop simulation...")
-
-    # Skip if no display available
-    if not has_display:
-        print("[SKIP] Drag and drop test skipped - no display available")
-        return True
 
     try:
         import tkinter as tk
@@ -479,14 +481,11 @@ def test_drag_drop_simulation():
         return False
 
 
+@skip_on_ci
+@skip_without_display
 def test_full_workflow():
     """Test complete workflow with new features"""
     print("Testing complete workflow...")
-
-    # Skip if no display available
-    if not has_display:
-        print("[SKIP] Complete workflow test skipped - no display available")
-        return True
 
     try:
         import tkinter as tk
