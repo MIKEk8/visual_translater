@@ -14,6 +14,9 @@ from src.domain.value_objects.language import Language, LanguagePair
 from src.infrastructure.services.ocr_service import TesseractOCRService
 from src.infrastructure.services.translation_service import GoogleTranslationService
 from src.infrastructure.services.tts_service import PyttsxTTSService
+from src.tests.test_utils import requires_tesseract, skip_on_ci
+
+pytestmark = pytest.mark.integration
 
 
 class TestServiceIntegration:
@@ -29,6 +32,8 @@ class TestServiceIntegration:
             self.ocr_service, self.translation_service, self.tts_service
         )
 
+    @skip_on_ci
+    @requires_tesseract
     def test_service_availability_validation(self):
         """Test service availability validation."""
         result = self.workflow_service.validate_services()
@@ -43,6 +48,8 @@ class TestServiceIntegration:
         assert isinstance(result["translation"], bool)
         assert isinstance(result["tts"], bool)
 
+    @skip_on_ci
+    @requires_tesseract
     @pytest.mark.asyncio
     async def test_workflow_service_error_handling(self):
         """Test workflow service handles service errors gracefully."""
@@ -59,6 +66,8 @@ class TestServiceIntegration:
             # Should handle error gracefully
             assert result is None
 
+    @skip_on_ci
+    @requires_tesseract
     @pytest.mark.asyncio
     async def test_service_chain_integration(self):
         """Test full service chain integration with mocked external dependencies."""
@@ -92,6 +101,8 @@ class TestServiceIntegration:
                         # Verify TTS was called
                         self.tts_service.speak.assert_called_once()
 
+    @skip_on_ci
+    @requires_tesseract
     @pytest.mark.asyncio
     async def test_service_resilience_partial_failures(self):
         """Test service resilience when some services fail."""
@@ -117,6 +128,8 @@ class TestServiceIntegration:
                     assert result.original.content == "Test text"
                     assert result.translated.content == "Тестовый текст"
 
+    @skip_on_ci
+    @requires_tesseract
     def test_service_configuration_loading(self):
         """Test that services load configuration correctly."""
         # Test OCR service
@@ -129,6 +142,8 @@ class TestServiceIntegration:
         assert hasattr(self.tts_service, "_engine")
         assert hasattr(self.tts_service, "_lock")
 
+    @skip_on_ci
+    @requires_tesseract
     @pytest.mark.asyncio
     async def test_service_thread_safety(self):
         """Test that services handle concurrent access safely."""
