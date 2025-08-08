@@ -153,7 +153,7 @@ def run_tests(
     elif test_type == "integration":
         cmd.append("src/tests/integration/")
     elif test_type == "all":
-        cmd.append("src/tests/")
+        cmd.extend(["src/tests/", "tests/"])
     else:
         colored_print(f"❌ Unknown test type: {test_type}", Colors.RED)
         return False
@@ -799,7 +799,7 @@ Examples:
                     elif test_type == "integration":
                         cmd.append("src/tests/integration/")
                     elif test_type == "all":
-                        cmd.append("src/tests/")
+                        cmd.extend(["src/tests/", "tests/"])
 
                     if verbose:
                         cmd.append("-v")
