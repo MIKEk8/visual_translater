@@ -1,9 +1,7 @@
 """Translation Data Transfer Objects."""
 
 from dataclasses import dataclass
-from typing import List, Optional
-
-from ...domain.entities.translation import Translation
+from typing import Optional
 
 
 @dataclass
@@ -18,18 +16,11 @@ class TranslationRequest:
 
 @dataclass
 class TranslationResponse:
-    """Response for translation operations."""
+    """Simplified translation result returned by use cases."""
 
-    success: bool
-    translation: Optional[Translation] = None
-    errors: List[str] = None
-
-    @classmethod
-    def success(cls, translation: Translation) -> "TranslationResponse":
-        """Create success response."""
-        return cls(success=True, translation=translation)
-
-    @classmethod
-    def error(cls, errors: List[str]) -> "TranslationResponse":
-        """Create error response."""
-        return cls(success=False, errors=errors or [])
+    original_text: str
+    translated_text: str
+    source_language: str
+    target_language: str
+    is_cached: bool = False
+    confidence: Optional[float] = None
