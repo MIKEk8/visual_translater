@@ -136,12 +136,17 @@ def install_dependencies(dev: bool = False) -> None:
         else:
             colored_print(f"❌ Installation failed: {e}", Colors.RED)
             raise
-def run_tests(test_type: str = "all", coverage: bool = False, verbose: bool = False) -> bool:
-    """Run tests with optional coverage"""
+def run_tests(
+    test_type: str = "all",
+    coverage: bool = False,
+    verbose: bool = False,
+    workers: int | None = None,
+) -> bool:
+    """Run tests with optional coverage and parallel workers"""
     colored_print(f"🧪 Running {test_type} tests...", Colors.BLUE)
-    
+
     cmd = [sys.executable, "-m", "pytest"]
-    
+
     # Select test type
     if test_type == "unit":
         cmd.append("src/tests/unit/")
@@ -152,11 +157,14 @@ def run_tests(test_type: str = "all", coverage: bool = False, verbose: bool = Fa
     else:
         colored_print(f"❌ Unknown test type: {test_type}", Colors.RED)
         return False
-    
+
     # Add options
     if verbose:
         cmd.append("-v")
-    
+
+    if workers is not None:
+        cmd.extend(["-n", str(workers)])
+
     if coverage:
         cmd.extend(["--cov=src", "--cov-report=html", "--cov-report=xml", "--cov-report=term"])
     
@@ -681,6 +689,11 @@ Examples:
                        help="Type of tests to run")
     parser.add_argument("--coverage", action="store_true", help="Generate coverage report")
     parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
+    parser.add_argument(
+        "--workers",
+        help="Number of workers for pytest-xdist (e.g., 'auto' or 4)",
+        default=None,
+    )
     
     # Lint options
     parser.add_argument("--fix", action="store_true", help="Fix code quality issues")
@@ -779,7 +792,7 @@ Examples:
             
             if env_type:
                 # Run tests in virtual environment
-                def run_tests_env(test_type, coverage, verbose):
+                def run_tests_env(test_type, coverage, verbose, workers):
                     cmd = [str(get_env_python()), "-m", "pytest"]
                     if test_type == "unit":
                         cmd.append("src/tests/unit/")
@@ -787,9 +800,11 @@ Examples:
                         cmd.append("src/tests/integration/")
                     elif test_type == "all":
                         cmd.append("src/tests/")
-                    
+
                     if verbose:
                         cmd.append("-v")
+                    if workers is not None:
+                        cmd.extend(["-n", str(workers)])
                     if coverage:
                         cmd.extend(["--cov=src", "--cov-report=html", "--cov-report=term"])
                     
@@ -803,9 +818,9 @@ Examples:
                     except subprocess.CalledProcessError:
                         return False
                 
-                success = run_tests_env(args.type, args.coverage, args.verbose)
+                success = run_tests_env(args.type, args.coverage, args.verbose, args.workers)
             else:
-                success = run_tests(args.type, args.coverage, args.verbose)
+                success = run_tests(args.type, args.coverage, args.verbose, args.workers)
             sys.exit(0 if success else 1)
             
         elif args.command == "lint":

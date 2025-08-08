@@ -1,5 +1,8 @@
 # Development requirements for Screen Translator v2.0
 
+# Testing
+pytest-xdist>=3.0.0
+
 # Code quality tools
 black>=23.7.0
 isort>=5.12.0
