@@ -184,13 +184,13 @@ def run_code_quality() -> bool:
     
     checks = [
         # Format check
-        ([sys.executable, "-m", "black", "--check", "src/", "--line-length", "100"], "Black formatting"),
-        # Import sorting check  
-        ([sys.executable, "-m", "isort", "--check-only", "src/", "--profile", "black"], "Import sorting"),
+        ([sys.executable, "-m", "black", "--check", "tests/", "--line-length", "100"], "Black formatting"),
+        # Import sorting check
+        ([sys.executable, "-m", "isort", "--check-only", "tests/", "--profile", "black"], "Import sorting"),
         # Linting
-        ([sys.executable, "-m", "flake8", "src/", "--max-line-length=100", "--extend-ignore=E203,W503"], "Flake8 linting"),
+        ([sys.executable, "-m", "flake8", "tests/", "--max-line-length=100", "--extend-ignore=E203,W503"], "Flake8 linting"),
         # Type checking
-        ([sys.executable, "-m", "mypy", "src/", "--ignore-missing-imports", "--check-untyped-defs"], "MyPy type checking"),
+        ([sys.executable, "-m", "mypy", "tests/", "--ignore-missing-imports", "--check-untyped-defs"], "MyPy type checking"),
     ]
     
     all_passed = True
@@ -849,10 +849,10 @@ Examples:
                     colored_print(f"🔍 Running basic code quality checks in {env_type}...", Colors.BLUE)
                     
                     commands = [
-                        ([python_exe, "-m", "black", "--check", "src/"], "Black formatting check"),
-                        ([python_exe, "-m", "isort", "--check-only", "src/"], "Import sorting check"),
-                        ([python_exe, "-m", "flake8", "src/"], "Flake8 linting"),
-                        ([python_exe, "-m", "mypy", "src/"], "MyPy type checking"),
+                        ([python_exe, "-m", "black", "--check", "tests/", "--line-length", "100"], "Black formatting check"),
+                        ([python_exe, "-m", "isort", "--check-only", "tests/", "--profile", "black"], "Import sorting check"),
+                        ([python_exe, "-m", "flake8", "tests/", "--max-line-length=100", "--extend-ignore=E203,W503"], "Flake8 linting"),
+                        ([python_exe, "-m", "mypy", "tests/", "--ignore-missing-imports", "--check-untyped-defs"], "MyPy type checking"),
                     ]
                     
                     all_passed = True
