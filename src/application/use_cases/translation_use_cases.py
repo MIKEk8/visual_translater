@@ -7,114 +7,92 @@ from typing import Optional
 from ...domain.entities.screenshot import Screenshot
 from ...domain.entities.translation import Translation
 from ...domain.protocols.repositories import TranslationRepository
-from ...domain.protocols.services import TranslationService, TTSService
+from ...domain.protocols.services import TranslationService
 from ...domain.services.translation_workflow import TranslationWorkflowService
 from ...domain.value_objects.language import Language, LanguagePair
-from ...domain.value_objects.text import Text, TranslatedText
 from ..dto.translation_dto import TranslationRequest, TranslationResponse
 from ..services.application_service_base import ApplicationServiceBase
-from ..validators.translation_validator import TranslationValidator
 
 
 class TranslateTextUseCase(ApplicationServiceBase):
-    """Use case for translating text."""
+    """Use case for translating text with optional caching."""
 
     def __init__(
         self,
         translation_service: TranslationService,
-        translation_repository: TranslationRepository,
-        tts_service: Optional[TTSService] = None,
-        validator: Optional[TranslationValidator] = None,
+        cache_service: Optional[object] = None,
     ):
         self.translation_service = translation_service
-        self.translation_repository = translation_repository
-        self.tts_service = tts_service
-        self.validator = validator or TranslationValidator()
+        self.cache_service = cache_service
 
-    async def execute(self, request: TranslationRequest) -> TranslationResponse:
+    async def execute(self, request: TranslationRequest) -> Optional[TranslationResponse]:
         """Execute text translation."""
 
-        # Validate request
-        validation_result = self.validator.validate_translation_request(request)
-        if not validation_result.is_valid:
-            return TranslationResponse.error(validation_result.errors)
+        source_lang = Language(request.source_language)
+        target_lang = Language(request.target_language)
+        language_pair = LanguagePair(source_lang, target_lang)
+
+        # Try cache first
+        if self.cache_service:
+            cached = self.cache_service.get_cached_translation(request.text, language_pair)
+            if cached:
+                return TranslationResponse(
+                    original_text=request.text,
+                    translated_text=cached.translated.content,
+                    source_language=request.source_language,
+                    target_language=request.target_language,
+                    is_cached=True,
+                    confidence=getattr(cached.translated, "confidence", None),
+                )
 
         try:
-            # Create language pair
-            source_lang = Language(request.source_language)
-            target_lang = Language(request.target_language)
-            language_pair = LanguagePair(source_lang, target_lang)
-
-            # Translate text
             translated_text = await self.translation_service.translate(request.text, language_pair)
+        except Exception:
+            return None
 
-            if not translated_text:
-                return TranslationResponse.error(["Translation failed"])
+        if not translated_text:
+            return None
 
-            # Create translation entity
-            translation = Translation(
-                original=Text(request.text),
-                translated=TranslatedText(translated_text),
-                language_pair=language_pair,
-            )
+        if self.cache_service:
+            try:
+                self.cache_service.cache_translation(request.text, translated_text, language_pair)
+            except Exception:
+                pass
 
-            # Save to repository
-            await self.translation_repository.save(translation)
-
-            # Text-to-speech if enabled
-            if request.auto_tts and self.tts_service:
-                await self.tts_service.speak(translated_text, target_lang)
-
-            return TranslationResponse.success(translation)
-
-        except Exception as e:
-            return TranslationResponse.error([f"Translation failed: {str(e)}"])
+        return TranslationResponse(
+            original_text=request.text,
+            translated_text=translated_text,
+            source_language=request.source_language,
+            target_language=request.target_language,
+            is_cached=False,
+        )
 
 
 class TranslateScreenshotUseCase(ApplicationServiceBase):
     """Use case for translating screenshot text."""
 
-    def __init__(
-        self,
-        workflow_service: TranslationWorkflowService,
-        translation_repository: TranslationRepository,
-        validator: Optional[TranslationValidator] = None,
-    ):
+    def __init__(self, workflow_service: TranslationWorkflowService):
         self.workflow_service = workflow_service
-        self.translation_repository = translation_repository
-        self.validator = validator or TranslationValidator()
 
     async def execute(
-        self, screenshot: Screenshot, request: TranslationRequest
-    ) -> TranslationResponse:
+        self, screenshot: Screenshot, language_pair: LanguagePair, auto_tts: bool = False
+    ) -> Optional[dict]:
         """Execute screenshot translation."""
 
-        # Validate request
-        validation_result = self.validator.validate_screenshot_translation(screenshot, request)
-        if not validation_result.is_valid:
-            return TranslationResponse.error(validation_result.errors)
-
         try:
-            # Create language pair
-            source_lang = Language(request.source_language)
-            target_lang = Language(request.target_language)
-            language_pair = LanguagePair(source_lang, target_lang)
-
-            # Process through workflow
             translation = await self.workflow_service.process_screenshot(
-                screenshot, language_pair, request.auto_tts
+                screenshot, language_pair, auto_tts=auto_tts
             )
+        except Exception:
+            return None
 
-            if not translation:
-                return TranslationResponse.error(["Screenshot translation failed"])
+        if not translation:
+            return None
 
-            # Save to repository
-            await self.translation_repository.save(translation)
+        if hasattr(translation, "to_dict"):
+            return translation.to_dict()
 
-            return TranslationResponse.success(translation)
-
-        except Exception as e:
-            return TranslationResponse.error([f"Screenshot translation failed: {str(e)}"])
+        return None
 
 
 class GetTranslationHistoryUseCase(ApplicationServiceBase):
