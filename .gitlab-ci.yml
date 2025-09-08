@@ -53,12 +53,12 @@ validate-config:
     - python --version
     - pip --version
     - echo "✅ Python environment OK"
-    - test -f "requirements.txt" || (echo "❌ requirements.txt not found" && exit 1)
-    - test -f "pyproject.toml" || (echo "❌ pyproject.toml not found" && exit 1)
+    - test -f requirements.txt
+    - test -f pyproject.toml
     - echo "✅ Configuration files validated"
     - echo "📊 Project info:"
     - echo "  - Name: Screen Translator v2.0"
-    - echo "  - Python: 3.8-3.13 support"  
+    - echo "  - Python: 3.8-3.13 support"
     - echo "  - Architecture: Modular with DI and interfaces"
   except:
     - schedules
@@ -320,7 +320,7 @@ security-scan:
     - bandit -r src/ -ll -f json -o bandit-report.json 2>/dev/null || echo "Bandit scan completed with warnings"
     - bandit -r src/ -ll || echo "Bandit analysis completed"
     - echo "🔍 Checking dependency vulnerabilities..."
-    - safety check --json --output safety-report.json 2>/dev/null || echo "Safety scan completed with warnings" 
+    - safety check --json --output safety-report.json 2>/dev/null || echo "Safety scan completed with warnings"
     - safety check || echo "Safety analysis completed"
     - echo "✅ Security scan completed"
   artifacts:
@@ -413,7 +413,7 @@ deploy-production:
     - echo "Creating release artifacts..."
     - mkdir -p release/
     - cp dist/*.whl release/ 2>/dev/null || echo "No wheel files found"
-    - cp dist/*.tar.gz release/ 2>/dev/null || echo "No source dist files found"
+    - cp dist/*.tar.gz release/ 2>/dev/null || echo "No source dist files found"  
     - cp dist/ScreenTranslator release/ 2>/dev/null || echo "Executable not found"
     - echo "📋 Release contents:"
     - ls -la release/ || echo "Release directory empty"
@@ -493,7 +493,7 @@ quality-report:
     - echo "📊 Generating comprehensive quality report..."
     - mkdir -p quality_reports/
     - black --check --diff src/ > quality_reports/black_report.txt 2>&1 || echo "Black report generated"
-    - flake8 src/ --statistics > quality_reports/flake8_report.txt 2>&1 || echo "Flake8 report generated"  
+    - flake8 src/ --statistics > quality_reports/flake8_report.txt 2>&1 || echo "Flake8 report generated"
     - mypy src/ --ignore-missing-imports > quality_reports/mypy_report.txt 2>&1 || echo "MyPy report generated"
     - radon cc src/ --average > quality_reports/complexity_report.txt 2>&1 || echo "Radon report generated"
     - bandit -r src/ -f txt > quality_reports/security_report.txt 2>&1 || echo "Bandit report generated"
