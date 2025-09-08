@@ -1,5 +1,5 @@
 # Screen Translator v2.0 - Production Dependencies
-# Compatible with Python 3.8-3.13 (conditional dependencies)
+# Compatible with Python 3.11-3.13
 # Note: For Windows development, see pyproject.toml dependencies
 
 # Core dependencies
@@ -14,34 +14,27 @@ pytesseract>=0.3.10
 
 # GUI framework - tkinter is built into Python
 
-# Configuration and data (Python 3.8 compatible versions)
-pydantic>=1.10.0,<2.0.0; python_version == '3.8'
-pydantic>=2.0.0; python_version >= '3.9'
+# Configuration and data
+pydantic>=2.0.0
 python-dotenv>=1.0.0
 
-# Networking and API (Python 3.8 compatible versions)
+# Networking and API
 requests>=2.31.0
-urllib3>=1.26.0,<2.0.0; python_version == '3.8'
-urllib3>=2.0.4; python_version >= '3.9'
-fastapi>=0.100.0; python_version >= '3.9'
-fastapi>=0.95.0,<0.100.0; python_version == '3.8'
-uvicorn>=0.20.0,<0.23.0; python_version == '3.8'
-uvicorn>=0.23.0; python_version >= '3.9'
+urllib3>=2.0.4
+fastapi>=0.100.0
+uvicorn>=0.23.0
 
-# Utilities (Python 3.8 compatible)
-click>=8.0.0,<8.1.0; python_version == '3.8'
-click>=8.1.6; python_version >= '3.9'
+# Utilities
+click>=8.1.6
 colorama>=0.4.6
-platformdirs>=3.0.0,<3.10.0; python_version == '3.8'
-platformdirs>=3.10.0; python_version >= '3.9'
+platformdirs>=3.10.0
 psutil>=5.9.0
 
 # Audio device management (for TTS)
 sounddevice>=0.4.6
 
-# Monitoring and logging (Python 3.8 compatible)
-structlog>=22.0.0,<23.0.0; python_version == '3.8'
-structlog>=23.1.0; python_version >= '3.9'
+# Monitoring and logging
+structlog>=23.1.0
 
 # Security - XML processing
 defusedxml>=0.7.1
@@ -58,9 +51,8 @@ cython>=3.0.0; python_version < '3.13'
 # Image processing (conditional)
 opencv-python>=4.8.0.76; python_version < '3.13'
 
-# Performance (version-specific numpy)
-numpy>=1.24.0,<1.25.0; python_version == '3.8'
-numpy>=1.26.0,<3.0.0; python_version >= '3.9'
+# Performance
+numpy>=1.26.0,<3.0.0
 
 # Async HTTP client (conditional - avoid conflict with googletrans)
 httpx>=0.25.0; python_version >= '3.13'

@@ -1,5 +1,5 @@
 # Screen Translator v2.0 - GitLab CI/CD Pipeline
-# Comprehensive pipeline with Python 3.8-3.13 support, quality checks, testing, and deployment
+# Comprehensive pipeline with Python 3.11-3.13 support, quality checks, testing, and deployment
 
 # Global variables
 variables:
@@ -8,7 +8,7 @@ variables:
   MYPY_CACHE_DIR: "$CI_PROJECT_DIR/.cache/mypy"
   
   # Python versions to test against
-  PYTHON_VERSIONS: "3.8 3.9 3.10 3.11 3.12"
+  PYTHON_VERSIONS: "3.11 3.12"
   
   # Quality thresholds
   MIN_COVERAGE: "80"
@@ -58,7 +58,7 @@ validate-config:
     - echo "Configuration files validated"
     - echo "Project info:"
     - 'echo "Name: Screen Translator v2.0"'
-    - 'echo "Python: 3.8-3.13 support"'
+    - 'echo "Python: 3.11-3.13 support"'
     - 'echo "Architecture: Modular with DI and interfaces"'
   except:
     - schedules
@@ -80,18 +80,6 @@ validate-config:
     - pip install -r requirements-dev.txt
     - echo "✅ Dependencies installed"
 
-install-deps-py38:
-  <<: *python-base
-  stage: dependencies
-  image: python:3.8-slim
-  script:
-    - echo "✅ Python 3.8 dependencies ready"
-  artifacts:
-    paths:
-      - venv/
-    expire_in: 1 hour
-  tags:
-    - shared
 
 install-deps-py311:
   <<: *python-base
@@ -231,17 +219,6 @@ dead-code-detection:
   tags:
     - shared
 
-unit-tests-py38:
-  <<: *test-base
-  image: python:3.8-slim
-  dependencies:
-    - install-deps-py38
-  script:
-    - source venv/bin/activate
-    - echo "🧪 Running unit tests on Python 3.8..."
-    - python -m pytest src/tests/unit/ -v --tb=short --junitxml=junit-report.xml --cov=src --cov-report=xml --cov-report=html --cov-report=term
-    - coverage report --show-missing
-    - echo "✅ Python 3.8 unit tests completed"
 
 unit-tests-py311:
   <<: *test-base

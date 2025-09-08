@@ -1,5 +1,6 @@
-# Development dependencies for CI/CD
+# Development dependencies for CI/CD  
 # This file is used instead of pyproject.toml[dev] to avoid platform-specific issues
+# Python 3.11+ compatible versions
 
 # Testing framework
 pytest>=7.0.0
@@ -8,29 +9,22 @@ pytest-asyncio>=0.21.0
 pytest-xdist>=3.0.0
 pytest-mock>=3.11.0
 
-# Code formatting and style (Python version compatible)
-black>=22.0.0,<23.0.0; python_version == '3.8'
-black>=23.0.0; python_version >= '3.9'
+# Code formatting and style
+black>=23.0.0
 isort>=5.0.0
-mypy>=0.991,<1.0.0; python_version == '3.8'
-mypy>=1.0.0; python_version >= '3.9'
-flake8>=5.0.0,<6.0.0; python_version == '3.8'
-flake8>=6.0.0; python_version >= '3.9'
+mypy>=1.0.0
+flake8>=6.0.0
 
-# Code quality and analysis (Python version compatible)
-pylint>=2.15.0,<3.0.0; python_version == '3.8'
-pylint>=3.0.0; python_version >= '3.9'
+# Code quality and analysis  
+pylint>=3.0.0
 bandit>=1.7.0
-safety>=2.3.0,<3.0.0; python_version == '3.8' 
-safety>=3.0.0; python_version >= '3.9'
-radon>=5.1.0,<6.0.0; python_version == '3.8'
-radon>=6.0.0; python_version >= '3.9'
+safety>=3.0.0
+radon>=6.0.0
 vulture>=2.10
 pydocstyle>=6.3.0
 pycodestyle>=2.11.0
 mccabe>=0.7.0
-prospector>=1.8.0,<1.10.0; python_version == '3.8'
-prospector>=1.10.0; python_version >= '3.9'
+prospector>=1.10.0
 autoflake>=2.0.0
 
 # Build tools
