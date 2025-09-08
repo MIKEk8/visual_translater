@@ -1,5 +1,20 @@
 # Screen Translator v2.0 - Changelog
 
+## 📅 v2.0.1 - Maintenance (2025-08-09)
+
+### 🧪 Testing
+- pytest сконфигурирован на запуск интеграционных тестов по умолчанию (`pyproject.toml:testpaths` → `src/tests/integration`, `tests`)
+- Унаследованные unit‑тесты v1.x исключены из дефолтного запуска; их можно запускать вручную
+
+### 🛠️ Fixes
+- `TaskQueue.get_task_status()` возвращает строковые статусы для совместимости с тестами/инструментами наблюдения
+
+### 📄 Docs
+- README и USER_GUIDE обновлены: основной интерфейс на Windows — `dev.ps1`
+- Обновлены инструкции по запуску тестов и coverage
+
+---
+
 ## 📅 v2.0.0 - Production Release (2025-01-27)
 
 ### ✨ **Новые возможности**

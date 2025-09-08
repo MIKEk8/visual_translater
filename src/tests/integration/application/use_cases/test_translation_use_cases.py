@@ -3,11 +3,11 @@ Integration tests for Translation Use Cases
 """
 
 import asyncio
-from unittest.mock import AsyncMock, Mock, patch
+from unittest.mock import AsyncMock, Mock
 
 import pytest
 
-from src.application.dto.translation_dto import TranslationRequest, TranslationResponse
+from src.application.dto.translation_dto import TranslationRequest
 from src.application.use_cases.translation_use_cases import (
     TranslateScreenshotUseCase,
     TranslateTextUseCase,
@@ -15,7 +15,6 @@ from src.application.use_cases.translation_use_cases import (
 from src.domain.entities.screenshot import Screenshot
 from src.domain.value_objects.coordinates import ScreenCoordinates
 from src.domain.value_objects.language import Language, LanguagePair
-from src.domain.value_objects.text import Text
 
 
 class TestTranslationUseCaseIntegration:

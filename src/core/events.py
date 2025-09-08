@@ -134,7 +134,7 @@ class EventBus:
         self._handlers[event_type].append(handler)
         handler.handled_events.add(event_type)
 
-        logger.debug(f"Subscribed {handler.name} to {event_type.name}")
+        logger.debug("Subscribed %s to %s", handler.name, event_type.name)
 
     def unsubscribe(self, event_type: EventType, handler: EventHandler) -> None:
         """Unsubscribe a handler from an event type."""
@@ -142,7 +142,7 @@ class EventBus:
             self._handlers[event_type].remove(handler)
             handler.handled_events.discard(event_type)
 
-            logger.debug(f"Unsubscribed {handler.name} from {event_type.name}")
+            logger.debug("Unsubscribed %s from %s", handler.name, event_type.name)
 
     def add_middleware(self, middleware: Callable[[Event], Event]) -> None:
         """Add middleware to process events before handling."""
@@ -167,7 +167,7 @@ class EventBus:
             handlers = self._handlers.get(processed_event.type, [])
 
             if not handlers:
-                logger.debug(f"No handlers for {processed_event.type.name}")
+                logger.debug("No handlers for %s", processed_event.type.name)
                 return
 
             # Execute all handlers concurrently
@@ -181,11 +181,13 @@ class EventBus:
                 await asyncio.gather(*tasks, return_exceptions=True)
 
             self._stats["events_published"] += 1
-            logger.debug(f"Published {processed_event.type.name} to {len(handlers)} handlers")
+            logger.debug(
+                "Published %s to %d handlers", processed_event.type.name, len(handlers)
+            )
 
         except Exception as e:
             self._stats["errors"] += 1
-            logger.error(f"Error publishing event {event.type.name}: {e}")
+            logger.error("Error publishing event %s: %s", event.type.name, e)
 
             # Publish error event
             error_event = Event(

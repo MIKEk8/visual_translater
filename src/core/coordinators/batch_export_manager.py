@@ -13,9 +13,9 @@ Responsibilities:
 
 import queue
 import threading
-from datetime import datetime
+import time
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
 
 # Import filedialog only when needed to avoid tkinter dependency
 try:
@@ -23,22 +23,21 @@ try:
 except ImportError:
     filedialog = None
 
+import warnings
+
 from src.core.batch_processor import BatchJob, BatchProcessor, BatchStatus
 from src.core.screenshot_engine import ScreenshotEngine
 from src.models.translation import Translation
 
-import warnings
-
-# Suppress defusedxml warning for development environment
+# Check for secure XML parsing library
 try:
-    import defusedxml.ElementTree as ET
+    import defusedxml
     print("Using defusedxml for secure XML parsing")
 except ImportError:
-    import xml.etree.ElementTree as ET
     warnings.warn(
         "defusedxml not available. Using xml.etree.ElementTree which may be vulnerable to XML attacks",
         UserWarning,
-        stacklevel=2
+        stacklevel=2,
     )
 
 from src.utils.export_manager import ExportManager
@@ -46,7 +45,7 @@ from src.utils.logger import logger
 from src.utils.performance_monitor import get_performance_monitor
 
 if TYPE_CHECKING:
-    from src.ui.progress_indicator import ProgressInfo, ProgressManager
+    from src.ui.progress_indicator import ProgressManager
 
     def _queue_gui_operation(self, operation_type: str, data: dict):
         """Queue GUI operation for main thread processing"""
@@ -106,7 +105,7 @@ if TYPE_CHECKING:
 
     def _handle_file_dialog_operation(self, data: dict):
         """Handle file dialog operations"""
-# filedialog imported at module level
+        # filedialog imported at module level
 
         dialog_type = data.get("type", "open")
         callback = data.get("callback")
@@ -532,7 +531,6 @@ class BatchExportManager:
                 # Show file dialog to get file path
                 from datetime import datetime
 
-                file_types = [("JSON files", "*.json"), ("All files", "*.*")]
                 suggested_name = (
                     f"performance_metrics_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
                 )
@@ -617,7 +615,7 @@ class BatchExportManager:
 
     def _handle_file_dialog_operation(self, data: dict):
         """Handle file dialog operations"""
-# filedialog imported at module level
+        # filedialog imported at module level
 
         dialog_type = data.get("type", "open")
         callback = data.get("callback")

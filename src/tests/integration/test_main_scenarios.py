@@ -7,19 +7,18 @@ import queue
 import threading
 import time
 import unittest
-from typing import Dict, List
-from unittest.mock import MagicMock, Mock, patch
+from typing import Dict
+from unittest.mock import Mock
 
 import pytest
 
-from src.models.config import AppConfig, HotkeyConfig, LanguageConfig, TTSConfig
+from src.models.config import HotkeyConfig
 from src.services.container import DIContainer
 
 # Импорт основных компонентов
 from src.services.task_queue import TaskPriority, TaskQueue
 from src.services.translation_cache import TranslationCache
 from src.tests.test_utils import skip_on_ci
-from src.utils.logger import logger
 
 pytestmark = pytest.mark.integration
 

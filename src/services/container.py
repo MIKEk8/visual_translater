@@ -127,14 +127,20 @@ def setup_default_services(target_container: Optional[DIContainer] = None):
     from src.core.screenshot_engine import ScreenshotEngine
     from src.core.translation_engine import TranslationProcessor
     from src.core.tts_engine import TTSProcessor
-    from src.repositories import (
-        FileScreenshotRepository,
-        FileTranslationRepository,
-        RepositoryManager,
-        ScreenshotRepository,
-        TranslationRepository,
-        get_repository_manager,
-    )
+    # Optional repositories: allow running without file-based repositories
+    try:
+        from src.repositories import (
+            FileScreenshotRepository,
+            FileTranslationRepository,
+            RepositoryManager,
+            ScreenshotRepository,
+            TranslationRepository,
+            get_repository_manager,
+        )
+        _repositories_available = True
+    except ModuleNotFoundError:
+        logger.warning("Repositories module not available; skipping repository registrations")
+        _repositories_available = False
     from src.services.circuit_breaker import get_circuit_breaker_manager
     from src.services.config_manager import ConfigManager
     from src.services.plugin_service import PluginService
@@ -171,25 +177,26 @@ def setup_default_services(target_container: Optional[DIContainer] = None):
     target_container.register_factory(TranslationProcessor, create_translation_processor)
     target_container.register_factory(TTSProcessor, create_tts_processor)
 
-    # Register repository services
-    def create_repository_manager():
-        config_manager = target_container.get(ConfigManager)
-        data_dir = getattr(config_manager.get_config(), "data_directory", "data")
-        return get_repository_manager(data_dir)
+    # Register repository services if available
+    if _repositories_available:
+        def create_repository_manager():
+            config_manager = target_container.get(ConfigManager)
+            data_dir = getattr(config_manager.get_config(), "data_directory", "data")
+            return get_repository_manager(data_dir)
 
-    def create_translation_repository():
-        config_manager = target_container.get(ConfigManager)
-        data_dir = getattr(config_manager.get_config(), "data_directory", "data")
-        return FileTranslationRepository(data_dir)
+        def create_translation_repository():
+            config_manager = target_container.get(ConfigManager)
+            data_dir = getattr(config_manager.get_config(), "data_directory", "data")
+            return FileTranslationRepository(data_dir)
 
-    def create_screenshot_repository():
-        config_manager = target_container.get(ConfigManager)
-        data_dir = getattr(config_manager.get_config(), "data_directory", "data")
-        return FileScreenshotRepository(data_dir)
+        def create_screenshot_repository():
+            config_manager = target_container.get(ConfigManager)
+            data_dir = getattr(config_manager.get_config(), "data_directory", "data")
+            return FileScreenshotRepository(data_dir)
 
-    target_container.register_factory(RepositoryManager, create_repository_manager)
-    target_container.register_factory(TranslationRepository, create_translation_repository)
-    target_container.register_factory(ScreenshotRepository, create_screenshot_repository)
+        target_container.register_factory(RepositoryManager, create_repository_manager)
+        target_container.register_factory(TranslationRepository, create_translation_repository)
+        target_container.register_factory(ScreenshotRepository, create_screenshot_repository)
 
     # Register circuit breaker services
     target_container.register_instance(

@@ -3,7 +3,6 @@ Text-to-speech service implementation.
 """
 
 import threading
-from typing import Optional
 
 try:
     import pyttsx3
@@ -66,7 +65,7 @@ class PyttsxTTSService(TTSService):
                 self._engine.say(text)
                 self._engine.runAndWait()
 
-            logger.info(f"TTS completed", text_length=len(text), language=language.code)
+            logger.info("TTS completed", text_length=len(text), language=language.code)
 
         except Exception as e:
             logger.error(f"TTS failed: {e}")

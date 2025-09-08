@@ -99,7 +99,7 @@ class CircuitBreakerMonitor:
             if state == CircuitState.CLOSED.value:
                 status_msg = "Healthy - All operations successful"
             elif state == CircuitState.HALF_OPEN.value:
-                status_msg = f"Recovering - Testing service availability"
+                status_msg = "Recovering - Testing service availability"
             else:  # OPEN
                 time_since_failure = time.time() - last_failure_time if last_failure_time else 0
                 status_msg = f"Failed - Circuit open for {int(time_since_failure)}s"

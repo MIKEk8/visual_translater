@@ -3,7 +3,7 @@ import os
 import tempfile
 import unittest
 from datetime import datetime
-from unittest.mock import MagicMock, Mock, patch
+from unittest.mock import Mock, patch
 
 try:
     from PIL import Image

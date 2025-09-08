@@ -4,19 +4,14 @@ Comprehensive tests for Event-Driven Architecture system.
 
 import asyncio
 from datetime import datetime
-from typing import Any, Dict
-from unittest.mock import AsyncMock, Mock, patch
+from unittest.mock import Mock, patch
 
 import pytest
 
 from src.core.event_handlers import (
-    OCREventHandler,
     ScreenshotEventHandler,
     SystemEventHandler,
     TranslationEventHandler,
-    TTSEventHandler,
-    UIEventHandler,
-    setup_event_handlers,
 )
 from src.core.events import Event, EventBus, EventHandler, EventType, get_event_bus, publish_event
 

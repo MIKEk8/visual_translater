@@ -2,7 +2,7 @@
 Preferences validation.
 """
 
-from typing import List
+from typing import List  # noqa: F401 (kept for backward compatibility and typing hints)
 
 from ..dto.preferences_dto import PreferencesRequest
 from .validator_base import ValidationResult

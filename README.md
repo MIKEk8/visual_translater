@@ -56,38 +56,38 @@ Modern, modular Python application for capturing screen regions, performing OCR 
 
 ### **📦 Installation & Setup**
 
-**🚨 ВАЖНО: Используйте ТОЛЬКО `dev.bat` для работы с проектом!**
+**🚨 ВАЖНО (Windows): Используйте `dev.ps1` для работы с проектом!**
 
 ```batch
 # 1. Настройка окружения (один раз)
-dev.bat setup
+PowerShell -ExecutionPolicy Bypass -File .\dev.ps1 setup
 
 # 2. Сборка приложения
-dev.bat build
+PowerShell -ExecutionPolicy Bypass -File .\dev.ps1 build
 
 # 3. Запуск готового приложения
 dist\ScreenTranslator.exe
 ```
 
-**📋 Основные команды для пользователя:**
-- `dev.bat setup` - Настройка окружения
-- `dev.bat build` - Сборка приложения
-- `dev.bat test` - Запуск тестов
-- `dev.bat help` - Полная справка
+**📋 Основные команды (Windows / PowerShell):**
+- `./dev.ps1 setup` - Настройка окружения
+- `./dev.ps1 build` - Сборка приложения
+- `./dev.ps1 test` - Запуск тестов
+- `./dev.ps1 help` - Полная справка
 
-**📄 Подробное руководство:** [`README_USER.md`](README_USER.md)
+**📄 Подробное руководство:** [`docs/USER_GUIDE.md`](docs/USER_GUIDE.md)
 
 ### **🎯 Usage**
 
-#### **Для пользователя (ТОЛЬКО dev.bat):**
+#### **Для пользователя (Windows PowerShell — dev.ps1):**
 ```batch
 # Основные команды
-dev.bat setup              # Настройка окружения (первый запуск)
-dev.bat build              # Сборка релизной версии
-dev.bat build debug        # Сборка отладочной версии
-dev.bat test               # Запуск тестов
-dev.bat run                # Запуск из исходников
-dev.bat help               # Полная справка
+./dev.ps1 setup              # Настройка окружения (первый запуск)
+./dev.ps1 build              # Сборка релизной версии
+./dev.ps1 build debug        # Сборка отладочной версии
+./dev.ps1 test               # Запуск тестов (интеграционные по умолчанию)
+./dev.ps1 run                # Запуск из исходников
+./dev.ps1 help               # Полная справка
 
 # Запуск готового приложения
 dist\ScreenTranslator.exe
@@ -166,19 +166,20 @@ Configuration is managed through JSON files with automatic validation and hot-re
 
 ## 🧪 **Testing**
 
-### **Run All Tests**
+### **Testing**
 ```bash
-python main.py --test
+# Windows (PowerShell)
+./dev.ps1 test                 # Интеграционные тесты по умолчанию
+./dev.ps1 test integration     # Явно интеграционные тесты
+
+# Запуск unit-тестов вручную
+wenv\Scripts\python.exe -m pytest -q src/tests/unit
+
+# Полный pytest с coverage
+wenv\Scripts\python.exe -m pytest --cov=src --cov-report=term-missing
 ```
 
-### **Test Results**
-- ✅ **AI OCR Architecture**: 5/5 tests passed
-- ✅ **Translation Overlay**: 7/7 tests passed
-- ✅ **Multi-Language UI**: 10/10 tests passed
-- ✅ **Web API**: 9/9 tests passed
-- ✅ **Notification System**: 8/10 tests passed
-- ✅ **Hotkey System**: 12/12 tests passed
-- ✅ **System Integration**: 4/8 tests passed
+Примечание: по умолчанию запуск через pytest сконфигурирован на интеграционные сценарии (`pyproject.toml:testpaths`). Наследованные unit‑тесты v1.x исключены из дефолтного запуска.
 
 ---
 
@@ -268,7 +269,7 @@ plyer (Cross-platform notifications - optional)
 ```
 
 ### **System Requirements**
-- **Python 3.8+**
+- **Python 3.11+** (рекомендовано)
 - **Windows 10/11** (primary target)
 - **Tesseract OCR** installed
 - **Internet connection** for translation services

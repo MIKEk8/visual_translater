@@ -48,7 +48,6 @@ class Command(ABC):
     @abstractmethod
     def validate(self) -> bool:
         """Validate command parameters."""
-        pass
 
     def get_command_type(self) -> str:
         """Get command type for logging and metrics."""

@@ -94,7 +94,6 @@ class CommandHandler(ABC, Generic[TCommand, TCommandResult]):
     @abstractmethod
     async def _execute(self, command: TCommand) -> CommandResult[TCommandResult]:
         """Execute the specific command logic."""
-        pass
 
     def get_metrics(self) -> dict:
         """Get handler performance metrics."""
@@ -193,7 +192,6 @@ class QueryHandler(ABC, Generic[TQuery, TQueryResult]):
     @abstractmethod
     async def _execute(self, query: TQuery) -> QueryResult[TQueryResult]:
         """Execute the specific query logic."""
-        pass
 
     def get_metrics(self) -> dict:
         """Get handler performance metrics."""

@@ -122,7 +122,6 @@ class Query(ABC):
     @abstractmethod
     def validate(self) -> bool:
         """Validate query parameters."""
-        pass
 
     def get_query_type(self) -> str:
         """Get query type for logging and metrics."""

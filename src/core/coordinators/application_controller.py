@@ -41,7 +41,7 @@ from src.plugins.base_plugin import PluginType
 from src.services.config_manager import ConfigManager, ConfigObserver
 from src.services.container import container, setup_default_services
 from src.services.plugin_service import PluginService
-from src.ui.tray_manager import TrayManager
+from ..interfaces import ITrayManager
 from src.utils.logger import logger
 
 if TYPE_CHECKING:

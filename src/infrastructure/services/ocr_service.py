@@ -72,7 +72,7 @@ class TesseractOCRService(OCRService):
                 confidence = 0.5  # Default confidence
 
             logger.info(
-                f"OCR extraction completed",
+                "OCR extraction completed",
                 text_length=len(text),
                 confidence=confidence,
                 language=language.code,

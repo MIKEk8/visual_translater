@@ -7,8 +7,8 @@ from typing import Optional
 from ..entities.screenshot import Screenshot
 from ..entities.translation import Translation
 from ..protocols.services import OCRService, TranslationService, TTSService
-from ..value_objects.language import Language, LanguagePair
-from ..value_objects.text import Text, TranslatedText
+from ..value_objects.language import LanguagePair
+from ..value_objects.text import TranslatedText
 
 
 class TranslationWorkflowService:

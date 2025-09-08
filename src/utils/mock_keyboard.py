@@ -42,6 +42,7 @@ class MockKeyboard:
     @staticmethod
     def get_hotkey_name(names=None):
         """Mock get_hotkey_name"""
+        _ = names  # unused placeholder for API compatibility
         return "ctrl+shift+a"
 
 

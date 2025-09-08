@@ -183,11 +183,15 @@ class TaskQueue:
                 return True
         return False
 
-    def get_task_status(self, task_id: str) -> Optional[TaskStatus]:
-        """Get status of a task"""
+    def get_task_status(self, task_id: str) -> Optional[str]:
+        """Get status of a task.
+
+        Returns the status as a lowercase string (e.g., "completed") to
+        align with external callers/tests that compare against string values.
+        """
         with self.task_lock:
             task = self.tasks.get(task_id)
-            return task.status if task else None
+            return task.status.value if task else None
 
     def get_task_result(self, task_id: str) -> Any:
         """Get result of completed task"""

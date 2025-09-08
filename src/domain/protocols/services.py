@@ -15,8 +15,6 @@ except ImportError:
     Image = Any
     ImageType = Any
 
-from ..entities.screenshot import Screenshot
-from ..entities.translation import Translation
 from ..value_objects.coordinates import ScreenCoordinates
 from ..value_objects.language import Language, LanguagePair
 

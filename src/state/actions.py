@@ -10,7 +10,7 @@ from enum import Enum
 from typing import Any, Dict, Optional, Tuple
 
 from src.models.translation import Translation
-from src.state.app_state import AppStatus, CaptureMode
+from src.state.app_state import CaptureMode
 
 
 class ActionType(Enum):
@@ -95,7 +95,6 @@ class Action(ABC):
     @abstractmethod
     def get_payload(self) -> Dict[str, Any]:
         """Get action payload for state reduction."""
-        pass
 
 
 # Application lifecycle actions

@@ -2,11 +2,8 @@
 Comprehensive tests for CQRS (Command Query Responsibility Segregation) system.
 """
 
-import asyncio
 import time
 from datetime import datetime
-from typing import Any, Dict, List, Optional
-from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
 

@@ -7,7 +7,7 @@ from datetime import datetime
 from typing import Optional
 
 from ..value_objects.domain_id import DomainId
-from ..value_objects.language import Language, LanguagePair
+from ..value_objects.language import LanguagePair
 from ..value_objects.text import Text, TranslatedText
 
 

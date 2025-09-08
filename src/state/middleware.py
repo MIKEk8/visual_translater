@@ -20,12 +20,10 @@ class Middleware(ABC):
         Process action before dispatch.
         Return None to block the action, or modified action to continue.
         """
-        pass
 
     @abstractmethod
     def after_dispatch(self, action: Action, old_state: AppState, new_state: AppState) -> None:
         """Process after state has been updated."""
-        pass
 
 
 class LoggingMiddleware(Middleware):

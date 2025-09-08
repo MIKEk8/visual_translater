@@ -2,8 +2,6 @@
 Mock для pystray модуля (system tray)
 """
 
-from typing import Any, Callable, Optional
-
 
 class MockMenuItem:
     """Mock для MenuItem"""

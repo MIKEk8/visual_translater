@@ -3,7 +3,7 @@ import tempfile
 import unittest
 from unittest.mock import Mock, patch
 
-from src.models.config import AppConfig, HotkeyConfig, LanguageConfig, TTSConfig
+from src.models.config import AppConfig, LanguageConfig, TTSConfig
 from src.services.config_manager import ConfigManager, ConfigObserver
 
 

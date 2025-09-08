@@ -1,15 +1,12 @@
-import pytesseract
-
-from src.core.ocr_engine import TesseractOCR
-
-"""
-AI-powered OCR engine for Screen Translator v2.0.
+"""AI-powered OCR engine for Screen Translator v2.0.
 Provides advanced text detection and recognition using machine learning approaches.
 """
 
 import io
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Tuple
+
+import pytesseract
 
 try:
     import cv2
@@ -19,6 +16,7 @@ except ImportError:
 import numpy as np
 from PIL import Image
 
+from src.core.ocr_engine import TesseractOCR
 from src.plugins.base_plugin import OCRPlugin, PluginMetadata, PluginType
 from src.utils.logger import logger
 
@@ -464,7 +462,7 @@ class ImageEnhancer:
                 # Calculate average angle
                 angles = []
                 for line in lines[:20]:  # Use top 20 lines
-                    rho, theta = line[0]
+                    _rho, theta = line[0]
                     angle = theta * 180 / np.pi - 90
                     if abs(angle) < 45:  # Only consider reasonable skew angles
                         angles.append(angle)

@@ -18,7 +18,6 @@ import numpy as np
 from PIL import Image, ImageTk
 
 from src.ai.smart_area_detection import DetectionConfig, SmartAreaDetector, TextRegion
-from src.ui.real_time_overlay import OverlayConfig
 from src.utils.logger import logger
 
 

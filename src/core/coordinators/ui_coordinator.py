@@ -14,6 +14,8 @@ Responsibilities:
 
 import queue
 import threading
+import time
+
 # Import tkinter modules only when available
 try:
     from tkinter import TclError, messagebox
@@ -21,19 +23,21 @@ except ImportError:
     # Mock TclError and messagebox for compatibility
     class TclError(Exception):
         pass
-    
+
     class MockMessageBox:
         def showerror(self, *args, **kwargs):
             print(f"Mock messagebox.showerror: {args}")
+
         def showinfo(self, *args, **kwargs):
             print(f"Mock messagebox.showinfo: {args}")
+
         def showwarning(self, *args, **kwargs):
             print(f"Mock messagebox.showwarning: {args}")
-    
+
     messagebox = MockMessageBox()
     print("tkinter недоступен в src.core.coordinators.ui_coordinator")
     print("Mock GUI компоненты загружены")
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING, List
 
 from src.models.translation import Translation
 from src.services.config_manager import ConfigManager

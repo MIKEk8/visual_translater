@@ -5,7 +5,6 @@ Translation Cache Service - Screen Translator v2.0
 
 import hashlib
 import json
-import time
 from collections import OrderedDict
 from dataclasses import dataclass
 from datetime import datetime, timedelta

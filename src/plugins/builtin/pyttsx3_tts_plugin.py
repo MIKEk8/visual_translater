@@ -3,7 +3,7 @@ Built-in pyttsx3 TTS plugin for Screen Translator v2.0.
 Wraps the existing TTSProcessor as a plugin.
 """
 
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 from src.plugins.base_plugin import PluginMetadata, PluginType, TTSPlugin
 from src.utils.logger import logger

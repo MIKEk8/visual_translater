@@ -2,8 +2,6 @@
 Translation validation.
 """
 
-from typing import List
-
 from ...domain.entities.screenshot import Screenshot
 from ..dto.translation_dto import TranslationRequest
 from .validator_base import ValidationResult

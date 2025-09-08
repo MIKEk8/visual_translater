@@ -4,7 +4,7 @@ Configuration system adapter.
 
 import json
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from ...domain.entities.preferences import UserPreferences
 from ...domain.value_objects.language import Language

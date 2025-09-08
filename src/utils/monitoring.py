@@ -1,8 +1,6 @@
 """Production Monitoring System"""
 
 import logging
-import time
-from datetime import datetime
 
 
 class ComponentLogger:

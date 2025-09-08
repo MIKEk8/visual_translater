@@ -26,8 +26,12 @@ class TestDragDropHandler(unittest.TestCase):
 
     def setUp(self):
         """Setup test environment"""
-        self.root = (tk.Tk if tk else None)()
-        self.root.withdraw()  # Hide window during tests
+        try:
+            self.root = (tk.Tk if tk else None)()
+            self.root.withdraw()  # Hide window during tests
+        except Exception as e:  # e.g., _tkinter.TclError in headless/invalid Tcl
+            self.root = None
+            self.skipTest(f"Tk initialization failed: {e}")
 
         self.callback_calls = []
 
@@ -39,7 +43,10 @@ class TestDragDropHandler(unittest.TestCase):
     def tearDown(self):
         """Cleanup test environment"""
         if self.root:
-            self.root.destroy()
+            try:
+                self.root.destroy()
+            except Exception:
+                pass
 
     def test_supported_formats(self):
         """Test supported file formats"""
@@ -233,8 +240,12 @@ class TestImageDropZone(unittest.TestCase):
 
     def setUp(self):
         """Setup test environment"""
-        self.root = (tk.Tk if tk else None)()
-        self.root.withdraw()  # Hide window during tests
+        try:
+            self.root = (tk.Tk if tk else None)()
+            self.root.withdraw()  # Hide window during tests
+        except Exception as e:
+            self.root = None
+            self.skipTest(f"Tk initialization failed: {e}")
 
         self.callback_calls = []
 
@@ -246,7 +257,10 @@ class TestImageDropZone(unittest.TestCase):
     def tearDown(self):
         """Cleanup test environment"""
         if self.root:
-            self.root.destroy()
+            try:
+                self.root.destroy()
+            except Exception:
+                pass
 
     def test_creation(self):
         """Test drop zone creation"""
@@ -458,14 +472,21 @@ class TestCreateImageDropInterface(unittest.TestCase):
 
     def setUp(self):
         """Setup test environment"""
-        self.root = (tk.Tk if tk else None)()
-        self.root.withdraw()  # Hide window during tests
+        try:
+            self.root = (tk.Tk if tk else None)()
+            self.root.withdraw()  # Hide window during tests
+        except Exception as e:
+            self.root = None
+            self.skipTest(f"Tk initialization failed: {e}")
         self.mock_app = Mock()
 
     def tearDown(self):
         """Cleanup test environment"""
         if self.root:
-            self.root.destroy()
+            try:
+                self.root.destroy()
+            except Exception:
+                pass
 
     def test_create_interface(self):
         """Test creating drop interface"""

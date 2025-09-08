@@ -133,4 +133,3 @@ class TestTranslation:
         # This would require modifying the entity after creation
         # Since we use frozen dataclasses, we can't easily test invalid states
         # In a real implementation, you might want validation in __post_init__
-        pass

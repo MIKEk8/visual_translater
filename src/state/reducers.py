@@ -4,10 +4,9 @@ State reducers for Redux-like state management.
 
 import time
 from datetime import datetime
-from typing import Callable, Dict
 
 from src.state.actions import Action, ActionType
-from src.state.app_state import AppState, AppStatus, PerformanceMetrics, ProcessingState
+from src.state.app_state import AppState, AppStatus, PerformanceMetrics
 from src.utils.logger import logger
 
 
@@ -97,7 +96,7 @@ class RootReducer:
 
     def _reduce_app_error(self, state: AppState, action: Action) -> AppState:
         """Handle app error."""
-        payload = action.get_payload()
+        action.get_payload()
         state.status = AppStatus.ERROR
         # Could store error details in state if needed
         return state
@@ -122,7 +121,7 @@ class RootReducer:
 
     def _reduce_translation_failure(self, state: AppState, action: Action) -> AppState:
         """Handle translation failure."""
-        payload = action.get_payload()
+        action.get_payload()
         # Could store error info in state if needed
         return state
 

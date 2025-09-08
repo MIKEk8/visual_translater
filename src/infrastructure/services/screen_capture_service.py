@@ -37,7 +37,7 @@ class PILScreenCaptureService(ScreenCaptureService):
             image = ImageGrab.grab(bbox=bbox)
 
             logger.info(
-                f"Screen capture completed",
+                "Screen capture completed",
                 coordinates=f"{coordinates.x1},{coordinates.y1},{coordinates.x2},{coordinates.y2}",
                 size=f"{image.width}x{image.height}",
             )

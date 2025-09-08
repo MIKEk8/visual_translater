@@ -1,11 +1,9 @@
-import base64
-
-"""
-Web API server for Screen Translator v2.0.
+"""Web API server for Screen Translator v2.0.
 Provides HTTP REST API interface for translation services.
 """
 
 import asyncio
+import base64
 import threading
 import time
 from dataclasses import asdict, dataclass
@@ -21,9 +19,11 @@ try:
 except ImportError:
     # Fallback to simple HTTP server
     try:
-        from http.server import BaseHTTPRequestHandler, HTTPServer  # noqa: F401
+        from http.server import BaseHTTPRequestHandler, HTTPServer  # type: ignore
 
         AIOHTTP_AVAILABLE = False
+        # Avoid unused-import warnings when fallback is not used
+        _unused = (HTTPServer, BaseHTTPRequestHandler)
     except ImportError:
         HTTPServer = None
         BaseHTTPRequestHandler = None
@@ -213,8 +213,7 @@ class WebAPIServer:
         self.server_thread = threading.Thread(target=run_server, daemon=True)
         self.server_thread.start()
 
-        # Wait a moment for startup
-        # TODO: Performance - Consider using asyncio.sleep() for non-blocking delays
+        # Wait a moment for startup (sync sleep is acceptable in separate thread context)
         time.sleep(0.5)
 
         return self.running
@@ -550,7 +549,7 @@ class WebAPIServer:
 
                 async for field in reader:
                     if field.name == "image":
-                        # TODO: Performance - Consider async file operations
+                        # Note: file operations here are small; async variant can be added later
                         image_data = await field.read()
                         break
 

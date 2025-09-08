@@ -13,9 +13,8 @@ import time
 from datetime import datetime
 from pathlib import Path
 
-from PIL import Image
-
 import pytest
+from PIL import Image
 
 # Add src to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
@@ -157,11 +156,10 @@ def test_batch_processing():
         assert stats["max_concurrent_workers"] == 2
 
         print("[PASS] Batch processing working")
-        return True
 
     except Exception as e:
         print(f"[FAIL] Batch processing test failed: {e}")
-        return False
+        pytest.fail(f"Batch processing test failed: {e}")
 
 
 @skip_on_ci
@@ -233,11 +231,10 @@ def test_export_functionality():
             shutil.rmtree(temp_dir, ignore_errors=True)
 
         print("[PASS] Export functionality working")
-        return True
 
     except Exception as e:
         print(f"[FAIL] Export functionality test failed: {e}")
-        return False
+        pytest.fail(f"Export functionality test failed: {e}")
 
 
 @skip_on_ci
@@ -321,11 +318,10 @@ def test_performance_monitoring():
             os.unlink(temp_file.name)
 
         print("[PASS] Performance monitoring working")
-        return True
 
     except Exception as e:
         print(f"[FAIL] Performance monitoring test failed: {e}")
-        return False
+        pytest.fail(f"Performance monitoring test failed: {e}")
 
 
 @skip_on_ci
@@ -373,11 +369,9 @@ def test_enhanced_ocr():
             assert enhanced_disabled.size == test_image.size  # Should not be changed
 
         print("[PASS] Enhanced OCR working")
-        return True
-
     except Exception as e:
         print(f"[FAIL] Enhanced OCR test failed: {e}")
-        return False
+        pytest.fail(f"Enhanced OCR test failed: {e}")
 
 
 @skip_on_ci

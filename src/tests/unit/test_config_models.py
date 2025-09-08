@@ -6,8 +6,6 @@ import json
 import tempfile
 from pathlib import Path
 
-import pytest
-
 from src.models.config import (
     DEBUG_MODE,
     DEFAULT_CONFIG_PATH,

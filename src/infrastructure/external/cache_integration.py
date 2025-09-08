@@ -8,7 +8,6 @@ import time
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-from ...domain.entities.translation import Translation
 from ...domain.value_objects.language import LanguagePair
 from ...utils.logger import logger
 

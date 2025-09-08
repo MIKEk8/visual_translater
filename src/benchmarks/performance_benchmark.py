@@ -5,14 +5,14 @@ Performance Benchmarks - Screen Translator v2.0
 """
 
 import json
+import queue
 import threading
 import time
-from typing import Any, Dict, List
 
 from src.services.container import DIContainer
 
 # Импорт компонентов для тестирования
-from src.services.task_queue import TaskPriority, TaskQueue
+from src.services.task_queue import TaskQueue
 from src.services.translation_cache import TranslationCache
 
 
@@ -41,8 +41,8 @@ class PerformanceBenchmark:
         print("🔍 Benchmarking TaskQueue...")
 
         # Создание очереди
-        queue = TaskQueue(num_workers=4)
-        queue.start()
+        queue_service = TaskQueue(num_workers=4)
+        queue_service.start()
 
         # Тест 1: Скорость добавления задач
         def dummy_task(x):
@@ -51,7 +51,7 @@ class PerformanceBenchmark:
         start = time.perf_counter()
         task_ids = []
         for i in range(1000):
-            task_id = queue.submit(dummy_task, args=(i,))
+            task_id = queue_service.submit(dummy_task, args=(i,))
             task_ids.append(task_id)
         submit_time = time.perf_counter() - start
 
@@ -67,7 +67,7 @@ class PerformanceBenchmark:
 
         while completed < len(task_ids) and (time.perf_counter() - start) < timeout:
             for task_id in task_ids:
-                if queue.get_task_status(task_id) == "completed":
+                if queue_service.get_task_status(task_id) == "completed":
                     completed += 1
             time.sleep(0.01)
 
@@ -78,7 +78,7 @@ class PerformanceBenchmark:
             "ops_per_sec": completed / execution_time,
         }
 
-        queue.stop()
+        queue_service.stop()
 
         print(f"   ✅ Submit 1000 tasks: {submit_time:.3f}s ({1000/submit_time:.1f} ops/sec)")
         print(
@@ -109,7 +109,7 @@ class PerformanceBenchmark:
         # Тест получения
         start = time.perf_counter()
         for i in range(1000):
-            service = container.get(f"service_{i}")
+            container.get(f"service_{i}")
         get_time = time.perf_counter() - start
 
         self.results["di_get_1000"] = {"duration": get_time, "ops_per_sec": 1000 / get_time}

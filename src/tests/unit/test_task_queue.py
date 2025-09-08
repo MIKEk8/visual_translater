@@ -1,7 +1,6 @@
 """Unit tests for task queue module"""
 
 import time
-from unittest.mock import MagicMock
 
 import pytest
 

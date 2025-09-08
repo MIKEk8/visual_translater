@@ -201,7 +201,7 @@ class StateStore:
     def reset_state(self, new_state: Optional[AppState] = None) -> None:
         """Reset state to initial or provided state."""
         with self._lock:
-            old_state = self._state
+            self._state
             self._state = new_state or AppState()
 
             # Clear history and add new initial state

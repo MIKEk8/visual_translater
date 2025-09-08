@@ -161,8 +161,6 @@ class MockToplevel(MockWidget):
 class MockFrame(MockWidget):
     """Mock для tkinter.Frame"""
 
-    pass
-
 
 class MockLabel(MockWidget):
     """Mock для tkinter.Label"""
@@ -248,7 +246,7 @@ class MockCanvas(MockWidget):
     def delete(self, *args):
         return self
 
-    def yview_scroll(self, number, what):
+    def yview_scroll(self, _number, _what):
         return self
 
     def configure(self, **kwargs):
@@ -263,7 +261,7 @@ class MockScrollbar(MockWidget):
     def __init__(self, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
 
-    def set(self, first, last):
+    def set(self, _first, _last):
         return self
 
 

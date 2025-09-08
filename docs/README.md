@@ -65,14 +65,17 @@ python main.py --debug
 
 ### Тестирование
 ```bash
-# Unit тесты
-python -m pytest src/tests/unit/ -v
+# Интеграционные тесты (по умолчанию через pytest config)
+wenv\Scripts\python.exe -m pytest -q
 
-# Интеграционные тесты
-python main.py --test
+# Явный запуск интеграционных
+wenv\Scripts\python.exe -m pytest -q src/tests/integration
 
-# Тесты с покрытием
-python -m pytest src/tests/ --cov=src --cov-report=html
+# Запуск unit-тестов вручную (наследие v1.x, могут требовать адаптации)
+wenv\Scripts\python.exe -m pytest -q src/tests/unit
+
+# Coverage
+wenv\Scripts\python.exe -m pytest --cov=src --cov-report=term-missing
 ```
 
 ### Code Quality

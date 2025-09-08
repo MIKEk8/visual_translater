@@ -4,7 +4,7 @@ Tests for TTS engine module.
 
 import threading
 import time
-from unittest.mock import MagicMock, Mock, patch
+from unittest.mock import Mock, patch
 
 import pytest
 
@@ -574,7 +574,7 @@ class TestTTSProcessor:
 
         # Test the thread function
         call_args = mock_thread.call_args
-        thread_target = call_args[1]["target"]
+        call_args[1]["target"]
         # thread_target()  # Execute the thread function - DISABLED to prevent hanging
 
         # Since we're not actually calling the thread function,

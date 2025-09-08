@@ -20,7 +20,7 @@ except ImportError:
     # Используем заглушку
     from src.utils.mock_gui import tk
 
-from typing import TYPE_CHECKING, Callable, Optional, Tuple
+from typing import TYPE_CHECKING, Callable, Optional
 
 from src.core.events import EventType, publish_event
 from src.core.screenshot_engine import ScreenshotEngine

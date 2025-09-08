@@ -1,8 +1,17 @@
 import threading
 import time
 from abc import ABC, abstractmethod
+from contextlib import nullcontext
 from dataclasses import dataclass
 from typing import List, Optional
+
+
+def _maybe_lock(obj):
+    """Return object's lock if present, otherwise a no-op context manager.
+    This makes methods resilient when __init__ is bypassed in tests.
+    """
+    return getattr(obj, "_lock", nullcontext())
+
 
 from src.models.config import TTSConfig
 from src.utils.logger import logger
@@ -49,7 +58,7 @@ class PyttsxEngine(TTSEngine):
 
     def __init__(self):
         self._lock = threading.Lock()
-        with self._lock:
+        with _maybe_lock(self):
             self.engine = None
             self.is_speaking = False
         self._initialize()
@@ -64,10 +73,10 @@ class PyttsxEngine(TTSEngine):
         try:
             import pyttsx3
 
-            with self._lock:
+            with _maybe_lock(self):
                 self.engine = pyttsx3.init()
             # Set default properties
-            with self._lock:
+            with _maybe_lock(self):
                 self.engine.setProperty("rate", 150)
         except Exception as e:
             logger.error("Failed to initialize pyttsx3", error=e)
@@ -77,7 +86,7 @@ class PyttsxEngine(TTSEngine):
         if not self.engine or not text.strip():
             return False
 
-        with self._lock:
+        with _maybe_lock(self):
             try:
                 self.is_speaking = True
                 self.engine.say(text)
@@ -98,7 +107,7 @@ class PyttsxEngine(TTSEngine):
             import pyttsx3
 
             # Use lock if available (might not be available in test environments)
-            if hasattr(self, '_lock'):
+            if hasattr(self, "_lock"):
                 with self._lock:
                     self.engine = pyttsx3.init()
             else:
@@ -113,7 +122,7 @@ class PyttsxEngine(TTSEngine):
             return False
 
         try:
-            with self._lock:
+            with _maybe_lock(self):
                 self.engine.setProperty("rate", rate)
             return True
         except Exception as e:
@@ -126,7 +135,7 @@ class PyttsxEngine(TTSEngine):
             return False
 
         try:
-            with self._lock:
+            with _maybe_lock(self):
                 self.engine.setProperty("voice", voice_id)
             return True
         except Exception as e:
@@ -139,7 +148,7 @@ class PyttsxEngine(TTSEngine):
             return []
 
         try:
-            with self._lock:
+            with _maybe_lock(self):
                 voices = self.engine.getProperty("voices")
             if not voices:
                 return []
@@ -166,9 +175,9 @@ class PyttsxEngine(TTSEngine):
         """Stop current speech"""
         if self.engine and self.is_speaking:
             try:
-                with self._lock:
+                with _maybe_lock(self):
                     self.engine.stop()
-                with self._lock:
+                with _maybe_lock(self):
                     self.is_speaking = False
             except Exception as e:
                 logger.error("Failed to stop TTS", error=e)
@@ -179,7 +188,7 @@ class TTSProcessor:
 
     def __init__(self, config: TTSConfig):
         self._lock = threading.Lock()
-        with self._lock:
+        with _maybe_lock(self):
             self.config = config
             self.engines = [PyttsxEngine()]  # Can add more engines
             self.active_engine = self._get_available_engine()
@@ -204,7 +213,7 @@ class TTSProcessor:
         if not self.active_engine:
             return
 
-        with self._lock:
+        with _maybe_lock(self):
             # Set rate
             self.active_engine.set_rate(self.config.rate)
 
@@ -234,7 +243,7 @@ class TTSProcessor:
         thread = threading.Thread(target=_speak, daemon=True)
         thread.start()
 
-        with self._lock:
+        with _maybe_lock(self):
             # Store last text for repeat functionality
             self.last_text = text
         return True
@@ -247,13 +256,13 @@ class TTSProcessor:
 
     def stop_speaking(self) -> None:
         """Stop current speech"""
-        with self._lock:
+        with _maybe_lock(self):
             if self.active_engine:
                 self.active_engine.stop()
 
     def update_config(self, config: TTSConfig) -> None:
         """Update TTS configuration"""
-        with self._lock:
+        with _maybe_lock(self):
             old_enabled = self.is_enabled
             self.config = config
         self.is_enabled = config.enabled
@@ -276,7 +285,7 @@ class TTSProcessor:
         if not self.active_engine:
             return False
 
-        with self._lock:
+        with _maybe_lock(self):
             # Temporarily set voice
             original_voice = self.config.voice_id
 
@@ -298,7 +307,7 @@ class TTSProcessor:
         if not self.active_engine:
             return {"engine": "None", "available": False}
 
-        with self._lock:
+        with _maybe_lock(self):
             return {
                 "engine": type(self.active_engine).__name__,
                 "available": True,

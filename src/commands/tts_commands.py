@@ -136,27 +136,27 @@ class QueueSpeechCommand(Command):
             self.speech_items = []
 
     def validate(self) -> bool:
-        """Validate speech queue command."""
+        """Validate speech queue command without excessive early returns."""
+        # Basic collection constraints
         if not self.speech_items:
             return False
-
         if len(self.speech_items) > 50:  # Max queue size
             return False
 
-        for item in self.speech_items:
+        def _is_valid_item(item: Dict[str, Any]) -> bool:
             if not isinstance(item, dict):
                 return False
-
-            if "text" not in item:
+            text = item.get("text", "")
+            if not isinstance(text, str):
                 return False
-
-            if not item["text"] or not item["text"].strip():
+            text_stripped = text.strip()
+            if not text_stripped:
                 return False
-
-            if len(item["text"]) > 2000:
+            if len(text_stripped) > 2000:
                 return False
+            return True
 
-        return True
+        return all(_is_valid_item(item) for item in self.speech_items)
 
     @property
     def total_items(self) -> int:

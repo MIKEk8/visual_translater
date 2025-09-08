@@ -19,9 +19,8 @@ from typing import Dict
 try:
     import keyboard
 except ImportError:
-    print(f"keyboard недоступен в данной среде")
+    print("keyboard недоступен в данной среде")
     # Используем mock
-    from src.utils.mock_keyboard import *
 
 import sounddevice as sd
 

@@ -2,8 +2,6 @@
 Screenshot validation.
 """
 
-from typing import List
-
 from ..dto.screenshot_dto import ScreenshotRequest
 from .validator_base import ValidationResult
 

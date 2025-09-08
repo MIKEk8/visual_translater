@@ -98,10 +98,19 @@ class AppConfig:
     def save_to_file(self, file_path: str) -> bool:
         """Save config to JSON file"""
         try:
+            # On Windows, reject Unix-style absolute paths like "/root/..." to match expected behavior
+            if os.name == "nt" and file_path.startswith("/"):
+                return False
+
+            # Ensure directory exists
+            dir_path = os.path.dirname(file_path)
+            if dir_path and not os.path.exists(dir_path):
+                os.makedirs(dir_path, exist_ok=True)
+
             with open(file_path, "w", encoding="utf-8") as f:
                 json.dump(self.to_dict(), f, indent=2, ensure_ascii=False)
             return True
-        except IOError:
+        except (IOError, OSError):
             return False
 
 

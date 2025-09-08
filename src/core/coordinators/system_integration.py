@@ -22,16 +22,18 @@ try:
 except ImportError:
     keyboard = None
     print("keyboard недоступен в данной среде")
-    
+
     # Create mock keyboard module for compatibility
     class MockKeyboard:
         def add_hotkey(self, *args, **kwargs):
             pass
+
         def remove_hotkey(self, *args, **kwargs):
             pass
+
         def is_pressed(self, *args, **kwargs):
             return False
-            
+
     keyboard = MockKeyboard()
     print("Mock keyboard модуль загружен")
 

@@ -6,46 +6,37 @@ No external dependencies, follows Clean Architecture principles
 from typing import Any
 
 
-class DomainId:
-    """Domain-specific identifier - no external dependencies"""
+class DomainId(str):
+    """Domain-specific identifier implemented as a string subclass.
 
-    def __init__(self, value: str):
+    Behaves like a standard string so it can be passed wherever a string is expected
+    (e.g., uuid.UUID()), while still providing a distinct type in the domain layer.
+    """
+
+    def __new__(cls, value: str):
         if not value or not isinstance(value, str):
             raise ValueError("ID must be non-empty string")
-        self._value = value.strip()
-        if not self._value:
+        normalized = value.strip()
+        if not normalized:
             raise ValueError("ID cannot be empty or whitespace")
+        return str.__new__(cls, normalized)
 
     @classmethod
     def generate(cls) -> "DomainId":
         """Generate new ID - implementation detail hidden"""
-        import random
-        import time
+        import uuid
 
-        timestamp = str(int(time.time() * 1000000))[-10:]
-        random_suffix = str(random.randint(100, 999))
-        return cls(f"id_{timestamp}_{random_suffix}")
+        return cls(str(uuid.uuid4()))
 
     @classmethod
     def from_string(cls, value: str) -> "DomainId":
         """Create from existing string"""
         return cls(value)
 
-    def __str__(self) -> str:
-        return self._value
-
     def __repr__(self) -> str:
-        return f"DomainId('{self._value}')"
-
-    def __eq__(self, other: Any) -> bool:
-        if not isinstance(other, DomainId):
-            return False
-        return self._value == other._value
-
-    def __hash__(self) -> int:
-        return hash(self._value)
+        return f"DomainId('{str(self)}')"
 
     @property
     def value(self) -> str:
         """Get the raw string value"""
-        return self._value
+        return str(self)

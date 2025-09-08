@@ -3,12 +3,11 @@ Real-time translation overlay for displaying results on screen.
 """
 
 import threading
-import time
 import tkinter as tk
 from dataclasses import dataclass
 from enum import Enum
 from tkinter import ttk
-from typing import Callable, Optional, Tuple
+from typing import Callable, Optional
 
 from src.models.translation import Translation
 from src.utils.logger import logger

@@ -241,7 +241,7 @@ class CircuitBreakerManager:
                     f"Circuit OPEN - last failure: {time.ctime(breaker.last_failure_time)}"
                 )
             elif breaker.state == CircuitState.HALF_OPEN:
-                unhealthy[name] = f"Circuit HALF_OPEN - testing recovery"
+                unhealthy[name] = "Circuit HALF_OPEN - testing recovery"
         return unhealthy
 
 

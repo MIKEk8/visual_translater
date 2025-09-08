@@ -41,7 +41,7 @@ class GoogleTranslationService(TranslationService):
 
             if result and result.text:
                 logger.info(
-                    f"Translation completed",
+                    "Translation completed",
                     source_lang=language_pair.source.code,
                     target_lang=target_lang,
                     text_length=len(text),

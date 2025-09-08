@@ -1,7 +1,6 @@
 import unittest
 from datetime import datetime, timedelta
-from typing import Any, Dict
-from unittest.mock import Mock, patch
+from unittest.mock import patch
 
 from src.models.translation import Translation
 from src.services.cache_service import TranslationCache

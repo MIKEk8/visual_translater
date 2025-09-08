@@ -5,9 +5,9 @@ Logging integration for infrastructure layer.
 import logging
 import sys
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Optional
 
-from ...utils.logger import logger as domain_logger
+# Domain logger import removed: not used in this module
 
 
 class InfrastructureLogger:

@@ -10,7 +10,6 @@ from src.domain.entities.screenshot import Screenshot
 from src.domain.services.translation_workflow import TranslationWorkflowService
 from src.domain.value_objects.coordinates import ScreenCoordinates
 from src.domain.value_objects.language import Language, LanguagePair
-from src.domain.value_objects.text import Text
 
 
 class TestTranslationWorkflowService:

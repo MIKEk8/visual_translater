@@ -40,19 +40,49 @@ This is **Screen Translator v2.0** - a completely refactored Windows desktop app
 
 ## Architecture Overview
 
-### 🏗️ **Modular Structure**
+### 🏗️ **Actual Modular Structure (Updated 2025-09-08)**
 ```
 src/
-├── core/           # Business logic engines
-├── ui/             # User interface components  
-├── services/       # Infrastructure services
-├── models/         # Data models and entities
-├── utils/          # Utility modules
-├── tests/          # Unit and integration tests
-tmp/                # Temporary scripts created by Claude
-├── diagnose_*.py   # Diagnostic utilities
-├── fix_*.py        # Automated fixes
-└── test_*.py       # Test utilities
+├── core/                 # Business logic engines & coordination
+│   ├── coordinators/     # Application coordination layer
+│   ├── interfaces.py     # Abstract interfaces (NEW - breaks circular deps)
+│   ├── screenshot_engine.py
+│   ├── ocr_engine.py
+│   ├── translation_engine.py
+│   └── application.py
+├── ui/                   # User interface components  
+│   ├── tray_manager.py   # Implements ITrayManager interface
+│   ├── settings_window.py
+│   └── history_window.py
+├── services/             # Infrastructure services
+│   ├── container.py      # Unified DI container (consolidated)
+│   ├── config_manager.py # Observer pattern implementation
+│   ├── hotkey_service.py
+│   └── cache_service.py
+├── models/               # Data models and entities
+│   ├── config.py         # Typed configuration with Pydantic
+│   ├── translation.py
+│   └── screenshot_data.py
+├── utils/                # Utility modules
+├── api/                  # Web API layer (REST endpoints)
+├── application/          # Application service layer
+├── domain/               # Domain entities and value objects
+├── infrastructure/       # External service adapters
+├── handlers/             # Command/Query handlers (CQRS)
+├── queries/              # Query layer implementation
+├── commands/             # Command layer implementation
+├── security/             # Security services (auth, encryption)
+├── state/                # State management (Redux-like)
+├── plugins/              # Plugin architecture
+│   ├── builtin/          # Built-in plugins
+│   └── base_plugin.py
+└── tests/                # Comprehensive test suite
+    ├── unit/             # Unit tests (64 files)
+    └── integration/      # Integration tests
+tmp/                      # Temporary scripts created by Claude
+├── diagnose_*.py         # Diagnostic utilities
+├── fix_*.py              # Automated fixes
+└── test_*.py             # Test utilities
 ```
 
 ### 🔧 **Core Components**
@@ -66,13 +96,18 @@ tmp/                # Temporary scripts created by Claude
 
 #### **Services** (`src/services/`)
 - **`ConfigManager`** - Observer pattern config management
-- **`HotkeyManager`** - Global hotkey registration/management  
-- **`TranslationCache`** - LRU cache with TTL for translations
-- **`DIContainer`** - Dependency injection container
+- **`container.py`** - Unified DI container (consolidated from duplicate implementations)
+- **`hotkey_service.py`** - Global hotkey registration/management  
+- **`translation_cache.py`** - LRU cache with TTL for translations
+- **`cache_service.py`** - General purpose caching service
+- **`plugin_service.py`** - Plugin management service
 
 #### **UI Components** (`src/ui/`)
-- **`SettingsWindow`** - Tabbed settings interface with live updates
-- **`TrayManager`** - System tray with context menu
+- **`TrayManager`** - System tray with context menu (implements ITrayManager interface)
+- **`SettingsWindow`** - Tabbed settings interface with live updates  
+- **`HistoryWindow`** - Translation history management
+- **`TranslationOverlay`** - Text overlay display
+- **`LanguageSelector`** - Language selection components
 
 #### **Models** (`src/models/`)
 - **`AppConfig`** - Strongly typed configuration with validation
@@ -362,6 +397,20 @@ if exist "wenv\Scripts\activate.bat" (
 
 ## Key Design Patterns
 
+### **NEW: Interface-Based Architecture (2025-09-08)**
+Abstract interfaces break circular dependencies and enable loose coupling:
+```python
+# src/core/interfaces.py - NEW FILE
+class ITrayManager(ABC):
+    def show_notification(self, title: str, message: str, duration: int = 3) -> None: pass
+    def update_menu(self) -> None: pass
+    def shutdown(self) -> None: pass
+
+class IApplicationController(ABC):
+    def initialize(self) -> bool: pass
+    def process_screenshot_request(self, coordinates) -> None: pass
+```
+
 ### **Observer Pattern**
 Configuration changes notify all registered observers:
 ```python
@@ -374,23 +423,23 @@ config_manager.add_observer(hotkey_manager)
 config_manager.add_observer(tts_processor)
 ```
 
-### **Dependency Injection**
-Services registered in DI container for loose coupling:
+### **Dependency Injection** 
+**CONSOLIDATED**: Single DI container in `src/services/container.py`
 ```python
 # Service registration
 container.register_singleton(ConfigManager, ConfigManager)
 container.register_factory(OCRProcessor, create_ocr_processor)
 
-# Service consumption
+# Service consumption  
 config_manager = container.get(ConfigManager)
 ```
 
 ### **Strategy Pattern**
 Pluggable engines for OCR, Translation, TTS:
 ```python
-class OCREngine(ABC):
-    def extract_text(self, image: Image) -> Tuple[str, float]:
-        pass
+class IOCREngine(ABC):  # Now interface-based
+    def extract_text(self, image: Image) -> Tuple[str, float]: pass
+    def is_available(self) -> bool: pass
 
 # Multiple implementations: TesseractOCR, EasyOCR, etc.
 ```
@@ -713,3 +762,47 @@ quality_reports/
 2. **Для исправления**: `.\dev.bat quality fix`
 3. **Просмотр отчётов**: `quality_reports\summary.json`
 4. **CI/CD**: Все проверки возвращают exit code для автоматизации
+
+## Claude Code Work Tracking
+
+### Директория `/cc/` для ведения логов работы
+
+**🤖 ВАЖНО для Claude Code:** Используйте эту структуру для организации работы:
+
+#### **`/cc/tasks/`** - Лог выполненных задач и TODO списки:
+- Файлы с датой: `YYYY-MM-DD.md` для ежедневных задач
+- Формат записи: `## [HH:MM] Задача - Что сделано (кратко)`
+- Пример: `## [14:30] Исправить циклическую зависимость - Добавлен интерфейс ITrayManager`
+- TODO файлы: `TODO_<тема>.md` для выявленных проблем (не записывать TODO в код)
+
+#### **`/cc/docs/`** - Документация и заметки:
+- Архитектурные решения: `architecture_notes.md`
+- Паттерны и практики: `patterns.md`
+- Бизнес-логика: `business_logic.md`
+- Технические долги: `tech_debt.md`
+
+#### **`/cc/analysis/`** - Результаты анализа:
+- Метрики качества: `quality_metrics.md`
+- Анализ производительности: `performance_analysis.md`
+- Отчеты по рефакторингу: `refactoring_reports/`
+
+### Примеры использования:
+
+```bash
+# Создание дневного лога задач
+Write("/workspace/cc/tasks/2025-08-23.md", content="# Задачи 2025-08-23\n\n## [10:00] Архитектурный анализ...")
+
+# Документирование архитектурного решения
+Write("/workspace/cc/docs/architecture_notes.md", content="# Архитектурные решения\n\n## DI Container...")
+
+# Сохранение TODO для будущей работы
+Write("/workspace/cc/tasks/TODO_ui_refactoring.md", content="# TODO: Рефакторинг UI\n\n- [ ] Разбить SettingsWindow...")
+```
+
+### Правила ведения документации:
+
+1. **Всегда документируйте** важные архитектурные решения
+2. **Создавайте TODO файлы** для проблем, найденных при анализе
+3. **Ведите дневной лог** выполненных задач с временными метками
+4. **Группируйте информацию** по темам в отдельные файлы
+5. **НЕ добавляйте TODO** комментарии в код - используйте `/cc/tasks/`
