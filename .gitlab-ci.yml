@@ -24,7 +24,6 @@ cache:
     files:
       - requirements.txt
       - requirements-dev.txt
-      - pyproject.toml
   paths:
     - .cache/pip
     - .cache/pytest
