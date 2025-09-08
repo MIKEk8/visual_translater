@@ -49,17 +49,17 @@ validate-config:
   stage: validate
   image: python:3.11-slim
   script:
-    - echo "🔍 Validating project configuration..."
+    - echo "Validating project configuration..."
     - python --version
     - pip --version
-    - echo "✅ Python environment OK"
+    - echo "Python environment OK"
     - test -f requirements.txt
     - test -f pyproject.toml
-    - echo "✅ Configuration files validated"
-    - echo "📊 Project info:"
-    - echo "  - Name: Screen Translator v2.0"
-    - echo "  - Python: 3.8-3.13 support"
-    - echo "  - Architecture: Modular with DI and interfaces"
+    - echo "Configuration files validated"
+    - echo "Project info:"
+    - 'echo "Name: Screen Translator v2.0"'
+    - 'echo "Python: 3.8-3.13 support"'
+    - 'echo "Architecture: Modular with DI and interfaces"'
   except:
     - schedules
   tags:
