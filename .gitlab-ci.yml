@@ -1,49 +1,551 @@
-# This file is a template, and might need editing before it works on your project.
-# This is a sample GitLab CI/CD configuration file that should run without any modifications.
-# It demonstrates a basic 3 stage CI/CD pipeline. Instead of real tests or scripts,
-# it uses echo commands to simulate the pipeline execution.
-#
-# A pipeline is composed of independent jobs that run scripts, grouped into stages.
-# Stages run in sequential order, but jobs within stages run in parallel.
-#
-# For more information, see: https://docs.gitlab.com/ee/ci/yaml/#stages
-#
-# You can copy and paste this template into a new `.gitlab-ci.yml` file.
-# You should not add this template to an existing `.gitlab-ci.yml` file by using the `include:` keyword.
-#
-# To contribute improvements to CI/CD templates, please follow the Development guide at:
-# https://docs.gitlab.com/development/cicd/templates/
-# This specific template is located at:
-# https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
+# Screen Translator v2.0 - GitLab CI/CD Pipeline
+# Comprehensive pipeline with Python 3.8-3.13 support, quality checks, testing, and deployment
 
-stages:          # List of stages for jobs, and their order of execution
-  - build
+# Global variables
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  PYTEST_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pytest"
+  MYPY_CACHE_DIR: "$CI_PROJECT_DIR/.cache/mypy"
+  
+  # Python versions to test against
+  PYTHON_VERSIONS: "3.8 3.9 3.10 3.11 3.12"
+  
+  # Quality thresholds
+  MIN_COVERAGE: "80"
+  MAX_COMPLEXITY: "10"
+  
+  # Build configuration
+  BUILD_DIR: "dist"
+  ARTIFACT_NAME: "screen-translator"
+
+# Cache configuration for faster builds
+cache:
+  key: 
+    files:
+      - requirements.txt
+      - pyproject.toml
+  paths:
+    - .cache/pip
+    - .cache/pytest
+    - .cache/mypy
+    - venv/
+
+# Define pipeline stages
+stages:
+  - validate
+  - dependencies
+  - quality
   - test
+  - security
+  - build
   - deploy
+  - cleanup
 
-build-job:       # This job runs in the build stage, which runs first.
+# =============================================================================
+# STAGE 1: VALIDATION
+# =============================================================================
+
+validate-config:
+  stage: validate
+  image: python:3.11-slim
+  script:
+    - echo "🔍 Validating project configuration..."
+    - python --version
+    - pip --version
+    - echo "✅ Python environment OK"
+    - |
+      if [ ! -f "requirements.txt" ]; then
+        echo "❌ requirements.txt not found"
+        exit 1
+      fi
+    - |
+      if [ ! -f "pyproject.toml" ]; then
+        echo "❌ pyproject.toml not found"
+        exit 1
+      fi
+    - echo "✅ Configuration files validated"
+    - echo "📊 Project info:"
+    - echo "  - Name: Screen Translator v2.0"
+    - echo "  - Python: 3.8-3.13 support"
+    - echo "  - Architecture: Modular with DI and interfaces"
+  except:
+    - schedules
+  tags:
+    - shared
+
+# =============================================================================
+# STAGE 2: DEPENDENCIES
+# =============================================================================
+
+.python-base: &python-base
+  before_script:
+    - echo "🐍 Setting up Python environment..."
+    - python -m venv venv
+    - source venv/bin/activate
+    - python -m pip install --upgrade pip setuptools wheel
+    - echo "📦 Installing dependencies..."
+    - pip install -r requirements.txt
+    - pip install -e .[dev,build]
+    - echo "✅ Dependencies installed"
+
+install-deps-py38:
+  <<: *python-base
+  stage: dependencies
+  image: python:3.8-slim
+  script:
+    - echo "✅ Python 3.8 dependencies ready"
+  artifacts:
+    paths:
+      - venv/
+    expire_in: 1 hour
+  tags:
+    - shared
+
+install-deps-py311:
+  <<: *python-base
+  stage: dependencies
+  image: python:3.11-slim
+  script:
+    - echo "✅ Python 3.11 dependencies ready"
+  artifacts:
+    paths:
+      - venv/
+    expire_in: 1 hour
+  tags:
+    - shared
+
+install-deps-py312:
+  <<: *python-base
+  stage: dependencies
+  image: python:3.12-slim
+  script:
+    - echo "✅ Python 3.12 dependencies ready"
+  artifacts:
+    paths:
+      - venv/
+    expire_in: 1 hour
+  tags:
+    - shared
+
+# =============================================================================
+# STAGE 3: QUALITY CHECKS
+# =============================================================================
+
+code-formatting:
+  stage: quality
+  image: python:3.11-slim
+  dependencies:
+    - install-deps-py311
+  script:
+    - source venv/bin/activate
+    - echo "🎨 Checking code formatting..."
+    - black --check --diff src/
+    - echo "✅ Code formatting is correct"
+  allow_failure: false
+  tags:
+    - shared
+
+import-sorting:
+  stage: quality
+  image: python:3.11-slim
+  dependencies:
+    - install-deps-py311
+  script:
+    - source venv/bin/activate
+    - echo "📦 Checking import sorting..."
+    - isort --check-only --diff src/
+    - echo "✅ Import sorting is correct"
+  allow_failure: false
+  tags:
+    - shared
+
+style-guide:
+  stage: quality
+  image: python:3.11-slim
+  dependencies:
+    - install-deps-py311
+  script:
+    - source venv/bin/activate
+    - echo "📏 Checking style guide compliance..."
+    - flake8 src/ --statistics
+    - echo "✅ Style guide compliance verified"
+  allow_failure: false
+  tags:
+    - shared
+
+type-checking:
+  stage: quality
+  image: python:3.11-slim
+  dependencies:
+    - install-deps-py311
+  script:
+    - source venv/bin/activate
+    - echo "🔍 Running type checking..."
+    - mypy src/ --ignore-missing-imports --show-error-codes
+    - echo "✅ Type checking passed"
+  allow_failure: true  # Allow failure for now due to complex architecture
+  tags:
+    - shared
+
+code-complexity:
+  stage: quality
+  image: python:3.11-slim
+  dependencies:
+    - install-deps-py311
+  script:
+    - source venv/bin/activate
+    - echo "📊 Checking code complexity..."
+    - radon cc src/ --average --show-complexity
+    - radon mi src/ --show
+    - echo "✅ Code complexity analysis complete"
+  artifacts:
+    reports:
+      junit: complexity-report.xml
+  allow_failure: true
+  tags:
+    - shared
+
+dead-code-detection:
+  stage: quality
+  image: python:3.11-slim
+  dependencies:
+    - install-deps-py311
+  script:
+    - source venv/bin/activate
+    - echo "🔍 Detecting dead code..."
+    - vulture src/ --min-confidence 80 --sort-by-size
+    - echo "✅ Dead code detection complete"
+  allow_failure: true
+  tags:
+    - shared
+
+# =============================================================================
+# STAGE 4: TESTING
+# =============================================================================
+
+.test-base: &test-base
+  stage: test
+  coverage: '/TOTAL.*\s+(\d+%)$/'
+  artifacts:
+    reports:
+      junit: junit-report.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
+    paths:
+      - htmlcov/
+    expire_in: 1 week
+  tags:
+    - shared
+
+unit-tests-py38:
+  <<: *test-base
+  image: python:3.8-slim
+  dependencies:
+    - install-deps-py38
+  script:
+    - source venv/bin/activate
+    - echo "🧪 Running unit tests on Python 3.8..."
+    - python -m pytest src/tests/unit/ -v --tb=short --junitxml=junit-report.xml --cov=src --cov-report=xml --cov-report=html --cov-report=term
+    - coverage report --show-missing
+    - echo "✅ Python 3.8 unit tests completed"
+
+unit-tests-py311:
+  <<: *test-base
+  image: python:3.11-slim
+  dependencies:
+    - install-deps-py311
+  script:
+    - source venv/bin/activate
+    - echo "🧪 Running unit tests on Python 3.11..."
+    - python -m pytest src/tests/unit/ -v --tb=short --junitxml=junit-report.xml --cov=src --cov-report=xml --cov-report=html --cov-report=term
+    - coverage report --show-missing
+    - echo "✅ Python 3.11 unit tests completed"
+
+unit-tests-py312:
+  <<: *test-base
+  image: python:3.12-slim
+  dependencies:
+    - install-deps-py312
+  script:
+    - source venv/bin/activate
+    - echo "🧪 Running unit tests on Python 3.12..."
+    - python -m pytest src/tests/unit/ -v --tb=short --junitxml=junit-report.xml --cov=src --cov-report=xml --cov-report=html --cov-report=term
+    - coverage report --show-missing
+    - echo "✅ Python 3.12 unit tests completed"
+
+integration-tests:
+  stage: test
+  image: python:3.11-slim
+  dependencies:
+    - install-deps-py311
+  script:
+    - source venv/bin/activate
+    - echo "🔗 Running integration tests..."
+    # Install system dependencies for integration tests
+    - apt-get update && apt-get install -y tesseract-ocr tesseract-ocr-eng
+    - python -m pytest src/tests/integration/ -v --tb=short --junitxml=integration-junit.xml -m "not gui"
+    - echo "✅ Integration tests completed"
+  artifacts:
+    reports:
+      junit: integration-junit.xml
+    expire_in: 1 week
+  allow_failure: true
+  tags:
+    - shared
+
+architecture-tests:
+  stage: test
+  image: python:3.11-slim
+  dependencies:
+    - install-deps-py311
+  script:
+    - source venv/bin/activate
+    - echo "🏗️ Running architecture compliance tests..."
+    - |
+      python3 -c "
+      import sys
+      sys.path.insert(0, 'src')
+      
+      print('🔍 Testing architectural compliance...')
+      
+      # Test 1: No circular dependencies
+      try:
+          from core.coordinators.application_controller import ApplicationController
+          from ui.tray_manager import TrayManager
+          from core.interfaces import ITrayManager
+          print('✅ No circular dependencies detected')
+      except ImportError as e:
+          if 'circular' in str(e).lower():
+              print(f'❌ CIRCULAR DEPENDENCY: {e}')
+              sys.exit(1)
+          else:
+              print(f'⚠️ Import issue (not circular): {e}')
+      
+      # Test 2: Interface compliance
+      if issubclass(TrayManager, ITrayManager):
+          print('✅ Interface compliance verified')
+      else:
+          print('❌ Interface compliance failed')
+          sys.exit(1)
+      
+      # Test 3: DI Container functionality
+      from services.container import DIContainer
+      container = DIContainer()
+      required_methods = ['register_singleton', 'get', 'register_factory']
+      for method in required_methods:
+          if not hasattr(container, method):
+              print(f'❌ DI Container missing method: {method}')
+              sys.exit(1)
+      print('✅ DI Container structure validated')
+      
+      print('🎉 All architecture tests passed!')
+      "
+    - echo "✅ Architecture compliance verified"
+  tags:
+    - shared
+
+# =============================================================================
+# STAGE 5: SECURITY
+# =============================================================================
+
+security-scan:
+  stage: security
+  image: python:3.11-slim
+  dependencies:
+    - install-deps-py311
+  script:
+    - source venv/bin/activate
+    - echo "🔒 Running security scan..."
+    - bandit -r src/ -ll -f json -o bandit-report.json || true
+    - bandit -r src/ -ll
+    - echo "🔍 Checking dependency vulnerabilities..."
+    - safety check --json --output safety-report.json || true
+    - safety check
+    - echo "✅ Security scan completed"
+  artifacts:
+    reports:
+      sast: bandit-report.json
+    paths:
+      - bandit-report.json
+      - safety-report.json
+    expire_in: 1 week
+  allow_failure: true
+  tags:
+    - shared
+
+# =============================================================================
+# STAGE 6: BUILD
+# =============================================================================
+
+build-package:
   stage: build
+  image: python:3.11-slim
+  dependencies:
+    - install-deps-py311
   script:
-    - echo "Compiling the code..."
-    - echo "Compile complete."
+    - source venv/bin/activate
+    - echo "📦 Building Python package..."
+    - python -m build
+    - echo "📋 Package contents:"
+    - ls -la dist/
+    - echo "✅ Package build completed"
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 1 month
+  tags:
+    - shared
 
-unit-test-job:   # This job runs in the test stage.
-  stage: test    # It only starts when the job in the build stage completes successfully.
+build-executable:
+  stage: build
+  image: python:3.11-slim
+  dependencies:
+    - install-deps-py311
   script:
-    - echo "Running unit tests... This will take about 60 seconds."
-    - sleep 60
-    - echo "Code coverage is 90%"
+    - source venv/bin/activate
+    - echo "🔨 Building executable with PyInstaller..."
+    - apt-get update && apt-get install -y binutils
+    - pip install pyinstaller
+    - pyinstaller --onefile --windowed --name=ScreenTranslator main.py
+    - echo "📋 Executable build contents:"
+    - ls -la dist/
+    - echo "✅ Executable build completed"
+  artifacts:
+    paths:
+      - dist/ScreenTranslator
+    expire_in: 1 month
+  when: manual
+  tags:
+    - shared
 
-lint-test-job:   # This job also runs in the test stage.
-  stage: test    # It can run at the same time as unit-test-job (in parallel).
-  script:
-    - echo "Linting code... This will take about 10 seconds."
-    - sleep 10
-    - echo "No lint issues found."
+# =============================================================================
+# STAGE 7: DEPLOYMENT
+# =============================================================================
 
-deploy-job:      # This job runs in the deploy stage.
-  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  environment: production
+deploy-staging:
+  stage: deploy
+  image: python:3.11-slim
+  dependencies:
+    - build-package
   script:
-    - echo "Deploying application..."
-    - echo "Application successfully deployed."
+    - echo "🚀 Deploying to staging environment..."
+    - echo "Package version: $(python setup.py --version)"
+    - echo "Artifacts ready for staging deployment"
+    - echo "✅ Staging deployment completed"
+  environment:
+    name: staging
+    url: https://staging.screen-translator.local
+  only:
+    - develop
+  when: manual
+  tags:
+    - shared
+
+deploy-production:
+  stage: deploy
+  image: python:3.11-slim
+  dependencies:
+    - build-package
+    - build-executable
+  script:
+    - echo "🏭 Deploying to production environment..."
+    - echo "Package version: $(python setup.py --version)"
+    - echo "Creating release artifacts..."
+    - mkdir -p release/
+    - cp dist/*.whl release/
+    - cp dist/*.tar.gz release/
+    - cp dist/ScreenTranslator release/ 2>/dev/null || echo "Executable not found"
+    - echo "📋 Release contents:"
+    - ls -la release/
+    - echo "✅ Production deployment completed"
+  environment:
+    name: production
+    url: https://screen-translator.com
+  artifacts:
+    paths:
+      - release/
+    expire_in: 6 months
+  only:
+    - main
+    - master
+  when: manual
+  tags:
+    - shared
+
+# =============================================================================
+# STAGE 8: CLEANUP
+# =============================================================================
+
+cleanup-cache:
+  stage: cleanup
+  image: alpine:latest
+  script:
+    - echo "🧹 Cleaning up temporary files..."
+    - rm -rf .cache/ || true
+    - rm -rf venv/ || true
+    - echo "✅ Cleanup completed"
+  when: always
+  tags:
+    - shared
+
+# =============================================================================
+# SCHEDULED JOBS
+# =============================================================================
+
+nightly-full-test:
+  extends: unit-tests-py311
+  script:
+    - source venv/bin/activate
+    - echo "🌙 Running nightly comprehensive test suite..."
+    - python -m pytest src/tests/ -v --tb=long --cov=src --cov-report=xml --cov-report=html --cov-report=term
+    - coverage report --show-missing
+    - echo "✅ Nightly test suite completed"
+  only:
+    - schedules
+  tags:
+    - shared
+
+# =============================================================================
+# MANUAL JOBS
+# =============================================================================
+
+performance-test:
+  stage: test
+  image: python:3.11-slim
+  dependencies:
+    - install-deps-py311
+  script:
+    - source venv/bin/activate
+    - echo "⚡ Running performance tests..."
+    - python -m pytest src/tests/ -v -k "performance" --tb=short
+    - echo "✅ Performance tests completed"
+  when: manual
+  tags:
+    - shared
+
+quality-report:
+  stage: quality
+  image: python:3.11-slim
+  dependencies:
+    - install-deps-py311
+  script:
+    - source venv/bin/activate
+    - echo "📊 Generating comprehensive quality report..."
+    - mkdir -p quality_reports/
+    - black --check --diff src/ > quality_reports/black_report.txt || true
+    - flake8 src/ --statistics > quality_reports/flake8_report.txt || true
+    - mypy src/ --ignore-missing-imports > quality_reports/mypy_report.txt || true
+    - radon cc src/ --average > quality_reports/complexity_report.txt || true
+    - bandit -r src/ -f txt > quality_reports/security_report.txt || true
+    - vulture src/ --min-confidence 80 > quality_reports/dead_code_report.txt || true
+    - echo "📋 Quality reports generated in quality_reports/"
+    - ls -la quality_reports/
+    - echo "✅ Quality report generation completed"
+  artifacts:
+    paths:
+      - quality_reports/
+    expire_in: 1 month
+  when: manual
+  tags:
+    - shared

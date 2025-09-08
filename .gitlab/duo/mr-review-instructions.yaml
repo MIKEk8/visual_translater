@@ -1,6 +1,201 @@
 instructions:
   default: |
-    - Отвечай на русском
-    - Проверяй, чтобы код соответствовал нашим стандартам форматирования.
-    - Указывай на дублирование кода.
-    - Если видишь магические числа, предлагай вынести их в константы.
+    # Screen Translator v2.0 - GitLab Duo AI Code Review Instructions
+    # Специализированные инструкции для архитектуры проекта
+    
+    ## 🎯 Общие Принципы
+    - **Отвечай на русском языке** для всех комментариев
+    - **Будь конструктивным** - предлагай решения, не только указывай проблемы
+    - **Приоритизируй критические проблемы** над стилистическими
+    - **Учитывай контекст проекта** - Screen Translator v2.0 с модульной архитектурой
+    
+    ## 🏗️ АРХИТЕКТУРНЫЕ ТРЕБОВАНИЯ (КРИТИЧНЫЕ)
+    
+    ### **Circular Dependencies - БЛОКИРУЮЩИЕ ОШИБКИ**
+    - ❌ **ЗАПРЕЩЕНО**: прямые imports между core/coordinators и ui/
+    - ❌ **ЗАПРЕЩЕНО**: `from src.ui.tray_manager import TrayManager` в core/
+    - ✅ **ТРЕБУЕТСЯ**: использование interfaces из `src/core/interfaces.py`
+    - **Пример правильного кода**:
+      ```python
+      # ❌ НЕПРАВИЛЬНО:
+      from src.ui.tray_manager import TrayManager
+      
+      # ✅ ПРАВИЛЬНО:
+      from ..interfaces import ITrayManager
+      ```
+    
+    ### **Interface Compliance - ОБЯЗАТЕЛЬНО**
+    - **Проверяй**, что новые классы реализуют соответствующие интерфейсы
+    - **Требуй** type hints с интерфейсами вместо конкретных классов
+    - **Пример**:
+      ```python
+      # ❌ НЕПРАВИЛЬНО:
+      def __init__(self, tray_manager: TrayManager):
+      
+      # ✅ ПРАВИЛЬНО:
+      def __init__(self, tray_manager: ITrayManager):
+      ```
+    
+    ### **Dependency Injection Patterns**
+    - **Проверяй** использование единого DI контейнера `src/services/container.py`
+    - ❌ **ЗАПРЕЩЕНО**: создание дублирующих DI контейнеров
+    - ✅ **ТРЕБУЕТСЯ**: использование `container.get()` для получения сервисов
+    - **Service Locator anti-pattern** - указывай и предлагай constructor injection
+    
+    ## 🔒 БЕЗОПАСНОСТЬ - ВЫСОКИЙ ПРИОРИТЕТ
+    
+    ### **XML Processing**
+    - ❌ **ЗАПРЕЩЕНО**: `import xml.etree.ElementTree` без fallback
+    - ✅ **ТРЕБУЕТСЯ**: использование `defusedxml` для XML парсинга
+    - **Пример безопасного кода**:
+      ```python
+      try:
+          import defusedxml.ElementTree as ET
+      except ImportError:
+          import warnings
+          import xml.etree.ElementTree as ET
+          warnings.warn("defusedxml not available. XML may be vulnerable")
+      ```
+    
+    ### **Dependency Security**
+    - **Проверяй** version pinning в requirements.txt
+    - **Указывай** на использование устаревших или уязвимых зависимостей
+    - **Требуй** conditional dependencies для Python version compatibility
+    
+    ### **Input Validation**
+    - **Проверяй** валидацию пользовательского ввода (coordinates, file paths)
+    - **Требуй** sanitization для данных OCR и translation
+    - **Указывай** на отсутствие bounds checking в coordinate validation
+    
+    ## 🧪 КАЧЕСТВО КОДА
+    
+    ### **Стандарты Форматирования**
+    - **Black**: line length = 100 characters
+    - **isort**: profile = "black" with trailing commas
+    - **Flake8**: соответствие настройкам в pyproject.toml
+    - **Указывай** конкретные команды для исправления: `black src/`, `isort src/`
+    
+    ### **Type Hints - СТРОГО**
+    - **Требуй** полную типизацию для всех public методов
+    - **Проверяй** использование generics для контейнеров
+    - **Указывай** на отсутствие return type annotations
+    - **Пример**:
+      ```python
+      # ❌ НЕПРАВИЛЬНО:
+      def process_screenshot(self, coordinates):
+      
+      # ✅ ПРАВИЛЬНО:
+      def process_screenshot(self, coordinates: Tuple[int, int, int, int]) -> Optional[ScreenshotData]:
+      ```
+    
+    ### **Error Handling**
+    - **Проверяй** graceful degradation при недоступности зависимостей
+    - **Требуй** specific exception types вместо bare `except:`
+    - **Указывай** на отсутствие cleanup в finally blocks
+    - **Logging**: требуй structured logging с контекстом
+    
+    ## 🎯 SCREEN TRANSLATOR СПЕЦИФИЧНЫЕ ПАТТЕРНЫ
+    
+    ### **Configuration Management**
+    - **Observer Pattern**: проверяй правильную реализацию `ConfigObserver`
+    - **Требуй** thread-safe operations для config updates
+    - **Проверяй** proper cleanup observers при shutdown
+    
+    ### **Threading Patterns**
+    - **OCR Processing**: должен быть в background thread
+    - **TTS Operations**: не блокировать main thread  
+    - **Screenshot Capture**: thread-safe concurrent access
+    - **Указывай** на race conditions в shared state
+    
+    ### **Resource Management**
+    - **Image Objects**: требуй explicit `.close()` для PIL Images
+    - **TTS Engine**: проверяй cleanup при shutdown
+    - **Translation Cache**: указывай на potential memory leaks
+    - **Пример**:
+      ```python
+      # ✅ ПРАВИЛЬНО:
+      try:
+          image = ImageGrab.grab()
+          # process image
+      finally:
+          image.close()  # ОБЯЗАТЕЛЬНО!
+      ```
+    
+    ### **Plugin Architecture** 
+    - **Base Plugin**: новые плагины должны наследовать от `BasePlugin`
+    - **Plugin Manager**: проверяй proper registration/unregistration
+    - **Interface Compliance**: плагины должны реализовать required interfaces
+    
+    ## 🚀 ПРОИЗВОДИТЕЛЬНОСТЬ
+    
+    ### **Memory Management**
+    - **Указывай** на potential memory leaks в image processing
+    - **Проверяй** efficient caching strategies
+    - **LRU Cache**: правильная настройка TTL и размеров
+    - **Batch Processing**: оптимизация concurrent operations
+    
+    ### **I/O Operations**
+    - **File Operations**: предлагай async/await где applicable
+    - **Network Requests**: timeout configuration и retry logic
+    - **Database/Cache Access**: connection pooling patterns
+    
+    ## 📋 ТЕСТИРОВАНИЕ
+    
+    ### **Test Coverage**
+    - **Требуй** unit tests для новых public методов
+    - **Проверяй** mock strategies для external dependencies
+    - **Architecture Tests**: добавляй тесты для новых interfaces
+    - **Integration Tests**: проверяй end-to-end workflows
+    
+    ### **Test Quality**
+    - ❌ **ЗАПРЕЩЕНО**: `return True/False` в test functions
+    - ✅ **ТРЕБУЕТСЯ**: proper assertions и `pytest.fail()` для errors
+    - **Mock Objects**: правильное использование для GUI components
+    
+    ## 🏷️ DOCUMENTATION
+    
+    ### **Code Comments**
+    - **Docstrings**: Google style для всех public методов
+    - **Type Documentation**: сложные type hints требуют пояснений  
+    - **Architecture Decisions**: документировать в коде или отдельно
+    
+    ### **CLAUDE.md Updates**
+    - **Проверяй** актуальность архитектурной документации
+    - **Требуй** updates при изменении module structure
+    - **Interface Changes**: документировать breaking changes
+    
+    ## ❗ КРИТИЧЕСКИЕ АНТИ-ПАТТЕРНЫ
+    
+    ### **Немедленно Отклоняй MR с:**
+    - Circular dependencies между модулями
+    - Direct UI imports в core/coordinators 
+    - Дублирование DI контейнеров
+    - XML parsing без security considerations
+    - Отсутствие error handling для external dependencies
+    - Memory leaks в image processing
+    - Blocking operations в main thread
+    - Hardcoded secrets или API keys
+    
+    ### **Строго Требуй Исправления:**
+    - Missing type hints для public API
+    - Нарушение interface contracts
+    - Отсутствие tests для новой функциональности
+    - Неправильный cleanup в resource management
+    - Performance regressions в core operations
+    
+    ## 🎉 ПООЩРЯЙ И ОДОБРЯЙ:
+    - Использование dependency injection
+    - Proper interface implementations
+    - Comprehensive error handling
+    - Performance optimizations
+    - Security improvements
+    - Clean, readable code
+    - Good test coverage
+    
+    ## 💡 ПОЛЕЗНЫЕ ССЫЛКИ В КОММЕНТАРИЯХ:
+    - Architecture: `/workspace/CLAUDE.md`
+    - Interfaces: `/workspace/src/core/interfaces.py`
+    - Quality Tools: `.venv/bin/python build.py quality`
+    - Testing: `.venv/bin/python -m pytest src/tests/`
+    
+    **Помни**: Screen Translator v2.0 - это высококачественный проект с чистой архитектурой. Поддерживай эти стандарты!
