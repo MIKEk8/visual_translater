@@ -39,7 +39,7 @@ except ImportError:
 
 from src.core.events import EventType, get_event_bus, publish_event
 from src.services.task_queue import get_task_queue
-from src.ui.tray_manager import TrayManager
+from ..interfaces import ITrayManager
 from src.utils.logger import logger
 
 if TYPE_CHECKING:
@@ -55,7 +55,7 @@ class SystemIntegration:
         self,
         root: "tk.Tk",
         tts_processor: Optional["TTSProcessor"] = None,
-        tray_manager: Optional[TrayManager] = None,
+        tray_manager: Optional[ITrayManager] = None,
     ):
         self.root = root
         self.tts_processor = tts_processor
