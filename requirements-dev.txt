@@ -21,7 +21,7 @@ flake8>=6.0.0; python_version >= '3.9'
 pylint>=2.15.0,<3.0.0; python_version == '3.8'
 pylint>=3.0.0; python_version >= '3.9'
 bandit>=1.7.0
-safety>=2.3.0,<3.0.0; python_version == '3.8' 
+safety>=2.3.0,<3.0.0; python_version == '3.8'
 safety>=3.0.0; python_version >= '3.9'
 radon>=5.1.0,<6.0.0; python_version == '3.8'
 radon>=6.0.0; python_version >= '3.9'
