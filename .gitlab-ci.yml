@@ -193,6 +193,7 @@ code-complexity:
   artifacts:
     reports:
       junit: complexity-report.xml
+    expire_in: 1 week
   allow_failure: true
   tags:
     - shared
@@ -376,6 +377,7 @@ build-executable:
       - dist/ScreenTranslator
     expire_in: 1 month
   when: manual
+  allow_failure: true
   tags:
     - shared
 
@@ -399,6 +401,7 @@ deploy-staging:
   only:
     - develop
   when: manual
+  allow_failure: true
   tags:
     - shared
 
@@ -429,6 +432,7 @@ deploy-production:
     - main
     - master
   when: manual
+  allow_failure: true
   tags:
     - shared
 
@@ -454,6 +458,7 @@ cleanup-cache:
 
 nightly-full-test:
   extends: unit-tests-py311
+  image: python:3.11-slim
   script:
     - source venv/bin/activate
     - echo "🌙 Running nightly comprehensive test suite..."
@@ -480,6 +485,7 @@ performance-test:
     - python -m pytest src/tests/ -v -k "performance" --tb=short
     - echo "✅ Performance tests completed"
   when: manual
+  allow_failure: true
   tags:
     - shared
 
@@ -506,5 +512,6 @@ quality-report:
       - quality_reports/
     expire_in: 1 month
   when: manual
+  allow_failure: true
   tags:
     - shared

@@ -27,7 +27,7 @@ keywords = ["translation", "ocr", "tts", "screen-capture", "desktop"]
 requires-python = ">=3.8"
 dependencies = [
     "Pillow>=10.0.0",
-    "keyboard>=0.13.5",
+    "pynput>=1.7.6",
     "pystray>=0.19.4",
     "pytesseract>=0.3.10",
     "googletrans==4.0.0rc1",
