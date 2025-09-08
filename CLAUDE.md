@@ -689,6 +689,25 @@ def _get_available_audio_devices(self):
 ✅ **Выбор аудиоустройства**: Пользователь может выбрать конкретное устройство вывода для TTS  
 ✅ **Стабильность**: Graceful обработка отсутствия sounddevice библиотеки
 
+## **📦 Структура зависимостей для CI/CD**
+
+**Для решения проблем совместимости с Linux CI созданы отдельные файлы:**
+
+- **`requirements.txt`** - Production зависимости с условными версиями для Python 3.8-3.13
+- **`requirements-dev.txt`** - Development зависимости для CI/CD (без platform-specific проблем)  
+- **`pyproject.toml`** - Windows development зависимости (pynput вместо keyboard)
+
+**🚨 В CI НЕ используется `pip install -e .[dev]` чтобы избежать проблем с evdev на Linux!**
+
+```bash
+# CI установка (правильно):
+pip install -r requirements.txt
+pip install -r requirements-dev.txt
+
+# Локальная Windows разработка (правильно):
+pip install -e .[dev,build]
+```
+
 ## **🔍 Интегрированные Инструменты Качества Кода**
 
 ### **⚠️ ОБЯЗАТЕЛЬНО: Все команды используют venv автоматически!**

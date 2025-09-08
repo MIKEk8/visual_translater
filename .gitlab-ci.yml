@@ -23,6 +23,7 @@ cache:
   key: 
     files:
       - requirements.txt
+      - requirements-dev.txt
       - pyproject.toml
   paths:
     - .cache/pip
@@ -77,7 +78,7 @@ validate-config:
     - python -m pip install --upgrade pip setuptools wheel
     - echo "📦 Installing dependencies..."
     - pip install -r requirements.txt
-    - pip install -e ".[dev,build]"
+    - pip install -r requirements-dev.txt
     - echo "✅ Dependencies installed"
 
 install-deps-py38:
