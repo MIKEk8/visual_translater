@@ -118,6 +118,24 @@ class PluginService(ConfigObserver):
 
         return None
 
+    def get_active_plugin(self, plugin_type: PluginType) -> Optional[str]:
+        """
+        Get the name of the active plugin for the specified type.
+
+        Args:
+            plugin_type: The plugin type to get active plugin for
+
+        Returns:
+            Name of active plugin or None if no active plugin found
+        """
+        plugins = self.plugin_manager.get_plugins_by_type(plugin_type)
+
+        for plugin in plugins:
+            if plugin.enabled and plugin.is_available():
+                return plugin.metadata.name
+
+        return None
+
     def enable_plugin(self, plugin_name: str) -> bool:
         """Enable a plugin."""
         return self.plugin_manager.enable_plugin(plugin_name)

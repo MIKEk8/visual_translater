@@ -28,21 +28,24 @@ import warnings
 from src.core.batch_processor import BatchJob, BatchProcessor, BatchStatus
 from src.core.screenshot_engine import ScreenshotEngine
 from src.models.translation import Translation
+from src.utils.export_manager import ExportManager
+from src.utils.logger import logger
+from src.utils.performance_monitor import get_performance_monitor
 
 # Check for secure XML parsing library
 try:
     import defusedxml
-    print("Using defusedxml for secure XML parsing")
+    XML_SECURE = True
+    logger.info("Using defusedxml for secure XML parsing")
 except ImportError:
+    XML_SECURE = False
     warnings.warn(
-        "defusedxml not available. Using xml.etree.ElementTree which may be vulnerable to XML attacks",
+        "SECURITY WARNING: defusedxml not available. XML export features may be disabled to prevent XML attacks. "
+        "Please install defusedxml to enable secure XML export: pip install defusedxml",
         UserWarning,
         stacklevel=2,
     )
-
-from src.utils.export_manager import ExportManager
-from src.utils.logger import logger
-from src.utils.performance_monitor import get_performance_monitor
+    logger.error("XML export security risk - defusedxml not available")
 
 if TYPE_CHECKING:
     from src.ui.progress_indicator import ProgressManager

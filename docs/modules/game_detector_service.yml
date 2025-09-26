@@ -1,0 +1,17 @@
+module: src/services/game_detector_service.py
+purpose: Process monitoring and automatic game detection with profile switching
+interfaces:
+  - async start_monitoring() -> None
+  - async stop_monitoring() -> None
+  - async detect_active_game() -> Optional[GameInfo]
+  - async add_game_profile(game_name: str, profile_name: str) -> bool
+dependencies:
+  uses: [psutil, hotkey_profile_service, circuit_breaker]
+  used_by: [core/application, ui/tray_manager]
+tests:
+  unit: [tests/unit/services/test_game_detector_service.py]
+  integration: [tests/integration/test_enhanced_features_integration.py]
+constraints:
+  invariants: [process scanning rate limited, memory usage monitored, graceful fallbacks]
+  perf_budget: <200ms detection cycle, <10MB memory usage
+last_updated: 2025-09-26

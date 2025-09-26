@@ -40,24 +40,49 @@ class DragDropHandler:
 
     def _setup_drag_drop(self):
         """Setup drag and drop bindings"""
+        dnd_enabled = False
+
         try:
             # Try to use tkinterdnd2 if available
             import tkinterdnd2
 
-            self.widget.drop_target_register(tkinterdnd2.DND_FILES)
-            self.widget.dnd_bind("<<Drop>>", self._on_drop)
-            logger.info("Advanced drag & drop enabled with tkinterdnd2")
+            # Check if the widget's root window is a TkinterDnD window
+            root = self.widget.winfo_toplevel()
+
+            # Try multiple ways to detect DnD support
+            if hasattr(root, 'TkdndVersion'):
+                # The window has TkinterDnD2 support
+                self.widget.drop_target_register(tkinterdnd2.DND_FILES)
+                self.widget.dnd_bind("<<Drop>>", self._on_drop)
+                logger.info("Advanced drag & drop enabled with tkinterdnd2")
+                dnd_enabled = True
+            elif hasattr(root, 'tk') and hasattr(root.tk, 'call'):
+                # Try to register anyway - sometimes the attribute is not set but it works
+                try:
+                    self.widget.drop_target_register(tkinterdnd2.DND_FILES)
+                    self.widget.dnd_bind("<<Drop>>", self._on_drop)
+                    logger.info("Drag & drop enabled via tkinterdnd2 (forced)")
+                    dnd_enabled = True
+                except Exception as e:
+                    logger.debug(f"Could not force DnD registration: {e}")
+
+            if not dnd_enabled:
+                logger.info("Root window is not TkinterDnD-enabled, using fallback")
+
         except ImportError:
-            # Fallback to basic file dialog approach
-            logger.info("Using fallback drag & drop with right-click menu")
-            self._setup_fallback_menu()
+            logger.info("tkinterdnd2 not installed, using fallback")
+        except Exception as e:
+            logger.warning(f"Error setting up drag & drop: {e}")
+
+        # Always set up the fallback menu for right-click and paste
+        self._setup_fallback_menu()
 
     def _setup_fallback_menu(self):
         """Setup right-click menu as fallback for drag & drop"""
         menu = tk.Menu(self.widget, tearoff=0)
         menu.add_command(label="Select Image Files...", command=self._select_files)
         menu.add_separator()
-        menu.add_command(label="Paste from Clipboard", command=self._paste_from_clipboard)
+        menu.add_command(label="Paste from Clipboard (Ctrl+V)", command=self._paste_from_clipboard)
 
         def show_menu(event):
             try:
@@ -67,19 +92,75 @@ class DragDropHandler:
 
         self.widget.bind("<Button-3>", show_menu)  # Right click
 
+        # Also bind Ctrl+V for paste
+        self.widget.bind("<Control-v>", lambda e: self._paste_from_clipboard())
+        self.widget.bind("<Control-V>", lambda e: self._paste_from_clipboard())  # For uppercase V
+
+        # Make widget focusable so it can receive keyboard events
+        self.widget.configure(takefocus=True)
+        self.widget.bind("<Button-1>", lambda e: self.widget.focus_set())  # Focus on click
+
     def _on_drop(self, event):
         """Handle drop event"""
         try:
-            files = event.data.split()
-            valid_files = self._filter_supported_files(files)
+            # Parse the dropped data - it might be in different formats
+            if hasattr(event, 'data'):
+                data = event.data
+            elif hasattr(event, 'Data'):
+                data = event.Data
+            else:
+                logger.error("Drop event has no data attribute")
+                return
+
+            # Handle Windows paths with spaces and special characters
+            # TkinterDnD2 returns paths in curly braces if they contain spaces
+            files = []
+
+            # Check if data is a string
+            if isinstance(data, str):
+                # Remove extra whitespace
+                data = data.strip()
+
+                # Handle curly braces for paths with spaces (Windows specific)
+                if data.startswith('{') and data.endswith('}'):
+                    # Single file with spaces
+                    files = [data[1:-1]]
+                elif '{' in data:
+                    # Multiple files, some with spaces
+                    import re
+                    # Find all paths in curly braces
+                    braced = re.findall(r'\{([^}]+)\}', data)
+                    # Find all paths without spaces
+                    unbraced = [p for p in data.split() if not (p.startswith('{') or p.endswith('}'))]
+                    files = braced + unbraced
+                else:
+                    # Simple space-separated paths
+                    files = data.split()
+            else:
+                # Data might be a list already
+                files = list(data) if hasattr(data, '__iter__') else [str(data)]
+
+            # Clean up file paths
+            cleaned_files = []
+            for f in files:
+                # Remove quotes and extra whitespace
+                f = f.strip().strip('"').strip("'")
+                if f:
+                    cleaned_files.append(f)
+
+            logger.debug(f"Dropped files: {cleaned_files}")
+            valid_files = self._filter_supported_files(cleaned_files)
 
             if valid_files:
+                logger.info(f"Processing {len(valid_files)} valid image file(s)")
                 self.callback(valid_files)
             else:
                 logger.warning("No supported image files in drop")
+                messagebox.showinfo("Drag & Drop", "Перетащенные файлы не содержат поддерживаемых изображений.\n\nПоддерживаемые форматы: PNG, JPG, BMP, GIF, TIFF, WebP")
 
         except Exception as e:
-            logger.error("Error handling drop", error=e)
+            logger.error(f"Error handling drop: {e}", error=e)
+            messagebox.showerror("Ошибка", f"Ошибка при обработке перетащенных файлов:\n{str(e)}")
 
     def _select_files(self):
         """Open file dialog to select images"""
@@ -104,24 +185,70 @@ class DragDropHandler:
         try:
             # Try to get image from clipboard
             from PIL import ImageGrab
+            import tempfile
+            import os
 
             image = ImageGrab.grabclipboard()
             if image:
-                # Save to temporary file
-                import tempfile
+                # Check if it's an image
+                if isinstance(image, list):
+                    # It's a list of file paths
+                    valid_files = self._filter_supported_files(image)
+                    if valid_files:
+                        self.callback(valid_files)
+                        logger.info(f"Pasted {len(valid_files)} file(s) from clipboard")
+                    else:
+                        messagebox.showinfo("Буфер обмена", "В буфере обмена нет поддерживаемых изображений")
+                else:
+                    # It's an actual image
+                    # Use NamedTemporaryFile for automatic cleanup
+                    with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp_file:
+                        temp_file = tmp_file.name
 
-                with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
-                    image.save(tmp.name, "PNG")
-                    self.callback([tmp.name])
+                        # Convert to RGB if necessary
+                        if image.mode in ('RGBA', 'LA', 'P'):
+                            # Create a white background
+                            background = Image.new('RGB', image.size, (255, 255, 255))
+                            if image.mode == 'P':
+                                image = image.convert('RGBA')
+                            background.paste(image, mask=image.split()[-1] if image.mode in ('RGBA', 'LA') else None)
+                            image = background
+                        elif image.mode != 'RGB':
+                            image = image.convert('RGB')
+
+                        image.save(temp_file, "PNG")
+
+                    # Schedule cleanup after a delay (give time for processing)
+                    def cleanup_temp_file():
+                        try:
+                            if os.path.exists(temp_file):
+                                os.unlink(temp_file)
+                                logger.debug(f"Cleaned up temporary file: {temp_file}")
+                        except Exception as e:
+                            logger.debug(f"Could not cleanup temp file {temp_file}: {e}")
+
+                    # Clean up after 60 seconds
+                    import threading
+                    threading.Timer(60.0, cleanup_temp_file).start()
+
+                    self.callback([temp_file])
                     logger.info("Pasted image from clipboard")
+
+                    # Show success feedback
+                    if hasattr(self, 'widget'):
+                        # Flash the widget briefly to show success
+                        orig_bg = self.widget.cget('bg') if hasattr(self.widget, 'cget') else None
+                        if orig_bg:
+                            self.widget.config(bg='#90EE90')  # Light green
+                            self.widget.after(200, lambda: self.widget.config(bg=orig_bg))
             else:
-                messagebox.showinfo("Clipboard", "No image found in clipboard")
+                messagebox.showinfo("Буфер обмена", "В буфере обмена нет изображения.\n\nСкопируйте изображение или сделайте скриншот (Print Screen),\nзатем нажмите Ctrl+V")
 
         except ImportError:
-            messagebox.showerror("Error", "PIL ImageGrab not available")
+            messagebox.showerror("Ошибка", "Модуль PIL ImageGrab не доступен.\nУстановите Pillow: pip install Pillow")
         except Exception as e:
             logger.error("Error pasting from clipboard", error=e)
-            messagebox.showerror("Error", f"Failed to paste from clipboard: {str(e)}")
+            messagebox.showerror("Ошибка", f"Не удалось вставить из буфера обмена:\n{str(e)}")
 
     def _filter_supported_files(self, files: List[str]) -> List[str]:
         """Filter files to only include supported image formats"""
@@ -159,10 +286,10 @@ class ImageDropZone:
         # Add label
         self.label = tk.Label(
             self.frame,
-            text="Drop image files here\nor right-click to select",
+            text="📥 Перетащите изображения сюда\n\n• Правый клик - выбрать файлы\n• Ctrl+V - вставить из буфера обмена",
             bg="#f0f0f0",
             fg="#666666",
-            font=("TkDefaultFont", 12),
+            font=("TkDefaultFont", 11),
             justify=tk.CENTER,
         )
         self.label.pack(expand=True)
@@ -195,12 +322,12 @@ class ImageDropZone:
         if files:
             # Update label to show file count
             count = len(files)
-            self.label.config(text=f"Processing {count} file{'s' if count > 1 else ''}...")
+            self.label.config(text=f"⏳ Обрабатывается {count} {'файл' if count == 1 else 'файла' if count < 5 else 'файлов'}...")
 
             # Reset label after callback
             self.parent.after(
                 2000,
-                lambda: self.label.config(text="Drop image files here\nor right-click to select"),
+                lambda: self.label.config(text="📥 Перетащите изображения сюда\n\n• Правый клик - выбрать файлы\n• Ctrl+V - вставить из буфера обмена"),
             )
 
             # Call the callback
@@ -265,28 +392,33 @@ class BatchImageProcessor:
         try:
             from src.models.screenshot_data import ScreenshotData
 
-            # Load image
-            image = Image.open(file_path)
+            # Load image using context manager to prevent memory leak
+            with Image.open(file_path) as image:
+                # Store dimensions before closing
+                width, height = image.size
 
-            # Convert to bytes
-            img_byte_arr = io.BytesIO()
+                # Convert to bytes
+                img_byte_arr = io.BytesIO()
 
-            # Ensure RGB format for consistency
-            if image.mode != "RGB":
-                image = image.convert("RGB")
+                # Ensure RGB format for consistency
+                if image.mode != "RGB":
+                    image = image.convert("RGB")
 
-            image.save(img_byte_arr, format="PNG")
-            image_bytes = img_byte_arr.getvalue()
+                image.save(img_byte_arr, format="PNG")
+                image_bytes = img_byte_arr.getvalue()
+
+                # Create PIL image copy for screenshot data
+                img_copy = image.copy()
 
             # Create screenshot data
             screenshot_data = ScreenshotData(
-                image=image,
+                image=img_copy,
                 image_data=image_bytes,  # For backward compatibility
-                coordinates=(0, 0, image.width, image.height),
+                coordinates=(0, 0, width, height),
                 timestamp=None,
             )
 
-            logger.debug(f"Loaded image file: {file_path} ({image.width}x{image.height})")
+            logger.debug(f"Loaded image file: {file_path} ({width}x{height})")
             return screenshot_data
 
         except Exception as e:

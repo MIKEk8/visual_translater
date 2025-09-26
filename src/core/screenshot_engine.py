@@ -173,8 +173,9 @@ class ScreenshotEngine:
             # Convert bytes back to image and save
             import io
 
-            image = Image.open(io.BytesIO(screenshot_data.image_data))
-            image.save(filename)
+            # Use context manager to ensure image is closed and prevent memory leak
+            with Image.open(io.BytesIO(screenshot_data.image_data)) as image:
+                image.save(filename)
 
             logger.debug(f"Debug screenshot saved: {filename}")
             return True

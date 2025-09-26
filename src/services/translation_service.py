@@ -1,6 +1,6 @@
 """
 Translation service for Screen Translator v2.0.
-Provides translation functionality with multiple backends.
+Provides translation functionality with multiple backends and caching.
 """
 
 import time
@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Dict, List, Optional
 
+from src.services.translation_cache_service import get_translation_cache, CachedTranslation
 from src.utils.logger import logger
 
 
@@ -163,7 +164,9 @@ class TranslationService:
         """Initialize translation service."""
         self.config = config or TranslationConfig()
         self.backends: Dict[TranslationProvider, TranslationBackend] = {}
-        self.cache: Dict[str, TranslationResult] = {}
+
+        # Initialize advanced caching system
+        self.cache = get_translation_cache() if self.config.cache_enabled else None
 
         # Initialize backends
         self._initialize_backends()
@@ -174,6 +177,8 @@ class TranslationService:
         logger.info(f"Translation service initialized with {len(self.backends)} backends")
         if self.primary_backend:
             logger.debug(f"Primary backend: {type(self.primary_backend).__name__}")
+        if self.cache:
+            logger.debug("Advanced translation caching enabled")
 
     def _initialize_backends(self) -> None:
         """Initialize all available translation backends."""
@@ -228,11 +233,22 @@ class TranslationService:
 
         target_lang = target_lang or self.config.target_language
 
-        # Check cache
-        cache_key = f"{text}|{source_lang}|{target_lang}"
-        if self.config.cache_enabled and cache_key in self.cache:
-            logger.debug("Translation found in cache")
-            return self.cache[cache_key]
+        # Check advanced cache first
+        if self.cache:
+            provider_name = self.primary_backend.__class__.__name__.replace("Backend", "").lower() if self.primary_backend else "unknown"
+            cached_translation = self.cache.get(text, source_lang, target_lang, provider_name)
+
+            if cached_translation:
+                logger.debug(f"Translation found in cache (hit ratio: {self.cache.get_statistics().get('hit_ratio_percent', 0):.1f}%)")
+                return TranslationResult(
+                    original_text=cached_translation.source_text,
+                    translated_text=cached_translation.translated_text,
+                    source_language=cached_translation.source_language,
+                    target_language=cached_translation.target_language,
+                    provider=TranslationProvider(cached_translation.provider) if cached_translation.provider in [p.value for p in TranslationProvider] else TranslationProvider.OFFLINE,
+                    confidence=cached_translation.confidence,
+                    timestamp=cached_translation.timestamp
+                )
 
         # Try translation with primary backend
         if not self.primary_backend:
@@ -241,9 +257,17 @@ class TranslationService:
         try:
             result = self.primary_backend.translate(text, source_lang, target_lang)
 
-            # Cache result
-            if self.config.cache_enabled:
-                self.cache[cache_key] = result
+            # Cache result using advanced caching system
+            if self.cache:
+                provider_name = self.primary_backend.__class__.__name__.replace("Backend", "").lower()
+                self.cache.put(
+                    source_text=result.original_text,
+                    translated_text=result.translated_text,
+                    source_lang=result.source_language,
+                    target_lang=result.target_language,
+                    provider=provider_name,
+                    confidence=result.confidence
+                )
 
             logger.debug(f"Translated '{text[:30]}...' -> '{result.translated_text[:30]}...'")
             return result
@@ -284,12 +308,31 @@ class TranslationService:
 
     def clear_cache(self) -> None:
         """Clear translation cache."""
-        self.cache.clear()
-        logger.debug("Translation cache cleared")
+        if self.cache:
+            self.cache.clear_all()
+            logger.debug("Advanced translation cache cleared")
+        else:
+            logger.debug("Translation cache not enabled")
+
+    def get_cache_statistics(self) -> Dict[str, any]:
+        """Get detailed cache statistics."""
+        if self.cache:
+            return self.cache.get_statistics()
+        else:
+            return {"cache_enabled": False}
 
     def get_cache_size(self) -> int:
         """Get number of cached translations."""
-        return len(self.cache)
+        if self.cache:
+            stats = self.cache.get_statistics()
+            return stats.get("cache_size", 0) + stats.get("disk_cache_size", 0)
+        return 0
+
+    def cleanup_cache(self, max_age_days: int = 30, max_entries: int = 10000) -> int:
+        """Clean up old cache entries."""
+        if self.cache:
+            return self.cache.cleanup_old_entries(max_age_days, max_entries)
+        return 0
 
 
 # Global translation service instance

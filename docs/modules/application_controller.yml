@@ -1,0 +1,17 @@
+module: src/core/coordinators/application_controller.py
+purpose: Main application coordination controller managing component lifecycle and DI orchestration
+interfaces:
+  - "start() -> None"
+  - "stop() -> None"
+  - "on_config_changed(key: str, value: Any) -> None"
+  - "is_running() -> bool"
+dependencies:
+  uses: [coordinators/capture_orchestrator, coordinators/translation_workflow, coordinators/ui_coordinator, services/container, services/config_manager]
+  used_by: [core/application, main]
+tests:
+  unit: [src/tests/unit/core/coordinators/test_application_controller.py]
+  integration: [src/tests/integration/test_main_scenarios.py, src/tests/integration/test_system_integration.py]
+constraints:
+  invariants: [single instance, thread-safe operations, proper component lifecycle]
+  perf_budget: <200ms startup time, <50ms per operation
+last_updated: 2025-09-26

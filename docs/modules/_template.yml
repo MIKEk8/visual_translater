@@ -1,0 +1,14 @@
+module: <path or name>
+purpose: <1-2 lines>
+interfaces:
+  - <signature/contract>
+dependencies:
+  uses: []
+  used_by: []
+tests:
+  unit: []
+  integration: []
+constraints:
+  invariants: []
+  perf_budget: ""
+last_updated: YYYY-MM-DD

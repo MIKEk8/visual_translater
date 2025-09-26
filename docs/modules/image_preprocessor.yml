@@ -1,0 +1,17 @@
+module: src/core/image_preprocessor.py
+purpose: OpenCV-based image preprocessing pipeline for OCR accuracy enhancement
+interfaces:
+  - async preprocess(image: Image.Image, config: PreprocessingConfig) -> Image.Image
+  - async preprocess_batch(images: List[Image.Image]) -> List[Image.Image]
+  - create_optimized_config(image_type: str) -> PreprocessingConfig
+  - get_performance_stats() -> Dict[str, Dict[str, float]]
+dependencies:
+  uses: [opencv-python, PIL, numpy, circuit_breaker]
+  used_by: [ocr_engine, screenshot_processor]
+tests:
+  unit: [tests/unit/core/test_image_preprocessor.py]
+  integration: [tests/integration/test_enhanced_features_integration.py]
+constraints:
+  invariants: [pipeline step validation, quality metric tracking, graceful fallback on errors]
+  perf_budget: <200ms per image, <500ms batch processing per image
+last_updated: 2025-09-26

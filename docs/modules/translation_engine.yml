@@ -1,0 +1,17 @@
+module: src/core/translation_engine.py
+purpose: Core translation service that coordinates multiple translation providers
+interfaces:
+  - "translate(text: str, source_lang: str, target_lang: str) -> TranslationResult"
+  - "get_supported_languages() -> List[str]"
+  - "get_available_providers() -> List[str]"
+  - "set_provider(provider: str) -> None"
+dependencies:
+  uses: [plugins/plugin_manager, services/translation_cache, services/circuit_breaker]
+  used_by: [coordinators/translation_workflow, application/use_cases/translation_use_cases, api/web_server]
+tests:
+  unit: [src/tests/unit/core/test_translation_engine_unit.py, src/tests/unit/core/test_translation_engine_validation.py]
+  integration: [src/tests/integration/test_main_scenarios.py, src/tests/integration/test_system_integration.py]
+constraints:
+  invariants: [non-empty text input, valid language codes, provider availability, circuit breaker protection]
+  perf_budget: <2s per translation, 90% cache hit rate, <100ms circuit breaker response
+last_updated: 2025-09-26

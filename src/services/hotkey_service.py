@@ -51,7 +51,7 @@ class HotkeyModifier(Enum):
     ALT = "alt"
     SHIFT = "shift"
     WIN = "win"
-    CMD = "cmd"  # macOS
+    # CMD key removed - Windows only application
 
 
 class HotkeyState(Enum):

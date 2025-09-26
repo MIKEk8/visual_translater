@@ -56,10 +56,9 @@ class BatchJob:
     @property
     def success_rate(self) -> float:
         """Calculate success rate as percentage"""
-        with self._lock:
-            if self.total_items == 0:
-                return 0.0
-            return ((self.completed_items) / self.total_items) * 100
+        if self.total_items == 0:
+            return 0.0
+        return ((self.completed_items) / self.total_items) * 100
 
     @property
     def is_finished(self) -> bool:
@@ -71,30 +70,25 @@ class BatchProcessor:
     """Engine for batch processing screenshots and OCR operations"""
 
     def __init__(self, ocr_processor, translation_processor, max_concurrent: int = 3):
-        with self._lock:
-            self.ocr_processor = ocr_processor
-        with self._lock:
-            self.translation_processor = translation_processor
-        with self._lock:
-            self.max_concurrent = max_concurrent
+        # Initialize lock first
+        self._lock = threading.Lock()
+
+        # Initialize processors
+        self.ocr_processor = ocr_processor
+        self.translation_processor = translation_processor
+        self.max_concurrent = max_concurrent
 
         # Job management
         self.jobs: Dict[str, BatchJob] = {}
         self.current_jobs: Set[str] = set()  # Track active job IDs
-        with self._lock:
-            self.current_jobs_lock = threading.Lock()
-        with self._lock:
-            self.max_batch_jobs = 10  # Limit concurrent batch jobs
-        with self._lock:
-            self.task_queue = get_task_queue()
+        self.current_jobs_lock = threading.Lock()
+        self.max_batch_jobs = 10  # Limit concurrent batch jobs
+        self.task_queue = get_task_queue()
 
         # Thread management
-        with self._lock:
-            self._processing_lock = threading.Lock()
-        with self._lock:
-            self._job_counter = 0
-        with self._lock:
-            self._item_counter = 0
+        self._processing_lock = threading.Lock()
+        self._job_counter = 0
+        self._item_counter = 0
 
         logger.info(f"Batch processor initialized with {max_concurrent} concurrent workers")
 

@@ -128,8 +128,9 @@ class MockTk(MockWidget):
         if callback:
             try:
                 callback(*args)
-            except:
-                pass
+            except Exception as e:
+                from src.utils.logger import logger
+                logger.warning(f"Mock GUI callback failed: {e}")
         return self
 
 
@@ -187,8 +188,9 @@ class MockButton(MockWidget):
         if self.command:
             try:
                 self.command()
-            except:
-                pass
+            except Exception as e:
+                from src.utils.logger import logger
+                logger.warning(f"Mock button command failed: {e}")
 
 
 class MockEntry(MockWidget):

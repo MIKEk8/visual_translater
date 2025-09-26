@@ -130,6 +130,9 @@ markers = [
     "asyncio: marks tests as async",
     "gui: marks tests that require GUI (skip in headless)",
 ]
+
+[tool.pytest_asyncio]
+asyncio_mode = "auto"
 filterwarnings = [
     "ignore::DeprecationWarning",
     "ignore::PendingDeprecationWarning",

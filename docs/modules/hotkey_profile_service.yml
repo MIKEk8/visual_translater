@@ -1,0 +1,17 @@
+module: src/services/hotkey_profile_service.py
+purpose: Context-aware hotkey profile management for gaming/reading/streaming scenarios
+interfaces:
+  - async create_profile(name: str, description: str, hotkeys: Dict[str, str]) -> HotkeyProfile
+  - async switch_profile(name: str, force: bool) -> bool
+  - async list_profiles(context: ProfileContext, include_system: bool) -> List[HotkeyProfile]
+  - async detect_conflicts() -> Dict[str, List[str]]
+dependencies:
+  uses: [hotkey_service, circuit_breaker, json_persistence]
+  used_by: [ui/settings_window, game_detector_service]
+tests:
+  unit: [tests/unit/services/test_hotkey_profile_service.py]
+  integration: [tests/integration/test_enhanced_features_integration.py]
+constraints:
+  invariants: [system profiles immutable, conflict detection mandatory, profile validation]
+  perf_budget: <50ms profile switching, <100ms conflict detection
+last_updated: 2025-09-26

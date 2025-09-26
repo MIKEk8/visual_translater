@@ -41,6 +41,7 @@ from src.plugins.base_plugin import PluginType
 from src.services.config_manager import ConfigManager, ConfigObserver
 from src.services.container import container, setup_default_services
 from src.services.plugin_service import PluginService
+from src.ui.tray_manager import TrayManager
 from ..interfaces import ITrayManager
 from src.utils.logger import logger
 
@@ -55,8 +56,21 @@ class ApplicationController(ConfigObserver):
         # Thread safety
         self._lock = threading.Lock()
 
-        # GUI initialization
-        self.root = tk.Tk()
+        # GUI initialization with drag and drop support
+        try:
+            # Try to use TkinterDnD2 for drag and drop support
+            from tkinterdnd2 import TkinterDnD
+            self.root = TkinterDnD.Tk()
+            logger.info("Main window initialized with TkinterDnD2 support")
+        except ImportError:
+            # Fallback to standard Tkinter
+            self.root = tk.Tk()
+            logger.info("Main window initialized with standard Tkinter (no drag-drop)")
+        except Exception as e:
+            # Fallback on any other error
+            logger.warning(f"Could not initialize TkinterDnD2: {e}")
+            self.root = tk.Tk()
+
         self.root.withdraw()  # Hide main window
 
         # Use provided container or global one
@@ -228,6 +242,10 @@ class ApplicationController(ConfigObserver):
         """Open settings window"""
         self.ui_coordinator.open_settings()
 
+    def show_settings(self) -> None:
+        """Show settings window (backward compatibility)"""
+        self.open_settings()
+
     def export_translation_history(self, format_type: str = "json") -> Optional[str]:
         """Export translation history"""
         history = self.translation_workflow.get_translation_history()
@@ -249,7 +267,29 @@ class ApplicationController(ConfigObserver):
 
     def shutdown(self) -> None:
         """Shutdown application"""
+        logger.info("Application shutdown initiated")
+
+        # First clean up tray icon immediately to avoid ghost icon
+        try:
+            if hasattr(self, 'tray_manager') and self.tray_manager:
+                self.tray_manager.stop()
+        except (AttributeError, RuntimeError) as e:
+            logger.debug(f"Could not stop tray manager during shutdown: {e}")
+
+        # Then proceed with normal shutdown
         self.system_integration.shutdown()
+
+        # Exit the application
+        if hasattr(self, 'root') and self.root:
+            self.root.quit()
+
+        # Force exit if needed
+        import sys
+        sys.exit(0)
+
+    def on_exit(self) -> None:
+        """Exit application (backward compatibility)"""
+        self.shutdown()
 
     # ConfigObserver implementation
     def on_config_changed(self, key: str, old_value, new_value) -> None:

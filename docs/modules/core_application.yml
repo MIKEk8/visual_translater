@@ -1,0 +1,17 @@
+module: src/core/application.py
+purpose: Main application entry point and coordination hub for the screen translator
+interfaces:
+  - "start() -> None"
+  - "stop() -> None"
+  - "process_screenshot(screenshot: Screenshot) -> None"
+  - "get_status() -> ApplicationStatus"
+dependencies:
+  uses: [coordinators/application_controller, services/container, state/app_state]
+  used_by: [main]
+tests:
+  unit: []
+  integration: [src/tests/integration/test_main_scenarios.py, src/tests/integration/test_system_integration.py]
+constraints:
+  invariants: [single instance, proper cleanup on exit, thread-safe operations]
+  perf_budget: <100ms startup time, graceful shutdown within 5s
+last_updated: 2025-09-26

@@ -228,4 +228,26 @@ def setup_default_services(target_container: Optional[DIContainer] = None):
     target_container.register_factory(type(get_alert_manager()), create_alert_manager)
     target_container.register_factory(type(get_monitoring_dashboard()), create_monitoring_dashboard)
 
+    # Register new enhanced services
+    try:
+        from src.services.history_search_service import HistorySearchService
+        from src.services.hotkey_profile_service import HotkeyProfileService
+        from src.services.game_detector_service import GameDetectorService
+        from src.services.glossary_service import GlossaryService
+        from src.services.live_translation_service import LiveTranslationService
+        from src.core.image_preprocessor import ImagePreprocessor
+
+        # Register these as singletons
+        target_container.register_singleton(HistorySearchService, HistorySearchService)
+        target_container.register_singleton(HotkeyProfileService, HotkeyProfileService)
+        target_container.register_singleton(GameDetectorService, GameDetectorService)
+        target_container.register_singleton(GlossaryService, GlossaryService)
+        target_container.register_singleton(LiveTranslationService, LiveTranslationService)
+        target_container.register_singleton(ImagePreprocessor, ImagePreprocessor)
+
+        logger.info("Enhanced services registered successfully")
+
+    except ImportError as e:
+        logger.warning(f"Some enhanced services not available: {e}")
+
     logger.info(f"Default services registered in DI container ({id(target_container)})")

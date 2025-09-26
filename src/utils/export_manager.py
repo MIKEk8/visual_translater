@@ -4,19 +4,7 @@ Export manager for translation results and batch processing data
 
 import csv
 import json
-
-try:
-    import defusedxml.ElementTree as ET
-except ImportError:
-    # Fallback to standard library with security warning
-    import warnings
-    import xml.etree.ElementTree as ET
-
-    warnings.warn(
-        "defusedxml not available. Using xml.etree.ElementTree which may be vulnerable to XML attacks",
-        UserWarning,
-        stacklevel=2,
-    )
+import warnings
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -24,6 +12,23 @@ from typing import Any, Dict, List, Optional
 from src.core.batch_processor import BatchJob
 from src.models.translation import Translation
 from src.utils.logger import logger
+
+try:
+    import defusedxml.ElementTree as ET
+    XML_AVAILABLE = True
+    logger.info("Using defusedxml for secure XML parsing")
+except ImportError:
+    # Security enforcement: Disable XML export when defusedxml is not available
+    ET = None
+    XML_AVAILABLE = False
+
+    warnings.warn(
+        "SECURITY WARNING: defusedxml not available. XML export disabled to prevent XML attacks. "
+        "Please install defusedxml to enable secure XML export: pip install defusedxml",
+        UserWarning,
+        stacklevel=2,
+    )
+    logger.error("XML export disabled due to security concerns - defusedxml not available")
 
 
 class ExportManager:
@@ -34,9 +39,12 @@ class ExportManager:
             "json": self._export_json,
             "csv": self._export_csv,
             "txt": self._export_txt,
-            "xml": self._export_xml,
             "html": self._export_html,
         }
+
+        # Only add XML handler if secure XML parsing is available
+        if XML_AVAILABLE:
+            self.supported_formats["xml"] = self._export_xml
 
     def export_translations(
         self, translations: List[Translation], file_path: str, format_type: str = "json"
@@ -152,6 +160,11 @@ class ExportManager:
 
     def _export_xml(self, translations: List[Translation], file_path: str) -> None:
         """Export to XML format"""
+        if not XML_AVAILABLE or ET is None:
+            raise RuntimeError(
+                "XML export is not available. Please install defusedxml for secure XML processing: pip install defusedxml"
+            )
+
         root = ET.Element("screen_translator_export")
 
         # Metadata

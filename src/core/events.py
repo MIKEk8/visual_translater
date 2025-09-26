@@ -266,7 +266,15 @@ def get_event_bus() -> EventBus:
 def publish_event(event_type: EventType, data: Any = None, source: str = "unknown") -> None:
     """Convenience function to publish an event."""
     event = Event(type=event_type, data=data, source=source)
-    asyncio.create_task(get_event_bus().publish(event))
+    try:
+        # Try to create task if event loop is running
+        loop = asyncio.get_running_loop()
+        asyncio.create_task(get_event_bus().publish(event))
+    except RuntimeError:
+        # No event loop running, skip event publishing to avoid warnings
+        # Events are not critical for application functionality
+        logger.debug(f"Skipping event publication (no event loop): {event_type.name}")
+        pass
 
 
 # Event middleware examples

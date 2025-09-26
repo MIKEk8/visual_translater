@@ -109,8 +109,11 @@ def main():
                 logger.info("Received interrupt signal, shutting down gracefully")
             try:
                 app.shutdown()
-            except:
-                pass
+            except Exception as e:
+                if logger:
+                    logger.error(f"Error during graceful shutdown: {e}")
+                else:
+                    print(f"Error during graceful shutdown: {e}", file=sys.stderr)
             sys.exit(0)
         
         signal.signal(signal.SIGINT, signal_handler)
@@ -145,6 +148,13 @@ def main():
             # Cleanup
             if logger:
                 logger.info("Shutting down...")
+
+            # Make sure to clean up the tray icon
+            try:
+                app.shutdown()
+            except (AttributeError, RuntimeError) as e:
+                logger.debug(f"Could not shutdown app in finally block: {e}")
+
             hotkey_service.unregister_all()
             notification_service.dismiss_all()
         
@@ -159,8 +169,11 @@ def main():
         try:
             from src.services.notification_service import notify_error
             notify_error("Import Error", error_msg)
-        except:
+        except ImportError:
+            # Notification service not available
             pass
+        except Exception as e:
+            print(f"Failed to show error notification: {e}", file=sys.stderr)
         
         return 1
     except Exception as e:
@@ -173,8 +186,11 @@ def main():
         try:
             from src.services.notification_service import notify_error
             notify_error("Startup Error", error_msg)
-        except:
+        except ImportError:
+            # Notification service not available
             pass
+        except Exception as e:
+            print(f"Failed to show startup error notification: {e}", file=sys.stderr)
         
         return 1
 

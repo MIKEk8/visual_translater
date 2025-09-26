@@ -1,0 +1,18 @@
+module: src/api/web_server.py
+purpose: HTTP REST API server providing web interface for translation services
+interfaces:
+  - "start() -> None"
+  - "stop() -> None"
+  - "handle_translate(request) -> APIResponse"
+  - "handle_screenshot(request) -> APIResponse"
+  - "health_check() -> APIResponse"
+dependencies:
+  uses: [services/container, services/ocr_service, services/translation_service, plugins/plugin_manager]
+  used_by: [api/routes, external_clients]
+tests:
+  unit: []
+  integration: [src/tests/integration/test_system_integration.py]
+constraints:
+  invariants: [single server instance, thread-safe request handling, proper CORS headers]
+  perf_budget: <100ms per API request, 10MB max request size, 30s timeout
+last_updated: 2025-09-26

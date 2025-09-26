@@ -47,6 +47,9 @@ class TrayManager(ITrayManager):
         self.start_message_processing()
         self.is_running = True
 
+        # Start GUI message queue processing
+        self._check_messages()
+
         logger.info("Tray manager started")
 
     def stop(self):
@@ -54,7 +57,24 @@ class TrayManager(ITrayManager):
         self.is_running = False
         try:
             if self.icon:
+                # First, hide the icon
+                self.icon.visible = False
+                # Then stop it
                 self.icon.stop()
+                # Force update to remove from tray
+                if hasattr(self.icon, '_hwnd'):
+                    # Windows specific - force remove from tray
+                    try:
+                        import ctypes
+                        from ctypes import wintypes
+                        # Send message to refresh tray area
+                        HWND_BROADCAST = 0xFFFF
+                        WM_TASKBARCREATED = ctypes.windll.user32.RegisterWindowMessageW('TaskbarCreated')
+                        ctypes.windll.user32.PostMessageW(HWND_BROADCAST, WM_TASKBARCREATED, 0, 0)
+                    except (ImportError, AttributeError, OSError) as e:
+                        logger.debug(f"Could not refresh tray area: {e}")
+                # Clear the reference
+                self.icon = None
         except Exception as e:
             logger.warning(f"Error stopping tray icon: {e}")
         logger.info("Tray manager stopped")
@@ -398,8 +418,19 @@ class TrayManager(ITrayManager):
 
     def _exit_app(self, icon=None, item=None):
         """Exit application"""
+        logger.info("Tray: Exit requested")
+
+        # First stop the icon to remove it from tray immediately
+        try:
+            if self.icon:
+                self.icon.visible = False
+                # Schedule stop in a moment to allow the menu to close
+                threading.Timer(0.1, self.stop).start()
+        except (AttributeError, RuntimeError) as e:
+            logger.debug(f"Could not hide tray icon immediately: {e}")
+
+        # Then shutdown the app
         if self.app:
-            logger.info("Tray: Exit requested")
             self.gui_queue.put((self.app.shutdown, ()))
             # Old API
             if hasattr(self.app, "on_exit"):
