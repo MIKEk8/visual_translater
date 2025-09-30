@@ -1,0 +1,3277 @@
+   Compiling screen-translator v3.0.0 (P:\visual_translater\screen-translator-rust)
+error[E0432]: unresolved imports `crate::core::image_processor::EnhancementFilter`, `crate::core::ocr::BoundingBox`
+  --> src\core\tests.rs:13:23
+   |
+13 |     image_processor::{EnhancementFilter, ImageProcessor, PreprocessingConfig},
+   |                       ^^^^^^^^^^^^^^^^^ no `EnhancementFilter` in `core::image_processor`
+14 |     ocr::{BoundingBox, OcrConfig, OcrEngine, OcrResult, TesseractOcr, TextRegion},
+   |           ^^^^^^^^^^^ no `BoundingBox` in `core::ocr`
+   |
+   = help: consider importing this struct instead:
+           crate::ai::tests::BoundingBox
+
+error[E0432]: unresolved imports `crate::services::config::ConfigObserver`, `crate::services::config::ConfigService`, `crate::services::hotkey::GlobalHotkey`, `crate::services::hotkey::HotkeyEvent`, `crate::services::hotkey::HotkeyService`, `crate::services::translation::GoogleTranslationService`
+  --> src\services\tests.rs:16:14
+   |
+16 |     config::{ConfigObserver, ConfigService},
+   |              ^^^^^^^^^^^^^^  ^^^^^^^^^^^^^ no `ConfigService` in `services::config`
+   |              |
+   |              no `ConfigObserver` in `services::config`
+17 |     hotkey::{GlobalHotkey, HotkeyEvent, HotkeyService},
+   |              ^^^^^^^^^^^^  ^^^^^^^^^^^  ^^^^^^^^^^^^^ no `HotkeyService` in `services::hotkey`
+   |              |             |
+   |              |             no `HotkeyEvent` in `services::hotkey`
+   |              no `GlobalHotkey` in `services::hotkey`
+...
+22 |         GoogleTranslationService, TranslationRequest, TranslationResult, TranslationService,
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^
+   |         |
+   |         no `GoogleTranslationService` in `services::translation`
+   |         help: a similar name exists in the module: `TranslationService`
+
+error[E0432]: unresolved import `crate::commands::tests`
+  --> src\lib.rs:30:26
+   |
+30 |     use crate::commands::tests::*;
+   |                          ^^^^^ could not find `tests` in `commands`
+
+error[E0433]: failed to resolve: could not find `test` in `tokio`
+   --> src\ai\tests.rs:799:14
+    |
+799 |     #[tokio::test]
+    |              ^^^^ could not find `test` in `tokio`
+
+error[E0433]: failed to resolve: could not find `test` in `tokio`
+   --> src\ai\tests.rs:842:14
+    |
+842 |     #[tokio::test]
+    |              ^^^^ could not find `test` in `tokio`
+
+error[E0433]: failed to resolve: could not find `test` in `tokio`
+   --> src\ai\tests.rs:877:14
+    |
+877 |     #[tokio::test]
+    |              ^^^^ could not find `test` in `tokio`
+
+error[E0119]: conflicting implementations of trait `std::default::Default` for type `smart_detection::DetectionConfig`
+   --> src\ai\tests.rs:987:1
+    |
+987 | impl Default for DetectionConfig {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ conflicting implementation for `smart_detection::DetectionConfig`
+    |
+   ::: src\ai\smart_detection.rs:109:1
+    |
+109 | impl Default for DetectionConfig {
+    | -------------------------------- first implementation here
+
+error[E0609]: no field `context` on type `context_aware::LanguageDetection`
+   --> src\ai\tests.rs:824:27
+    |
+824 |                 detection.context,
+    |                           ^^^^^^^ unknown field
+    |
+    = note: available fields are: `language`, `confidence`, `context_type`, `context_confidence`, `processing_time_ms`
+
+error[E0609]: no field `suggestions` on type `context_aware::LanguageDetection`
+   --> src\ai\tests.rs:835:28
+    |
+835 |                 !detection.suggestions.is_empty(),
+    |                            ^^^^^^^^^^^ unknown field
+    |
+    = note: available fields are: `language`, `confidence`, `context_type`, `context_confidence`, `processing_time_ms`
+
+error[E0609]: no field `context` on type `context_aware::LanguageDetection`
+   --> src\ai\tests.rs:864:27
+    |
+864 |                 detection.context,
+    |                           ^^^^^^^ unknown field
+    |
+    = note: available fields are: `language`, `confidence`, `context_type`, `context_confidence`, `processing_time_ms`
+
+error[E0308]: mismatched types
+   --> src\ai\tests.rs:898:37
+    |
+898 |                 detection.language, expected_lang,
+    |                                     ^^^^^^^^^^^^^ expected `Language`, found `&str`
+
+error[E0592]: duplicate definitions with name `new`
+   --> src\ai\context_aware.rs:136:5
+    |
+136 |     pub fn new() -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^ duplicate definitions for `new`
+    |
+   ::: src\ai\tests.rs:921:5
+    |
+921 |     pub fn new() -> Self {
+    |     -------------------- other definition for `new`
+
+error[E0592]: duplicate definitions with name `detect_language_and_context`
+   --> src\ai\context_aware.rs:381:5
+    |
+381 |       pub fn detect_language_and_context(&mut self, text: &str) -> Result<LanguageDetection> {
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ duplicate definitions for `detect_language_and_context`
+    |
+   ::: src\ai\tests.rs:926:5
+    |
+926 | /     pub fn detect_language_and_context(
+927 | |         &mut self,
+928 | |         _text: &str,
+929 | |     ) -> Result<LanguageDetection, String> {
+    | |__________________________________________- other definition for `detect_language_and_context`
+
+error[E0592]: duplicate definitions with name `suggest_target_language`
+   --> src\ai\context_aware.rs:564:5
+    |
+564 | /     pub fn suggest_target_language(
+565 | |         &self,
+566 | |         source_language: Language,
+567 | |         context_type: ContextType,
+568 | |     ) -> Vec<TranslationSuggestion> {
+    | |___________________________________^ duplicate definitions for `suggest_target_language`
+    |
+   ::: src\ai\tests.rs:933:5
+    |
+933 | /     pub fn suggest_target_language(
+934 | |         &self,
+935 | |         _source: Language,
+936 | |         _context: ContextType,
+937 | |     ) -> Vec<TranslationSuggestion> {
+    | |___________________________________- other definition for `suggest_target_language`
+
+error[E0592]: duplicate definitions with name `update_user_pattern`
+   --> src\ai\context_aware.rs:668:5
+    |
+668 | /     pub fn update_user_pattern(
+669 | |         &mut self,
+670 | |         source_lang: Language,
+671 | |         target_lang: Language,
+672 | |         context_type: ContextType,
+673 | |     ) {
+    | |_____^ duplicate definitions for `update_user_pattern`
+    |
+   ::: src\ai\tests.rs:941:5
+    |
+941 | /     pub fn update_user_pattern(
+942 | |         &mut self,
+943 | |         _source: Language,
+944 | |         _target: Language,
+945 | |         _context: ContextType,
+946 | |     ) {
+    | |_____- other definition for `update_user_pattern`
+
+error[E0592]: duplicate definitions with name `new`
+   --> src\ai\smart_detection.rs:138:5
+    |
+138 |     pub fn new(config: DetectionConfig) -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ duplicate definitions for `new`
+    |
+   ::: src\ai\tests.rs:956:5
+    |
+956 |     pub fn new(_config: DetectionConfig) -> Self {
+    |     -------------------------------------------- other definition for `new`
+
+error[E0592]: duplicate definitions with name `detect_text_regions`
+   --> src\ai\smart_detection.rs:148:5
+    |
+148 |     pub fn detect_text_regions(&mut self, image_data: &[u8]) -> Result<DetectionResult> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ duplicate definitions for `detect_text_regions`
+    |
+   ::: src\ai\tests.rs:965:5
+    |
+965 |     pub fn detect_text_regions(&mut self, _image_data: &[u8]) -> Result<DetectionResult, String> {
+    |     -------------------------------------------------------------------------------------------- other definition for `detect_text_regions`
+
+error[E0592]: duplicate definitions with name `get_preprocessing_suggestions`
+   --> src\ai\smart_detection.rs:393:5
+    |
+393 |     pub fn get_preprocessing_suggestions(&self, regions: &[TextRegion]) -> Vec<String> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ duplicate definitions for `get_preprocessing_suggestions`
+    |
+   ::: src\ai\tests.rs:969:5
+    |
+969 |     pub fn get_preprocessing_suggestions(&self, _regions: &[TextRegion]) -> Vec<String> {
+    |     ----------------------------------------------------------------------------------- other definition for `get_preprocessing_suggestions`
+
+error[E0034]: multiple applicable items in scope
+   --> src\ai\context_aware.rs:713:15
+    |
+713 |         Self::new()
+    |               ^^^ multiple `new` found
+    |
+note: candidate #1 is defined in an impl for the type `context_aware::ContextAwareTranslator`
+   --> src\ai\tests.rs:921:5
+    |
+921 |     pub fn new() -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^
+note: candidate #2 is defined in an impl for the type `context_aware::ContextAwareTranslator`
+   --> src\ai\context_aware.rs:136:5
+    |
+136 |     pub fn new() -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^
+
+error[E0034]: multiple applicable items in scope
+   --> src\ai\context_aware.rs:723:54
+    |
+723 |         let mut translator = ContextAwareTranslator::new();
+    |                                                      ^^^ multiple `new` found
+    |
+note: candidate #1 is defined in an impl for the type `context_aware::ContextAwareTranslator`
+   --> src\ai\tests.rs:921:5
+    |
+921 |     pub fn new() -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^
+note: candidate #2 is defined in an impl for the type `context_aware::ContextAwareTranslator`
+   --> src\ai\context_aware.rs:136:5
+    |
+136 |     pub fn new() -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^
+
+error[E0034]: multiple applicable items in scope
+   --> src\ai\context_aware.rs:734:54
+    |
+734 |         let mut translator = ContextAwareTranslator::new();
+    |                                                      ^^^ multiple `new` found
+    |
+note: candidate #1 is defined in an impl for the type `context_aware::ContextAwareTranslator`
+   --> src\ai\tests.rs:921:5
+    |
+921 |     pub fn new() -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^
+note: candidate #2 is defined in an impl for the type `context_aware::ContextAwareTranslator`
+   --> src\ai\context_aware.rs:136:5
+    |
+136 |     pub fn new() -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^
+
+error[E0034]: multiple applicable items in scope
+   --> src\ai\context_aware.rs:745:54
+    |
+745 |         let mut translator = ContextAwareTranslator::new();
+    |                                                      ^^^ multiple `new` found
+    |
+note: candidate #1 is defined in an impl for the type `context_aware::ContextAwareTranslator`
+   --> src\ai\tests.rs:921:5
+    |
+921 |     pub fn new() -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^
+note: candidate #2 is defined in an impl for the type `context_aware::ContextAwareTranslator`
+   --> src\ai\context_aware.rs:136:5
+    |
+136 |     pub fn new() -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^
+
+error[E0034]: multiple applicable items in scope
+   --> src\ai\context_aware.rs:757:54
+    |
+757 |         let mut translator = ContextAwareTranslator::new();
+    |                                                      ^^^ multiple `new` found
+    |
+note: candidate #1 is defined in an impl for the type `context_aware::ContextAwareTranslator`
+   --> src\ai\tests.rs:921:5
+    |
+921 |     pub fn new() -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^
+note: candidate #2 is defined in an impl for the type `context_aware::ContextAwareTranslator`
+   --> src\ai\context_aware.rs:136:5
+    |
+136 |     pub fn new() -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^
+
+error[E0034]: multiple applicable items in scope
+   --> src\ai\context_aware.rs:769:54
+    |
+769 |         let mut translator = ContextAwareTranslator::new();
+    |                                                      ^^^ multiple `new` found
+    |
+note: candidate #1 is defined in an impl for the type `context_aware::ContextAwareTranslator`
+   --> src\ai\tests.rs:921:5
+    |
+921 |     pub fn new() -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^
+note: candidate #2 is defined in an impl for the type `context_aware::ContextAwareTranslator`
+   --> src\ai\context_aware.rs:136:5
+    |
+136 |     pub fn new() -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^
+
+error[E0034]: multiple applicable items in scope
+   --> src\ai\smart_detection.rs:471:15
+    |
+471 |         Self::new(DetectionConfig::default())
+    |               ^^^ multiple `new` found
+    |
+note: candidate #1 is defined in an impl for the type `smart_detection::SmartAreaDetector`
+   --> src\ai\tests.rs:956:5
+    |
+956 |     pub fn new(_config: DetectionConfig) -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: candidate #2 is defined in an impl for the type `smart_detection::SmartAreaDetector`
+   --> src\ai\smart_detection.rs:138:5
+    |
+138 |     pub fn new(config: DetectionConfig) -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0034]: multiple applicable items in scope
+   --> src\ai\smart_detection.rs:511:31
+    |
+511 |         let result = detector.detect_text_regions(&mock_image).unwrap();
+    |                               ^^^^^^^^^^^^^^^^^^^ multiple `detect_text_regions` found
+    |
+note: candidate #1 is defined in an impl for the type `smart_detection::SmartAreaDetector`
+   --> src\ai\tests.rs:965:5
+    |
+965 |     pub fn detect_text_regions(&mut self, _image_data: &[u8]) -> Result<DetectionResult, String> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: candidate #2 is defined in an impl for the type `smart_detection::SmartAreaDetector`
+   --> src\ai\smart_detection.rs:148:5
+    |
+148 |     pub fn detect_text_regions(&mut self, image_data: &[u8]) -> Result<DetectionResult> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0034]: multiple applicable items in scope
+   --> src\ai\smart_detection.rs:525:31
+    |
+525 |         let result = detector.detect_text_regions(&mock_image).unwrap();
+    |                               ^^^^^^^^^^^^^^^^^^^ multiple `detect_text_regions` found
+    |
+note: candidate #1 is defined in an impl for the type `smart_detection::SmartAreaDetector`
+   --> src\ai\tests.rs:965:5
+    |
+965 |     pub fn detect_text_regions(&mut self, _image_data: &[u8]) -> Result<DetectionResult, String> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: candidate #2 is defined in an impl for the type `smart_detection::SmartAreaDetector`
+   --> src\ai\smart_detection.rs:148:5
+    |
+148 |     pub fn detect_text_regions(&mut self, image_data: &[u8]) -> Result<DetectionResult> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0034]: multiple applicable items in scope
+   --> src\ai\smart_detection.rs:539:32
+    |
+539 |         let result1 = detector.detect_text_regions(&mock_image).unwrap();
+    |                                ^^^^^^^^^^^^^^^^^^^ multiple `detect_text_regions` found
+    |
+note: candidate #1 is defined in an impl for the type `smart_detection::SmartAreaDetector`
+   --> src\ai\tests.rs:965:5
+    |
+965 |     pub fn detect_text_regions(&mut self, _image_data: &[u8]) -> Result<DetectionResult, String> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: candidate #2 is defined in an impl for the type `smart_detection::SmartAreaDetector`
+   --> src\ai\smart_detection.rs:148:5
+    |
+148 |     pub fn detect_text_regions(&mut self, image_data: &[u8]) -> Result<DetectionResult> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0034]: multiple applicable items in scope
+   --> src\ai\smart_detection.rs:540:32
+    |
+540 |         let result2 = detector.detect_text_regions(&mock_image).unwrap();
+    |                                ^^^^^^^^^^^^^^^^^^^ multiple `detect_text_regions` found
+    |
+note: candidate #1 is defined in an impl for the type `smart_detection::SmartAreaDetector`
+   --> src\ai\tests.rs:965:5
+    |
+965 |     pub fn detect_text_regions(&mut self, _image_data: &[u8]) -> Result<DetectionResult, String> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: candidate #2 is defined in an impl for the type `smart_detection::SmartAreaDetector`
+   --> src\ai\smart_detection.rs:148:5
+    |
+148 |     pub fn detect_text_regions(&mut self, image_data: &[u8]) -> Result<DetectionResult> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0034]: multiple applicable items in scope
+   --> src\ai\smart_detection.rs:551:18
+    |
+551 |         detector.detect_text_regions(&mock_image).unwrap();
+    |                  ^^^^^^^^^^^^^^^^^^^ multiple `detect_text_regions` found
+    |
+note: candidate #1 is defined in an impl for the type `smart_detection::SmartAreaDetector`
+   --> src\ai\tests.rs:965:5
+    |
+965 |     pub fn detect_text_regions(&mut self, _image_data: &[u8]) -> Result<DetectionResult, String> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: candidate #2 is defined in an impl for the type `smart_detection::SmartAreaDetector`
+   --> src\ai\smart_detection.rs:148:5
+    |
+148 |     pub fn detect_text_regions(&mut self, image_data: &[u8]) -> Result<DetectionResult> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0034]: multiple applicable items in scope
+   --> src\ai\tests.rs:27:54
+    |
+ 27 |         let mut translator = ContextAwareTranslator::new();
+    |                                                      ^^^ multiple `new` found
+    |
+note: candidate #1 is defined in an impl for the type `context_aware::ContextAwareTranslator`
+   --> src\ai\tests.rs:921:5
+    |
+921 |     pub fn new() -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^
+note: candidate #2 is defined in an impl for the type `context_aware::ContextAwareTranslator`
+   --> src\ai\context_aware.rs:136:5
+    |
+136 |     pub fn new() -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^
+
+error[E0034]: multiple applicable items in scope
+   --> src\ai\tests.rs:72:54
+    |
+ 72 |         let mut translator = ContextAwareTranslator::new();
+    |                                                      ^^^ multiple `new` found
+    |
+note: candidate #1 is defined in an impl for the type `context_aware::ContextAwareTranslator`
+   --> src\ai\tests.rs:921:5
+    |
+921 |     pub fn new() -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^
+note: candidate #2 is defined in an impl for the type `context_aware::ContextAwareTranslator`
+   --> src\ai\context_aware.rs:136:5
+    |
+136 |     pub fn new() -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^
+
+error[E0034]: multiple applicable items in scope
+   --> src\ai\tests.rs:113:50
+    |
+113 |         let translator = ContextAwareTranslator::new();
+    |                                                  ^^^ multiple `new` found
+    |
+note: candidate #1 is defined in an impl for the type `context_aware::ContextAwareTranslator`
+   --> src\ai\tests.rs:921:5
+    |
+921 |     pub fn new() -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^
+note: candidate #2 is defined in an impl for the type `context_aware::ContextAwareTranslator`
+   --> src\ai\context_aware.rs:136:5
+    |
+136 |     pub fn new() -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^
+
+error[E0034]: multiple applicable items in scope
+   --> src\ai\tests.rs:171:54
+    |
+171 |         let mut translator = ContextAwareTranslator::new();
+    |                                                      ^^^ multiple `new` found
+    |
+note: candidate #1 is defined in an impl for the type `context_aware::ContextAwareTranslator`
+   --> src\ai\tests.rs:921:5
+    |
+921 |     pub fn new() -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^
+note: candidate #2 is defined in an impl for the type `context_aware::ContextAwareTranslator`
+   --> src\ai\context_aware.rs:136:5
+    |
+136 |     pub fn new() -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^
+
+error[E0034]: multiple applicable items in scope
+   --> src\ai\tests.rs:222:54
+    |
+222 |         let mut translator = ContextAwareTranslator::new();
+    |                                                      ^^^ multiple `new` found
+    |
+note: candidate #1 is defined in an impl for the type `context_aware::ContextAwareTranslator`
+   --> src\ai\tests.rs:921:5
+    |
+921 |     pub fn new() -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^
+note: candidate #2 is defined in an impl for the type `context_aware::ContextAwareTranslator`
+   --> src\ai\context_aware.rs:136:5
+    |
+136 |     pub fn new() -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^
+
+error[E0034]: multiple applicable items in scope
+   --> src\ai\tests.rs:262:54
+    |
+262 |         let mut translator = ContextAwareTranslator::new();
+    |                                                      ^^^ multiple `new` found
+    |
+note: candidate #1 is defined in an impl for the type `context_aware::ContextAwareTranslator`
+   --> src\ai\tests.rs:921:5
+    |
+921 |     pub fn new() -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^
+note: candidate #2 is defined in an impl for the type `context_aware::ContextAwareTranslator`
+   --> src\ai\context_aware.rs:136:5
+    |
+136 |     pub fn new() -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^
+
+error[E0034]: multiple applicable items in scope
+   --> src\ai\tests.rs:303:54
+    |
+303 |         let mut translator = ContextAwareTranslator::new();
+    |                                                      ^^^ multiple `new` found
+    |
+note: candidate #1 is defined in an impl for the type `context_aware::ContextAwareTranslator`
+   --> src\ai\tests.rs:921:5
+    |
+921 |     pub fn new() -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^
+note: candidate #2 is defined in an impl for the type `context_aware::ContextAwareTranslator`
+   --> src\ai\context_aware.rs:136:5
+    |
+136 |     pub fn new() -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^
+
+error[E0560]: struct `smart_detection::DetectionConfig` has no field named `max_regions`
+   --> src\ai\tests.rs:374:13
+    |
+374 |             max_regions: 50,
+    |             ^^^^^^^^^^^ `smart_detection::DetectionConfig` does not have this field
+    |
+    = note: available fields are: `max_region_width`, `max_region_height`, `overlap_threshold`, `cache_results`
+
+error[E0560]: struct `smart_detection::DetectionConfig` has no field named `merge_threshold`
+   --> src\ai\tests.rs:375:13
+    |
+375 |             merge_threshold: 0.3,
+    |             ^^^^^^^^^^^^^^^ unknown field
+    |
+help: a field with a similar name exists
+    |
+375 -             merge_threshold: 0.3,
+375 +             overlap_threshold: 0.3,
+    |
+
+error[E0034]: multiple applicable items in scope
+   --> src\ai\tests.rs:378:47
+    |
+378 |         let mut detector = SmartAreaDetector::new(config);
+    |                                               ^^^ multiple `new` found
+    |
+note: candidate #1 is defined in an impl for the type `smart_detection::SmartAreaDetector`
+   --> src\ai\tests.rs:956:5
+    |
+956 |     pub fn new(_config: DetectionConfig) -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: candidate #2 is defined in an impl for the type `smart_detection::SmartAreaDetector`
+   --> src\ai\smart_detection.rs:138:5
+    |
+138 |     pub fn new(config: DetectionConfig) -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0034]: multiple applicable items in scope
+   --> src\ai\tests.rs:437:47
+    |
+437 |         let mut detector = SmartAreaDetector::new(config);
+    |                                               ^^^ multiple `new` found
+    |
+note: candidate #1 is defined in an impl for the type `smart_detection::SmartAreaDetector`
+   --> src\ai\tests.rs:956:5
+    |
+956 |     pub fn new(_config: DetectionConfig) -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: candidate #2 is defined in an impl for the type `smart_detection::SmartAreaDetector`
+   --> src\ai\smart_detection.rs:138:5
+    |
+138 |     pub fn new(config: DetectionConfig) -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0560]: struct `smart_detection::DetectionConfig` has no field named `merge_threshold`
+   --> src\ai\tests.rs:491:13
+    |
+491 |             merge_threshold: 0.3,
+    |             ^^^^^^^^^^^^^^^ unknown field
+    |
+help: a field with a similar name exists
+    |
+491 -             merge_threshold: 0.3,
+491 +             overlap_threshold: 0.3,
+    |
+
+error[E0034]: multiple applicable items in scope
+   --> src\ai\tests.rs:496:47
+    |
+496 |         let mut detector = SmartAreaDetector::new(config);
+    |                                               ^^^ multiple `new` found
+    |
+note: candidate #1 is defined in an impl for the type `smart_detection::SmartAreaDetector`
+   --> src\ai\tests.rs:956:5
+    |
+956 |     pub fn new(_config: DetectionConfig) -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: candidate #2 is defined in an impl for the type `smart_detection::SmartAreaDetector`
+   --> src\ai\smart_detection.rs:138:5
+    |
+138 |     pub fn new(config: DetectionConfig) -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0034]: multiple applicable items in scope
+   --> src\ai\tests.rs:580:36
+    |
+580 |         let suggestions = detector.get_preprocessing_suggestions(&test_regions);
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ multiple `get_preprocessing_suggestions` found
+    |
+note: candidate #1 is defined in an impl for the type `smart_detection::SmartAreaDetector`
+   --> src\ai\tests.rs:969:5
+    |
+969 |     pub fn get_preprocessing_suggestions(&self, _regions: &[TextRegion]) -> Vec<String> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: candidate #2 is defined in an impl for the type `smart_detection::SmartAreaDetector`
+   --> src\ai\smart_detection.rs:393:5
+    |
+393 |     pub fn get_preprocessing_suggestions(&self, regions: &[TextRegion]) -> Vec<String> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0560]: struct `smart_detection::DetectionConfig` has no field named `enable_caching`
+   --> src\ai\tests.rs:621:13
+    |
+621 |             enable_caching: true,
+    |             ^^^^^^^^^^^^^^ `smart_detection::DetectionConfig` does not have this field
+    |
+    = note: available fields are: `min_region_width`, `min_region_height`, `max_region_width`, `max_region_height`, `confidence_threshold` ... and 4 others
+
+error[E0560]: struct `smart_detection::DetectionConfig` has no field named `cache_ttl_seconds`
+   --> src\ai\tests.rs:622:13
+    |
+622 |             cache_ttl_seconds: 60,
+    |             ^^^^^^^^^^^^^^^^^ `smart_detection::DetectionConfig` does not have this field
+    |
+    = note: available fields are: `min_region_width`, `min_region_height`, `max_region_width`, `max_region_height`, `confidence_threshold` ... and 4 others
+
+error[E0034]: multiple applicable items in scope
+   --> src\ai\tests.rs:626:47
+    |
+626 |         let mut detector = SmartAreaDetector::new(config);
+    |                                               ^^^ multiple `new` found
+    |
+note: candidate #1 is defined in an impl for the type `smart_detection::SmartAreaDetector`
+   --> src\ai\tests.rs:956:5
+    |
+956 |     pub fn new(_config: DetectionConfig) -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: candidate #2 is defined in an impl for the type `smart_detection::SmartAreaDetector`
+   --> src\ai\smart_detection.rs:138:5
+    |
+138 |     pub fn new(config: DetectionConfig) -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0560]: struct `smart_detection::DetectionConfig` has no field named `ml_confidence_threshold`
+   --> src\ai\tests.rs:679:13
+    |
+679 |             ml_confidence_threshold: 0.7,
+    |             ^^^^^^^^^^^^^^^^^^^^^^^ unknown field
+    |
+help: a field with a similar name exists
+    |
+679 -             ml_confidence_threshold: 0.7,
+679 +             confidence_threshold: 0.7,
+    |
+
+error[E0034]: multiple applicable items in scope
+   --> src\ai\tests.rs:683:47
+    |
+683 |         let mut detector = SmartAreaDetector::new(config);
+    |                                               ^^^ multiple `new` found
+    |
+note: candidate #1 is defined in an impl for the type `smart_detection::SmartAreaDetector`
+   --> src\ai\tests.rs:956:5
+    |
+956 |     pub fn new(_config: DetectionConfig) -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: candidate #2 is defined in an impl for the type `smart_detection::SmartAreaDetector`
+   --> src\ai\smart_detection.rs:138:5
+    |
+138 |     pub fn new(config: DetectionConfig) -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0034]: multiple applicable items in scope
+   --> src\ai\tests.rs:962:15
+    |
+962 |         Self::new(DetectionConfig::default())
+    |               ^^^ multiple `new` found
+    |
+note: candidate #1 is defined in an impl for the type `smart_detection::SmartAreaDetector`
+   --> src\ai\tests.rs:956:5
+    |
+956 |     pub fn new(_config: DetectionConfig) -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: candidate #2 is defined in an impl for the type `smart_detection::SmartAreaDetector`
+   --> src\ai\smart_detection.rs:138:5
+    |
+138 |     pub fn new(config: DetectionConfig) -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0560]: struct `smart_detection::DetectionConfig` has no field named `max_regions`
+   --> src\ai\tests.rs:995:13
+    |
+995 |             max_regions: 20,
+    |             ^^^^^^^^^^^ `smart_detection::DetectionConfig` does not have this field
+    |
+    = note: available fields are: `max_region_width`, `max_region_height`, `overlap_threshold`, `cache_results`
+
+error[E0560]: struct `smart_detection::DetectionConfig` has no field named `merge_threshold`
+   --> src\ai\tests.rs:996:13
+    |
+996 |             merge_threshold: 0.3,
+    |             ^^^^^^^^^^^^^^^ unknown field
+    |
+help: a field with a similar name exists
+    |
+996 -             merge_threshold: 0.3,
+996 +             overlap_threshold: 0.3,
+    |
+
+error[E0560]: struct `smart_detection::DetectionConfig` has no field named `enable_caching`
+   --> src\ai\tests.rs:997:13
+    |
+997 |             enable_caching: false,
+    |             ^^^^^^^^^^^^^^ `smart_detection::DetectionConfig` does not have this field
+    |
+    = note: available fields are: `max_region_width`, `max_region_height`, `overlap_threshold`, `cache_results`
+
+error[E0560]: struct `smart_detection::DetectionConfig` has no field named `cache_ttl_seconds`
+   --> src\ai\tests.rs:998:13
+    |
+998 |             cache_ttl_seconds: 300,
+    |             ^^^^^^^^^^^^^^^^^ `smart_detection::DetectionConfig` does not have this field
+    |
+    = note: available fields are: `max_region_width`, `max_region_height`, `overlap_threshold`, `cache_results`
+
+error[E0560]: struct `smart_detection::DetectionConfig` has no field named `ml_confidence_threshold`
+   --> src\ai\tests.rs:999:13
+    |
+999 |             ml_confidence_threshold: 0.7,
+    |             ^^^^^^^^^^^^^^^^^^^^^^^ `smart_detection::DetectionConfig` does not have this field
+    |
+    = note: available fields are: `max_region_width`, `max_region_height`, `overlap_threshold`, `cache_results`
+
+error[E0599]: no method named `is_ok` found for struct `Pin<Box<dyn Future<Output = Result<DynamicImage, ...>> + Send>>` in the current scope
+   --> src\core\screenshot.rs:411:24
+    |
+411 |         assert!(result.is_ok(), "Should capture area successfully");
+    |                        ^^^^^
+    |
+help: there is a method `inspect_ok` with a similar name, but with different arguments
+   --> C:\Users\MIKEk8\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\futures-util-0.3.31\src\future\try_future\mod.rs:467:5
+    |
+467 | /     fn inspect_ok<F>(self, f: F) -> InspectOk<Self, F>
+468 | |     where
+469 | |         F: FnOnce(&Self::Ok),
+470 | |         Self: Sized,
+    | |____________________^
+
+error[E0599]: no method named `unwrap` found for struct `Pin<Box<dyn Future<Output = Result<DynamicImage, ...>> + Send>>` in the current scope
+   --> src\core\screenshot.rs:413:28
+    |
+413 |         let image = result.unwrap();
+    |                            ^^^^^^ method not found in `Pin<Box<dyn Future<Output = Result<DynamicImage, ...>> + Send>>`
+
+error[E0599]: no method named `is_err` found for struct `Pin<Box<dyn Future<Output = Result<DynamicImage, ...>> + Send>>` in the current scope
+   --> src\core\screenshot.rs:425:24
+    |
+425 |         assert!(result.is_err(), "Should fail when service not available");
+    |                        ^^^^^^
+    |
+help: there is a method `inspect_err` with a similar name, but with different arguments
+   --> C:\Users\MIKEk8\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\futures-util-0.3.31\src\future\try_future\mod.rs:493:5
+    |
+493 | /     fn inspect_err<F>(self, f: F) -> InspectErr<Self, F>
+494 | |     where
+495 | |         F: FnOnce(&Self::Error),
+496 | |         Self: Sized,
+    | |____________________^
+
+error[E0308]: mismatched types
+   --> src\core\screenshot.rs:427:16
+    |
+427 |         if let Err(ScreenshotError::NotAvailable(_)) = result {
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^   ------ this expression has type `Pin<Box<dyn Future<Output = Result<DynamicImage, ...>> + Send>>`
+    |                |
+    |                expected `Pin<Box<...>>`, found `Result<_, _>`
+    |
+    = note: expected struct `Pin<Box<dyn std::future::Future<Output = Result<image::DynamicImage, utils::error::ScreenshotError>> + Send>>`
+                 found enum `Result<_, _>`
+    = note: the full name for the type has been written to 'P:\visual_translater\screen-translator-rust\target\debug\deps\screen_translator-d09e2d9b430b9e37.long-type-12354581754038131854.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0599]: no method named `is_err` found for struct `Pin<Box<dyn Future<Output = Result<DynamicImage, ...>> + Send>>` in the current scope
+   --> src\core\screenshot.rs:448:24
+    |
+448 |         assert!(result.is_err(), "Should fail with zero width");
+    |                        ^^^^^^
+    |
+help: there is a method `inspect_err` with a similar name, but with different arguments
+   --> C:\Users\MIKEk8\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\futures-util-0.3.31\src\future\try_future\mod.rs:493:5
+    |
+493 | /     fn inspect_err<F>(self, f: F) -> InspectErr<Self, F>
+494 | |     where
+495 | |         F: FnOnce(&Self::Error),
+496 | |         Self: Sized,
+    | |____________________^
+
+error[E0599]: no method named `is_err` found for struct `Pin<Box<dyn Future<Output = Result<DynamicImage, ...>> + Send>>` in the current scope
+   --> src\core\screenshot.rs:459:24
+    |
+459 |         assert!(result.is_err(), "Should fail with oversized area");
+    |                        ^^^^^^
+    |
+help: there is a method `inspect_err` with a similar name, but with different arguments
+   --> C:\Users\MIKEk8\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\futures-util-0.3.31\src\future\try_future\mod.rs:493:5
+    |
+493 | /     fn inspect_err<F>(self, f: F) -> InspectErr<Self, F>
+494 | |     where
+495 | |         F: FnOnce(&Self::Error),
+496 | |         Self: Sized,
+    | |____________________^
+
+error[E0599]: no method named `is_ok` found for struct `Pin<Box<dyn Future<Output = Result<DynamicImage, ...>> + Send>>` in the current scope
+   --> src\core\screenshot.rs:470:24
+    |
+470 |         assert!(result.is_ok(), "Should capture fullscreen");
+    |                        ^^^^^
+    |
+help: there is a method `inspect_ok` with a similar name, but with different arguments
+   --> C:\Users\MIKEk8\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\futures-util-0.3.31\src\future\try_future\mod.rs:467:5
+    |
+467 | /     fn inspect_ok<F>(self, f: F) -> InspectOk<Self, F>
+468 | |     where
+469 | |         F: FnOnce(&Self::Ok),
+470 | |         Self: Sized,
+    | |____________________^
+
+error[E0599]: no method named `unwrap` found for struct `Pin<Box<dyn Future<Output = Result<DynamicImage, ...>> + Send>>` in the current scope
+   --> src\core\screenshot.rs:472:28
+    |
+472 |         let image = result.unwrap();
+    |                            ^^^^^^ method not found in `Pin<Box<dyn Future<Output = Result<DynamicImage, ...>> + Send>>`
+
+error[E0599]: no method named `is_ok` found for struct `Pin<Box<dyn Future<Output = Result<Vec<MonitorInfo>, ...>> + Send>>` in the current scope
+   --> src\core\screenshot.rs:485:24
+    |
+485 |         assert!(result.is_ok(), "Should get monitors list");
+    |                        ^^^^^
+    |
+help: there is a method `inspect_ok` with a similar name, but with different arguments
+   --> C:\Users\MIKEk8\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\futures-util-0.3.31\src\future\try_future\mod.rs:467:5
+    |
+467 | /     fn inspect_ok<F>(self, f: F) -> InspectOk<Self, F>
+468 | |     where
+469 | |         F: FnOnce(&Self::Ok),
+470 | |         Self: Sized,
+    | |____________________^
+
+error[E0599]: no method named `unwrap` found for struct `Pin<Box<dyn Future<Output = Result<Vec<MonitorInfo>, ...>> + Send>>` in the current scope
+   --> src\core\screenshot.rs:487:31
+    |
+487 |         let monitors = result.unwrap();
+    |                               ^^^^^^ method not found in `Pin<Box<dyn Future<Output = Result<Vec<MonitorInfo>, ...>> + Send>>`
+
+error[E0599]: no method named `is_ok` found for struct `Pin<Box<dyn Future<Output = Result<MonitorInfo, ...>> + Send>>` in the current scope
+   --> src\core\screenshot.rs:500:24
+    |
+500 |         assert!(result.is_ok(), "Should find primary monitor");
+    |                        ^^^^^
+    |
+help: there is a method `inspect_ok` with a similar name, but with different arguments
+   --> C:\Users\MIKEk8\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\futures-util-0.3.31\src\future\try_future\mod.rs:467:5
+    |
+467 | /     fn inspect_ok<F>(self, f: F) -> InspectOk<Self, F>
+468 | |     where
+469 | |         F: FnOnce(&Self::Ok),
+470 | |         Self: Sized,
+    | |____________________^
+
+error[E0599]: no method named `unwrap` found for struct `Pin<Box<dyn Future<Output = Result<MonitorInfo, ...>> + Send>>` in the current scope
+   --> src\core\screenshot.rs:502:30
+    |
+502 |         let primary = result.unwrap();
+    |                              ^^^^^^ method not found in `Pin<Box<dyn Future<Output = Result<MonitorInfo, ...>> + Send>>`
+
+error[E0599]: no method named `unwrap` found for struct `Pin<Box<dyn Future<Output = Result<Vec<MonitorInfo>, ...>> + Send>>` in the current scope
+   --> src\core\screenshot.rs:511:50
+    |
+511 |         let monitors = screenshot.get_monitors().unwrap();
+    |                                                  ^^^^^^ method not found in `Pin<Box<dyn Future<Output = Result<Vec<MonitorInfo>, ...>> + Send>>`
+
+error[E0599]: no method named `expect` found for struct `Pin<Box<dyn Future<Output = Result<DynamicImage, ...>> + Send>>` in the current scope
+  --> src\core\tests.rs:52:14
+   |
+50 |           let image = screenshot
+   |  _____________________-
+51 | |             .capture_area(area)
+52 | |             .expect("Should capture real screen area");
+   | |             -^^^^^^ method not found in `Pin<Box<dyn Future<Output = Result<DynamicImage, ...>> + Send>>`
+   | |_____________|
+   |
+
+error[E0599]: no method named `expect` found for struct `Pin<Box<dyn Future<Output = Result<Vec<MonitorInfo>, ...>> + Send>>` in the current scope
+  --> src\core\tests.rs:78:14
+   |
+76 |           let monitors = screenshot
+   |  ________________________-
+77 | |             .get_monitors()
+78 | |             .expect("Should enumerate real monitors");
+   | |             -^^^^^^ method not found in `Pin<Box<dyn Future<Output = Result<Vec<MonitorInfo>, ...>> + Send>>`
+   | |_____________|
+   |
+
+error[E0599]: no method named `expect` found for struct `Pin<Box<dyn Future<Output = Result<Vec<MonitorInfo>, ...>> + Send>>` in the current scope
+   --> src\core\tests.rs:112:50
+    |
+112 |         let monitors = screenshot.get_monitors().expect("Should get monitors");
+    |                                                  ^^^^^^ method not found in `Pin<Box<dyn Future<Output = Result<Vec<MonitorInfo>, ...>> + Send>>`
+
+error[E0599]: no method named `expect` found for struct `Pin<Box<dyn Future<Output = Result<DynamicImage, ...>> + Send>>` in the current scope
+   --> src\core\tests.rs:129:22
+    |
+127 |                   let image = screenshot_service
+    |  _____________________________-
+128 | |                     .capture_area(scaled_area)
+129 | |                     .expect("Should capture scaled area");
+    | |                     -^^^^^^ method not found in `Pin<Box<dyn Future<Output = Result<DynamicImage, ...>> + Send>>`
+    | |_____________________|
+    |
+
+error[E0599]: no method named `expect` found for struct `Pin<Box<dyn Future<Output = Result<DynamicImage, ...>> + Send>>` in the current scope
+   --> src\core\tests.rs:154:14
+    |
+152 |           let _image = screenshot
+    |  ______________________-
+153 | |             .capture_area(area)
+154 | |             .expect("Should capture screenshot");
+    | |             -^^^^^^ method not found in `Pin<Box<dyn Future<Output = Result<DynamicImage, ...>> + Send>>`
+    | |_____________|
+    |
+
+error[E0308]: mismatched types
+   --> src\core\tests.rs:183:13
+    |
+182 |         match result {
+    |               ------ this expression has type `Pin<Box<dyn Future<Output = Result<DynamicImage, ...>> + Send>>`
+183 |             Ok(image) => {
+    |             ^^^^^^^^^ expected `Pin<Box<...>>`, found `Result<_, _>`
+    |
+    = note: expected struct `Pin<Box<dyn std::future::Future<Output = Result<image::DynamicImage, utils::error::ScreenshotError>> + Send>>`
+                 found enum `Result<_, _>`
+    = note: the full name for the type has been written to 'P:\visual_translater\screen-translator-rust\target\debug\deps\screen_translator-d09e2d9b430b9e37.long-type-17217069467417702961.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0308]: mismatched types
+   --> src\core\tests.rs:187:13
+    |
+182 |         match result {
+    |               ------ this expression has type `Pin<Box<dyn Future<Output = Result<DynamicImage, ...>> + Send>>`
+...
+187 |             Err(ScreenshotError::InvalidArea(_)) => {
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `Pin<Box<...>>`, found `Result<_, _>`
+    |
+    = note: expected struct `Pin<Box<dyn std::future::Future<Output = Result<image::DynamicImage, utils::error::ScreenshotError>> + Send>>`
+                 found enum `Result<_, _>`
+    = note: the full name for the type has been written to 'P:\visual_translater\screen-translator-rust\target\debug\deps\screen_translator-d09e2d9b430b9e37.long-type-17217069467417702961.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0308]: mismatched types
+   --> src\core\tests.rs:190:13
+    |
+182 |         match result {
+    |               ------ this expression has type `Pin<Box<dyn Future<Output = Result<DynamicImage, ...>> + Send>>`
+...
+190 |             Err(e) => panic!("Unexpected error type: {:?}", e),
+    |             ^^^^^^ expected `Pin<Box<...>>`, found `Result<_, _>`
+    |
+    = note: expected struct `Pin<Box<dyn std::future::Future<Output = Result<image::DynamicImage, utils::error::ScreenshotError>> + Send>>`
+                 found enum `Result<_, _>`
+    = note: the full name for the type has been written to 'P:\visual_translater\screen-translator-rust\target\debug\deps\screen_translator-d09e2d9b430b9e37.long-type-17217069467417702961.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0599]: no method named `expect` found for struct `Pin<Box<dyn Future<Output = Result<Vec<MonitorInfo>, ...>> + Send>>` in the current scope
+   --> src\core\tests.rs:194:50
+    |
+194 |         let monitors = screenshot.get_monitors().expect("Should get monitors");
+    |                                                  ^^^^^^ method not found in `Pin<Box<dyn Future<Output = Result<Vec<MonitorInfo>, ...>> + Send>>`
+
+error[E0599]: no method named `is_ok` found for struct `Pin<Box<dyn Future<Output = Result<DynamicImage, ...>> + Send>>` in the current scope
+   --> src\core\tests.rs:209:24
+    |
+209 |         assert!(result.is_ok() || matches!(result, Err(ScreenshotError::InvalidArea(_))));
+    |                        ^^^^^
+    |
+help: there is a method `inspect_ok` with a similar name, but with different arguments
+   --> C:\Users\MIKEk8\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\futures-util-0.3.31\src\future\try_future\mod.rs:467:5
+    |
+467 | /     fn inspect_ok<F>(self, f: F) -> InspectOk<Self, F>
+468 | |     where
+469 | |         F: FnOnce(&Self::Ok),
+470 | |         Self: Sized,
+    | |____________________^
+
+error[E0308]: mismatched types
+   --> src\core\tests.rs:209:52
+    |
+209 |         assert!(result.is_ok() || matches!(result, Err(ScreenshotError::InvalidArea(_))));
+    |                                            ------  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `Pin<Box<...>>`, found `Result<_, _>`
+    |                                            |
+    |                                            this expression has type `Pin<Box<dyn Future<Output = Result<DynamicImage, ...>> + Send>>`
+    |
+    = note: expected struct `Pin<Box<dyn std::future::Future<Output = Result<image::DynamicImage, utils::error::ScreenshotError>> + Send>>`
+                 found enum `Result<_, _>`
+    = note: the full name for the type has been written to 'P:\visual_translater\screen-translator-rust\target\debug\deps\screen_translator-d09e2d9b430b9e37.long-type-11256192340007881608.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0560]: struct `ocr::OcrConfig` has no field named `confidence_threshold`
+   --> src\core\tests.rs:223:13
+    |
+223 |             confidence_threshold: 0.6,
+    |             ^^^^^^^^^^^^^^^^^^^^ `ocr::OcrConfig` does not have this field
+    |
+    = note: available fields are: `page_segmentation_mode`, `engine_mode`, `whitelist_chars`, `blacklist_chars`, `min_confidence`, `timeout_seconds`
+
+error[E0560]: struct `ocr::OcrConfig` has no field named `preprocessing_enabled`
+   --> src\core\tests.rs:224:13
+    |
+224 |             preprocessing_enabled: true,
+    |             ^^^^^^^^^^^^^^^^^^^^^ `ocr::OcrConfig` does not have this field
+    |
+    = note: available fields are: `page_segmentation_mode`, `engine_mode`, `whitelist_chars`, `blacklist_chars`, `min_confidence`, `timeout_seconds`
+
+error[E0609]: no field `bounds` on type `&ocr::TextRegion`
+   --> src\core\tests.rs:284:28
+    |
+284 |             assert!(region.bounds.width > 0, "Region width should be positive");
+    |                            ^^^^^^ unknown field
+    |
+    = note: available fields are: `x`, `y`, `width`, `height`, `confidence`, `text`
+
+error[E0609]: no field `bounds` on type `&ocr::TextRegion`
+   --> src\core\tests.rs:285:28
+    |
+285 |             assert!(region.bounds.height > 0, "Region height should be positive");
+    |                            ^^^^^^ unknown field
+    |
+    = note: available fields are: `x`, `y`, `width`, `height`, `confidence`, `text`
+
+error[E0609]: no field `bounds` on type `&ocr::TextRegion`
+   --> src\core\tests.rs:287:24
+    |
+287 |                 region.bounds.x < test_image.width(),
+    |                        ^^^^^^ unknown field
+    |
+    = note: available fields are: `x`, `y`, `width`, `height`, `confidence`, `text`
+
+error[E0609]: no field `bounds` on type `&ocr::TextRegion`
+   --> src\core\tests.rs:291:24
+    |
+291 |                 region.bounds.y < test_image.height(),
+    |                        ^^^^^^ unknown field
+    |
+    = note: available fields are: `x`, `y`, `width`, `height`, `confidence`, `text`
+
+error[E0599]: no method named `get_available_languages` found for struct `ocr::TesseractOcr` in the current scope
+   --> src\core\tests.rs:305:14
+    |
+304 |           let available_languages = ocr_engine
+    |  ___________________________________-
+305 | |             .get_available_languages()
+    | |_____________-^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src\core\ocr.rs:84:1
+    |
+ 84 |   pub struct TesseractOcr {
+    |   ----------------------- method `get_available_languages` not found for this struct
+    |
+help: there is a method `set_language` with a similar name, but with different arguments
+   --> src\core\ocr.rs:64:5
+    |
+ 64 |     fn set_language(&mut self, lang: &str) -> Result<(), OcrError>;
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0560]: struct `image_processor::PreprocessingConfig` has no field named `enable_rotation_correction`
+   --> src\core\tests.rs:391:13
+    |
+391 |             enable_rotation_correction: true,
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^ `image_processor::PreprocessingConfig` does not have this field
+    |
+    = note: available fields are: `enable_grayscale`, `enable_sharpening`, `contrast_factor`, `brightness_offset`, `noise_reduction_strength` ... and 2 others
+
+error[E0560]: struct `image_processor::PreprocessingConfig` has no field named `sharpen_factor`
+   --> src\core\tests.rs:392:13
+    |
+392 |             sharpen_factor: 1.2,
+    |             ^^^^^^^^^^^^^^ unknown field
+    |
+help: a field with a similar name exists
+    |
+392 -             sharpen_factor: 1.2,
+392 +             scale_factor: 1.2,
+    |
+
+error[E0061]: this method takes 1 argument but 2 arguments were supplied
+   --> src\core\tests.rs:398:14
+    |
+398 |             .preprocess(&noisy_image, &config)
+    |              ^^^^^^^^^^ ------------  ------- unexpected argument #2 of type `&image_processor::PreprocessingConfig`
+    |                         |
+    |                         expected `DynamicImage`, found `&DynamicImage`
+    |
+note: method defined here
+   --> src\core\image_processor.rs:121:12
+    |
+121 |     pub fn preprocess(
+    |            ^^^^^^^^^^
+122 |         &mut self,
+123 |         image: DynamicImage,
+    |         -------------------
+help: consider removing the borrow
+    |
+398 -             .preprocess(&noisy_image, &config)
+398 +             .preprocess(noisy_image, &config)
+    |
+help: remove the extra argument
+    |
+398 -             .preprocess(&noisy_image, &config)
+398 +             .preprocess(/* image::DynamicImage */)
+    |
+
+error[E0599]: no method named `detect_rotation_angle` found for struct `image_processor::ImageProcessor` in the current scope
+   --> src\core\tests.rs:426:14
+    |
+425 |           let detected_angle = processor
+    |  ______________________________-
+426 | |             .detect_rotation_angle(&rotated_image)
+    | |             -^^^^^^^^^^^^^^^^^^^^^ method not found in `image_processor::ImageProcessor`
+    | |_____________|
+    |
+    |
+   ::: src\core\image_processor.rs:97:1
+    |
+ 97 |   pub struct ImageProcessor {
+    |   ------------------------- method `detect_rotation_angle` not found for this struct
+
+error[E0599]: no method named `correct_rotation` found for struct `image_processor::ImageProcessor` in the current scope
+   --> src\core\tests.rs:438:14
+    |
+437 |           let corrected = processor
+    |  _________________________-
+438 | |             .correct_rotation(&rotated_image, detected_angle)
+    | |             -^^^^^^^^^^^^^^^^ method not found in `image_processor::ImageProcessor`
+    | |_____________|
+    |
+    |
+   ::: src\core\image_processor.rs:97:1
+    |
+ 97 |   pub struct ImageProcessor {
+    |   ------------------------- method `correct_rotation` not found for this struct
+
+error[E0599]: no method named `detect_rotation_angle` found for struct `image_processor::ImageProcessor` in the current scope
+   --> src\core\tests.rs:443:14
+    |
+442 |           let final_angle = processor
+    |  ___________________________-
+443 | |             .detect_rotation_angle(&corrected)
+    | |             -^^^^^^^^^^^^^^^^^^^^^ method not found in `image_processor::ImageProcessor`
+    | |_____________|
+    |
+    |
+   ::: src\core\image_processor.rs:97:1
+    |
+ 97 |   pub struct ImageProcessor {
+    |   ------------------------- method `detect_rotation_angle` not found for this struct
+
+error[E0599]: no method named `apply_filter` found for struct `image_processor::ImageProcessor` in the current scope
+   --> src\core\tests.rs:469:18
+    |
+468 |               let enhanced = processor
+    |  ____________________________-
+469 | |                 .apply_filter(&test_image, &filter)
+    | |                 -^^^^^^^^^^^^ method not found in `image_processor::ImageProcessor`
+    | |_________________|
+    |
+    |
+   ::: src\core\image_processor.rs:97:1
+    |
+ 97 |   pub struct ImageProcessor {
+    |   ------------------------- method `apply_filter` not found for this struct
+
+error[E0560]: struct `image_processor::PreprocessingConfig` has no field named `enable_rotation_correction`
+   --> src\core\tests.rs:497:13
+    |
+497 |             enable_rotation_correction: false, // Skip rotation for speed test
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^ `image_processor::PreprocessingConfig` does not have this field
+    |
+    = note: available fields are: `enable_grayscale`, `enable_sharpening`, `contrast_factor`, `brightness_offset`, `noise_reduction_strength` ... and 2 others
+
+error[E0061]: this method takes 1 argument but 2 arguments were supplied
+   --> src\core\tests.rs:503:14
+    |
+503 |             .preprocess(&large_image, &config)
+    |              ^^^^^^^^^^ ------------  ------- unexpected argument #2 of type `&image_processor::PreprocessingConfig`
+    |                         |
+    |                         expected `DynamicImage`, found `&DynamicImage`
+    |
+note: method defined here
+   --> src\core\image_processor.rs:121:12
+    |
+121 |     pub fn preprocess(
+    |            ^^^^^^^^^^
+122 |         &mut self,
+123 |         image: DynamicImage,
+    |         -------------------
+help: consider removing the borrow
+    |
+503 -             .preprocess(&large_image, &config)
+503 +             .preprocess(large_image, &config)
+    |
+help: remove the extra argument
+    |
+503 -             .preprocess(&large_image, &config)
+503 +             .preprocess(/* image::DynamicImage */)
+    |
+
+error[E0599]: no method named `expect` found for struct `Pin<Box<dyn Future<Output = Result<DynamicImage, ...>> + Send>>` in the current scope
+   --> src\core\tests.rs:637:14
+    |
+635 |           let raw_image = screenshot
+    |  _________________________-
+636 | |             .capture_area(area)
+637 | |             .expect("Should capture screenshot");
+    | |             -^^^^^^ method not found in `Pin<Box<dyn Future<Output = Result<DynamicImage, ...>> + Send>>`
+    | |_____________|
+    |
+
+error[E0061]: this method takes 1 argument but 2 arguments were supplied
+   --> src\core\tests.rs:643:14
+    |
+643 |             .preprocess(&raw_image, &preprocessing_config)
+    |              ^^^^^^^^^^             --------------------- unexpected argument #2 of type `&image_processor::PreprocessingConfig`
+    |
+note: method defined here
+   --> src\core\image_processor.rs:121:12
+    |
+121 |     pub fn preprocess(
+    |            ^^^^^^^^^^
+help: remove the extra argument
+    |
+643 -             .preprocess(&raw_image, &preprocessing_config)
+643 +             .preprocess(&raw_image)
+    |
+
+error[E0599]: no variant or associated item named `LanguageNotSupported` found for enum `utils::error::OcrError` in the current scope
+   --> src\core\tests.rs:710:27
+    |
+710 |             Err(OcrError::LanguageNotSupported(_)) => {
+    |                           ^^^^^^^^^^^^^^^^^^^^ variant or associated item not found in `utils::error::OcrError`
+    |
+   ::: src\utils\error.rs:69:1
+    |
+ 69 | pub enum OcrError {
+    | ----------------- variant or associated item `LanguageNotSupported` not found for this enum
+
+error[E0599]: no method named `get_available_languages` found for struct `ocr::TesseractOcr` in the current scope
+   --> src\core\tests.rs:704:44
+    |
+704 |                 let available = ocr_engine.get_available_languages().unwrap_or_default();
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src\core\ocr.rs:84:1
+    |
+ 84 | pub struct TesseractOcr {
+    | ----------------------- method `get_available_languages` not found for this struct
+    |
+help: there is a method `set_language` with a similar name, but with different arguments
+   --> src\core\ocr.rs:64:5
+    |
+ 64 |     fn set_language(&mut self, lang: &str) -> Result<(), OcrError>;
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0308]: mismatched types
+   --> src\core\tests.rs:731:13
+    |
+730 |         match result {
+    |               ------ this expression has type `Pin<Box<dyn Future<Output = Result<DynamicImage, ...>> + Send>>`
+731 |             Ok(image) => {
+    |             ^^^^^^^^^ expected `Pin<Box<...>>`, found `Result<_, _>`
+    |
+    = note: expected struct `Pin<Box<dyn std::future::Future<Output = Result<image::DynamicImage, utils::error::ScreenshotError>> + Send>>`
+                 found enum `Result<_, _>`
+    = note: the full name for the type has been written to 'P:\visual_translater\screen-translator-rust\target\debug\deps\screen_translator-d09e2d9b430b9e37.long-type-7646533736821313182.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0308]: mismatched types
+   --> src\core\tests.rs:735:13
+    |
+730 |         match result {
+    |               ------ this expression has type `Pin<Box<dyn Future<Output = Result<DynamicImage, ...>> + Send>>`
+...
+735 |             Err(ScreenshotError::InvalidArea(_)) => {
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `Pin<Box<...>>`, found `Result<_, _>`
+    |
+    = note: expected struct `Pin<Box<dyn std::future::Future<Output = Result<image::DynamicImage, utils::error::ScreenshotError>> + Send>>`
+                 found enum `Result<_, _>`
+    = note: the full name for the type has been written to 'P:\visual_translater\screen-translator-rust\target\debug\deps\screen_translator-d09e2d9b430b9e37.long-type-7646533736821313182.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0308]: mismatched types
+   --> src\core\tests.rs:738:13
+    |
+730 |         match result {
+    |               ------ this expression has type `Pin<Box<dyn Future<Output = Result<DynamicImage, ...>> + Send>>`
+...
+738 |             Err(e) => panic!("Unexpected error type for invalid area: {:?}", e),
+    |             ^^^^^^ expected `Pin<Box<...>>`, found `Result<_, _>`
+    |
+    = note: expected struct `Pin<Box<dyn std::future::Future<Output = Result<image::DynamicImage, utils::error::ScreenshotError>> + Send>>`
+                 found enum `Result<_, _>`
+    = note: the full name for the type has been written to 'P:\visual_translater\screen-translator-rust\target\debug\deps\screen_translator-d09e2d9b430b9e37.long-type-7646533736821313182.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `source_lang`
+  --> src\services\cache_test.rs:19:13
+   |
+19 |             source_lang: "en".to_string(),
+   |             ^^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+   |
+   = note: available fields are: `source_language`, `target_language`, `translation_service`, `context_type`, `source_type` ... and 5 others
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `target_lang`
+  --> src\services\cache_test.rs:20:13
+   |
+20 |             target_lang: "ru".to_string(),
+   |             ^^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+   |
+   = note: available fields are: `source_language`, `target_language`, `translation_service`, `context_type`, `source_type` ... and 5 others
+
+error[E0308]: mismatched types
+  --> src\services\cache_test.rs:21:24
+   |
+21 |             timestamp: Utc::now().timestamp(),
+   |                        ^^^^^^^^^^^^^^^^^^^^^^ expected `DateTime<Utc>`, found `i64`
+   |
+   = note: expected struct `DateTime<Utc>`
+                found type `i64`
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `is_favorite`
+  --> src\services\cache_test.rs:22:13
+   |
+22 |             is_favorite: false,
+   |             ^^^^^^^^^^^ unknown field
+   |
+help: a field with a similar name exists
+   |
+22 -             is_favorite: false,
+22 +             favorite: false,
+   |
+
+error[E0599]: no method named `add_entry` found for enum `Result` in the current scope
+  --> src\services\cache_test.rs:27:15
+   |
+27 |         cache.add_entry(entry.clone()).unwrap();
+   |               ^^^^^^^^^ method not found in `Result<cache::TranslationCacheService, anyhow::Error>`
+
+error[E0599]: no method named `get_translation` found for enum `Result` in the current scope
+  --> src\services\cache_test.rs:30:28
+   |
+30 |         let cached = cache.get_translation("Hello", "en", "ru").unwrap();
+   |                            ^^^^^^^^^^^^^^^ method not found in `Result<cache::TranslationCacheService, anyhow::Error>`
+
+error[E0560]: struct `cache::CacheConfig` has no field named `max_entries`
+  --> src\services\cache_test.rs:40:13
+   |
+40 |             max_entries: 2,
+   |             ^^^^^^^^^^^ `cache::CacheConfig` does not have this field
+   |
+   = note: available fields are: `cache_capacity`, `cache_ttl_hours`, `history_max_entries`, `auto_cleanup_enabled`, `cleanup_interval_hours`, `export_format`
+
+error[E0560]: struct `cache::CacheConfig` has no field named `ttl_seconds`
+  --> src\services\cache_test.rs:41:13
+   |
+41 |             ttl_seconds: 3600,
+   |             ^^^^^^^^^^^ `cache::CacheConfig` does not have this field
+   |
+   = note: available fields are: `cache_capacity`, `cache_ttl_hours`, `history_max_entries`, `auto_cleanup_enabled`, `cleanup_interval_hours`, `export_format`
+
+error[E0560]: struct `cache::CacheConfig` has no field named `enable_compression`
+  --> src\services\cache_test.rs:42:13
+   |
+42 |             enable_compression: false,
+   |             ^^^^^^^^^^^^^^^^^^ `cache::CacheConfig` does not have this field
+   |
+   = note: available fields are: `cache_capacity`, `cache_ttl_hours`, `history_max_entries`, `auto_cleanup_enabled`, `cleanup_interval_hours`, `export_format`
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `source_lang`
+  --> src\services\cache_test.rs:52:17
+   |
+52 |                 source_lang: "en".to_string(),
+   |                 ^^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+   |
+   = note: available fields are: `source_language`, `target_language`, `translation_service`, `context_type`, `source_type` ... and 5 others
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `target_lang`
+  --> src\services\cache_test.rs:53:17
+   |
+53 |                 target_lang: "ru".to_string(),
+   |                 ^^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+   |
+   = note: available fields are: `source_language`, `target_language`, `translation_service`, `context_type`, `source_type` ... and 5 others
+
+error[E0308]: mismatched types
+  --> src\services\cache_test.rs:54:28
+   |
+54 |                 timestamp: Utc::now().timestamp(),
+   |                            ^^^^^^^^^^^^^^^^^^^^^^ expected `DateTime<Utc>`, found `i64`
+   |
+   = note: expected struct `DateTime<Utc>`
+                found type `i64`
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `is_favorite`
+  --> src\services\cache_test.rs:55:17
+   |
+55 |                 is_favorite: false,
+   |                 ^^^^^^^^^^^ unknown field
+   |
+help: a field with a similar name exists
+   |
+55 -                 is_favorite: false,
+55 +                 favorite: false,
+   |
+
+error[E0599]: no method named `add_entry` found for enum `Result` in the current scope
+  --> src\services\cache_test.rs:58:19
+   |
+58 |             cache.add_entry(entry).unwrap();
+   |                   ^^^^^^^^^ method not found in `Result<cache::TranslationCacheService, anyhow::Error>`
+
+error[E0599]: no method named `get_translation` found for enum `Result` in the current scope
+  --> src\services\cache_test.rs:62:29
+   |
+62 |         let evicted = cache.get_translation("Text 1", "en", "ru").unwrap();
+   |                             ^^^^^^^^^^^^^^^ method not found in `Result<cache::TranslationCacheService, anyhow::Error>`
+
+error[E0599]: no method named `get_translation` found for enum `Result` in the current scope
+  --> src\services\cache_test.rs:66:29
+   |
+66 |         let present = cache.get_translation("Text 3", "en", "ru").unwrap();
+   |                             ^^^^^^^^^^^^^^^ method not found in `Result<cache::TranslationCacheService, anyhow::Error>`
+
+error[E0560]: struct `cache::CacheConfig` has no field named `max_entries`
+  --> src\services\cache_test.rs:75:13
+   |
+75 |             max_entries: 100,
+   |             ^^^^^^^^^^^ `cache::CacheConfig` does not have this field
+   |
+   = note: available fields are: `cache_capacity`, `cache_ttl_hours`, `history_max_entries`, `auto_cleanup_enabled`, `cleanup_interval_hours`, `export_format`
+
+error[E0560]: struct `cache::CacheConfig` has no field named `ttl_seconds`
+  --> src\services\cache_test.rs:76:13
+   |
+76 |             ttl_seconds: 1, // 1 second TTL for testing
+   |             ^^^^^^^^^^^ `cache::CacheConfig` does not have this field
+   |
+   = note: available fields are: `cache_capacity`, `cache_ttl_hours`, `history_max_entries`, `auto_cleanup_enabled`, `cleanup_interval_hours`, `export_format`
+
+error[E0560]: struct `cache::CacheConfig` has no field named `enable_compression`
+  --> src\services\cache_test.rs:77:13
+   |
+77 |             enable_compression: false,
+   |             ^^^^^^^^^^^^^^^^^^ `cache::CacheConfig` does not have this field
+   |
+   = note: available fields are: `cache_capacity`, `cache_ttl_hours`, `history_max_entries`, `auto_cleanup_enabled`, `cleanup_interval_hours`, `export_format`
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `source_lang`
+  --> src\services\cache_test.rs:85:13
+   |
+85 |             source_lang: "en".to_string(),
+   |             ^^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+   |
+   = note: available fields are: `source_language`, `target_language`, `translation_service`, `context_type`, `source_type` ... and 5 others
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `target_lang`
+  --> src\services\cache_test.rs:86:13
+   |
+86 |             target_lang: "ru".to_string(),
+   |             ^^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+   |
+   = note: available fields are: `source_language`, `target_language`, `translation_service`, `context_type`, `source_type` ... and 5 others
+
+error[E0308]: mismatched types
+  --> src\services\cache_test.rs:87:24
+   |
+87 |             timestamp: Utc::now().timestamp() - 2, // 2 seconds ago
+   |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `DateTime<Utc>`, found `i64`
+   |
+   = note: expected struct `DateTime<Utc>`
+                found type `i64`
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `is_favorite`
+  --> src\services\cache_test.rs:88:13
+   |
+88 |             is_favorite: false,
+   |             ^^^^^^^^^^^ unknown field
+   |
+help: a field with a similar name exists
+   |
+88 -             is_favorite: false,
+88 +             favorite: false,
+   |
+
+error[E0599]: no method named `add_entry` found for enum `Result` in the current scope
+  --> src\services\cache_test.rs:92:15
+   |
+92 |         cache.add_entry(entry).unwrap();
+   |               ^^^^^^^^^ method not found in `Result<cache::TranslationCacheService, anyhow::Error>`
+
+error[E0599]: no method named `get_translation` found for enum `Result` in the current scope
+  --> src\services\cache_test.rs:95:29
+   |
+95 |         let expired = cache.get_translation("Expire me", "en", "ru").unwrap();
+   |                             ^^^^^^^^^^^^^^^ method not found in `Result<cache::TranslationCacheService, anyhow::Error>`
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `source_lang`
+   --> src\services\cache_test.rs:111:17
+    |
+111 |                 source_lang: "en".to_string(),
+    |                 ^^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+    |
+    = note: available fields are: `source_language`, `target_language`, `translation_service`, `context_type`, `source_type` ... and 5 others
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `target_lang`
+   --> src\services\cache_test.rs:112:17
+    |
+112 |                 target_lang: "ru".to_string(),
+    |                 ^^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+    |
+    = note: available fields are: `source_language`, `target_language`, `translation_service`, `context_type`, `source_type` ... and 5 others
+
+error[E0308]: mismatched types
+   --> src\services\cache_test.rs:113:28
+    |
+113 |                 timestamp: Utc::now().timestamp(),
+    |                            ^^^^^^^^^^^^^^^^^^^^^^ expected `DateTime<Utc>`, found `i64`
+    |
+    = note: expected struct `DateTime<Utc>`
+                 found type `i64`
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `is_favorite`
+   --> src\services\cache_test.rs:114:17
+    |
+114 |                 is_favorite: false,
+    |                 ^^^^^^^^^^^ unknown field
+    |
+help: a field with a similar name exists
+    |
+114 -                 is_favorite: false,
+114 +                 favorite: false,
+    |
+
+error[E0599]: no method named `add_entry` found for enum `Result` in the current scope
+   --> src\services\cache_test.rs:117:19
+    |
+117 |             cache.add_entry(entry).unwrap();
+    |                   ^^^^^^^^^ method not found in `Result<cache::TranslationCacheService, anyhow::Error>`
+
+error[E0599]: no method named `get_translation` found for enum `Result` in the current scope
+   --> src\services\cache_test.rs:121:15
+    |
+121 |         cache.get_translation("Text 1", "en", "ru").unwrap();
+    |               ^^^^^^^^^^^^^^^ method not found in `Result<cache::TranslationCacheService, anyhow::Error>`
+
+error[E0599]: no method named `get_translation` found for enum `Result` in the current scope
+   --> src\services\cache_test.rs:122:15
+    |
+122 |         cache.get_translation("Text 2", "en", "ru").unwrap();
+    |               ^^^^^^^^^^^^^^^ method not found in `Result<cache::TranslationCacheService, anyhow::Error>`
+
+error[E0599]: no method named `get_translation` found for enum `Result` in the current scope
+   --> src\services\cache_test.rs:125:15
+    |
+125 |         cache.get_translation("Not exist", "en", "ru").unwrap();
+    |               ^^^^^^^^^^^^^^^ method not found in `Result<cache::TranslationCacheService, anyhow::Error>`
+
+error[E0599]: no method named `get_statistics` found for enum `Result` in the current scope
+   --> src\services\cache_test.rs:127:27
+    |
+127 |         let stats = cache.get_statistics().unwrap();
+    |                           ^^^^^^^^^^^^^^ method not found in `Result<cache::TranslationCacheService, anyhow::Error>`
+
+error[E0560]: struct `cache::CacheConfig` has no field named `max_entries`
+   --> src\services\cache_test.rs:138:13
+    |
+138 |             max_entries: 2,
+    |             ^^^^^^^^^^^ `cache::CacheConfig` does not have this field
+    |
+    = note: available fields are: `cache_capacity`, `cache_ttl_hours`, `history_max_entries`, `auto_cleanup_enabled`, `cleanup_interval_hours`, `export_format`
+
+error[E0560]: struct `cache::CacheConfig` has no field named `ttl_seconds`
+   --> src\services\cache_test.rs:139:13
+    |
+139 |             ttl_seconds: 3600,
+    |             ^^^^^^^^^^^ `cache::CacheConfig` does not have this field
+    |
+    = note: available fields are: `cache_capacity`, `cache_ttl_hours`, `history_max_entries`, `auto_cleanup_enabled`, `cleanup_interval_hours`, `export_format`
+
+error[E0560]: struct `cache::CacheConfig` has no field named `enable_compression`
+   --> src\services\cache_test.rs:140:13
+    |
+140 |             enable_compression: false,
+    |             ^^^^^^^^^^^^^^^^^^ `cache::CacheConfig` does not have this field
+    |
+    = note: available fields are: `cache_capacity`, `cache_ttl_hours`, `history_max_entries`, `auto_cleanup_enabled`, `cleanup_interval_hours`, `export_format`
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `source_lang`
+   --> src\services\cache_test.rs:149:13
+    |
+149 |             source_lang: "en".to_string(),
+    |             ^^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+    |
+    = note: available fields are: `source_language`, `target_language`, `translation_service`, `context_type`, `source_type` ... and 5 others
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `target_lang`
+   --> src\services\cache_test.rs:150:13
+    |
+150 |             target_lang: "ru".to_string(),
+    |             ^^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+    |
+    = note: available fields are: `source_language`, `target_language`, `translation_service`, `context_type`, `source_type` ... and 5 others
+
+error[E0308]: mismatched types
+   --> src\services\cache_test.rs:151:24
+    |
+151 |             timestamp: Utc::now().timestamp(),
+    |                        ^^^^^^^^^^^^^^^^^^^^^^ expected `DateTime<Utc>`, found `i64`
+    |
+    = note: expected struct `DateTime<Utc>`
+                 found type `i64`
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `is_favorite`
+   --> src\services\cache_test.rs:152:13
+    |
+152 |             is_favorite: true,
+    |             ^^^^^^^^^^^ unknown field
+    |
+help: a field with a similar name exists
+    |
+152 -             is_favorite: true,
+152 +             favorite: true,
+    |
+
+error[E0599]: no method named `add_entry` found for enum `Result` in the current scope
+   --> src\services\cache_test.rs:155:15
+    |
+155 |         cache.add_entry(favorite).unwrap();
+    |               ^^^^^^^^^ method not found in `Result<cache::TranslationCacheService, anyhow::Error>`
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `source_lang`
+   --> src\services\cache_test.rs:163:17
+    |
+163 |                 source_lang: "en".to_string(),
+    |                 ^^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+    |
+    = note: available fields are: `source_language`, `target_language`, `translation_service`, `context_type`, `source_type` ... and 5 others
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `target_lang`
+   --> src\services\cache_test.rs:164:17
+    |
+164 |                 target_lang: "ru".to_string(),
+    |                 ^^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+    |
+    = note: available fields are: `source_language`, `target_language`, `translation_service`, `context_type`, `source_type` ... and 5 others
+
+error[E0308]: mismatched types
+   --> src\services\cache_test.rs:165:28
+    |
+165 |                 timestamp: Utc::now().timestamp(),
+    |                            ^^^^^^^^^^^^^^^^^^^^^^ expected `DateTime<Utc>`, found `i64`
+    |
+    = note: expected struct `DateTime<Utc>`
+                 found type `i64`
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `is_favorite`
+   --> src\services\cache_test.rs:166:17
+    |
+166 |                 is_favorite: false,
+    |                 ^^^^^^^^^^^ unknown field
+    |
+help: a field with a similar name exists
+    |
+166 -                 is_favorite: false,
+166 +                 favorite: false,
+    |
+
+error[E0599]: no method named `add_entry` found for enum `Result` in the current scope
+   --> src\services\cache_test.rs:169:19
+    |
+169 |             cache.add_entry(entry).unwrap();
+    |                   ^^^^^^^^^ method not found in `Result<cache::TranslationCacheService, anyhow::Error>`
+
+error[E0599]: no method named `get_translation` found for enum `Result` in the current scope
+   --> src\services\cache_test.rs:173:26
+    |
+173 |         let kept = cache.get_translation("Keep me", "en", "ru").unwrap();
+    |                          ^^^^^^^^^^^^^^^ method not found in `Result<cache::TranslationCacheService, anyhow::Error>`
+
+error[E0061]: this method takes 1 argument but 3 arguments were supplied
+  --> src\services\translation_test.rs:13:30
+   |
+13 |         let result = service.translate("Hello world", "en", "ru").unwrap();
+   |                              ^^^^^^^^^ -------------  ----  ---- unexpected argument #3 of type `&'static str`
+   |                                        |              |
+   |                                        |              unexpected argument #2 of type `&'static str`
+   |                                        expected `TranslationRequest`, found `&str`
+   |
+note: method defined here
+  --> src\services\translation.rs:76:18
+   |
+76 |     pub async fn translate(
+   |                  ^^^^^^^^^
+77 |         &mut self,
+78 |         request: TranslationRequest,
+   |         ---------------------------
+help: remove the extra arguments
+   |
+13 -         let result = service.translate("Hello world", "en", "ru").unwrap();
+13 +         let result = service.translate(/* translation::TranslationRequest */).unwrap();
+   |
+
+error[E0599]: no method named `unwrap` found for opaque type `impl Future<Output = Result<TranslationResult, String>>` in the current scope
+  --> src\services\translation_test.rs:13:67
+   |
+13 |         let result = service.translate("Hello world", "en", "ru").unwrap();
+   |                                                                   ^^^^^^ method not found in `impl Future<Output = Result<TranslationResult, String>>`
+   |
+help: consider `await`ing on the `Future` and calling the method on its `Output`
+   |
+13 |         let result = service.translate("Hello world", "en", "ru").await.unwrap();
+   |                                                                   ++++++
+
+error[E0061]: this method takes 1 argument but 3 arguments were supplied
+  --> src\services\translation_test.rs:27:30
+   |
+27 |         let result = service.translate("Bonjour le monde", "auto", "en").unwrap();
+   |                              ^^^^^^^^^ ------------------  ------  ---- unexpected argument #3 of type `&'static str`
+   |                                        |                   |
+   |                                        |                   unexpected argument #2 of type `&'static str`
+   |                                        expected `TranslationRequest`, found `&str`
+   |
+note: method defined here
+  --> src\services\translation.rs:76:18
+   |
+76 |     pub async fn translate(
+   |                  ^^^^^^^^^
+77 |         &mut self,
+78 |         request: TranslationRequest,
+   |         ---------------------------
+help: remove the extra arguments
+   |
+27 -         let result = service.translate("Bonjour le monde", "auto", "en").unwrap();
+27 +         let result = service.translate(/* translation::TranslationRequest */).unwrap();
+   |
+
+error[E0599]: no method named `unwrap` found for opaque type `impl Future<Output = Result<TranslationResult, String>>` in the current scope
+  --> src\services\translation_test.rs:27:74
+   |
+27 |         let result = service.translate("Bonjour le monde", "auto", "en").unwrap();
+   |                                                                          ^^^^^^ method not found in `impl Future<Output = Result<TranslationResult, String>>`
+   |
+help: consider `await`ing on the `Future` and calling the method on its `Output`
+   |
+27 |         let result = service.translate("Bonjour le monde", "auto", "en").await.unwrap();
+   |                                                                          ++++++
+
+error[E0061]: this method takes 1 argument but 3 arguments were supplied
+  --> src\services\translation_test.rs:38:30
+   |
+38 |         let result = service.translate("", "en", "ru");
+   |                              ^^^^^^^^^ --  ----  ---- unexpected argument #3 of type `&'static str`
+   |                                        |   |
+   |                                        |   unexpected argument #2 of type `&'static str`
+   |                                        expected `TranslationRequest`, found `&str`
+   |
+note: method defined here
+  --> src\services\translation.rs:76:18
+   |
+76 |     pub async fn translate(
+   |                  ^^^^^^^^^
+77 |         &mut self,
+78 |         request: TranslationRequest,
+   |         ---------------------------
+help: remove the extra arguments
+   |
+38 -         let result = service.translate("", "en", "ru");
+38 +         let result = service.translate(/* translation::TranslationRequest */);
+   |
+
+error[E0599]: no method named `is_err` found for opaque type `impl Future<Output = Result<TranslationResult, String>>` in the current scope
+   --> src\services\translation_test.rs:40:24
+    |
+ 40 |         assert!(result.is_err());
+    |                        ^^^^^^
+    |
+help: there is a method `inspect_err` with a similar name, but with different arguments
+   --> C:\Users\MIKEk8\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\futures-util-0.3.31\src\future\try_future\mod.rs:493:5
+    |
+493 | /     fn inspect_err<F>(self, f: F) -> InspectErr<Self, F>
+494 | |     where
+495 | |         F: FnOnce(&Self::Error),
+496 | |         Self: Sized,
+    | |____________________^
+help: consider `await`ing on the `Future` and calling the method on its `Output`
+    |
+ 40 |         assert!(result.await.is_err());
+    |                        ++++++
+
+error[E0599]: no method named `unwrap_err` found for opaque type `impl Future<Output = Result<TranslationResult, String>>` in the current scope
+   --> src\services\translation_test.rs:42:20
+    |
+ 42 |             result.unwrap_err().to_string(),
+    |                    ^^^^^^^^^^
+    |
+help: there is a method `map_err` with a similar name, but with different arguments
+   --> C:\Users\MIKEk8\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\futures-util-0.3.31\src\future\try_future\mod.rs:308:5
+    |
+308 | /     fn map_err<E, F>(self, f: F) -> MapErr<Self, F>
+309 | |     where
+310 | |         F: FnOnce(Self::Error) -> E,
+311 | |         Self: Sized,
+    | |____________________^
+help: consider `await`ing on the `Future` and calling the method on its `Output`
+    |
+ 42 |             result.await.unwrap_err().to_string(),
+    |                    ++++++
+
+error[E0061]: this method takes 1 argument but 3 arguments were supplied
+  --> src\services\translation_test.rs:51:30
+   |
+51 |         let result = service.translate("Test text", "invalid", "xyz");
+   |                              ^^^^^^^^^ -----------  ---------  ----- unexpected argument #3 of type `&'static str`
+   |                                        |            |
+   |                                        |            unexpected argument #2 of type `&'static str`
+   |                                        expected `TranslationRequest`, found `&str`
+   |
+note: method defined here
+  --> src\services\translation.rs:76:18
+   |
+76 |     pub async fn translate(
+   |                  ^^^^^^^^^
+77 |         &mut self,
+78 |         request: TranslationRequest,
+   |         ---------------------------
+help: remove the extra arguments
+   |
+51 -         let result = service.translate("Test text", "invalid", "xyz");
+51 +         let result = service.translate(/* translation::TranslationRequest */);
+   |
+
+error[E0599]: no method named `is_err` found for opaque type `impl Future<Output = Result<TranslationResult, String>>` in the current scope
+   --> src\services\translation_test.rs:53:24
+    |
+ 53 |         assert!(result.is_err());
+    |                        ^^^^^^
+    |
+help: there is a method `inspect_err` with a similar name, but with different arguments
+   --> C:\Users\MIKEk8\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\futures-util-0.3.31\src\future\try_future\mod.rs:493:5
+    |
+493 | /     fn inspect_err<F>(self, f: F) -> InspectErr<Self, F>
+494 | |     where
+495 | |         F: FnOnce(&Self::Error),
+496 | |         Self: Sized,
+    | |____________________^
+help: consider `await`ing on the `Future` and calling the method on its `Output`
+    |
+ 53 |         assert!(result.await.is_err());
+    |                        ++++++
+
+error[E0599]: no method named `unwrap_err` found for opaque type `impl Future<Output = Result<TranslationResult, String>>` in the current scope
+   --> src\services\translation_test.rs:55:14
+    |
+ 54 |           assert!(result
+    |  _________________-
+ 55 | |             .unwrap_err()
+    | |_____________-^^^^^^^^^^
+    |
+help: there is a method `map_err` with a similar name, but with different arguments
+   --> C:\Users\MIKEk8\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\futures-util-0.3.31\src\future\try_future\mod.rs:308:5
+    |
+308 | /     fn map_err<E, F>(self, f: F) -> MapErr<Self, F>
+309 | |     where
+310 | |         F: FnOnce(Self::Error) -> E,
+311 | |         Self: Sized,
+    | |____________________^
+help: consider `await`ing on the `Future` and calling the method on its `Output`
+    |
+ 55 |             .await.unwrap_err()
+    |              ++++++
+
+error[E0061]: this method takes 1 argument but 3 arguments were supplied
+  --> src\services\translation_test.rs:67:36
+   |
+67 |         let first_result = service.translate("Test", "en", "ru").unwrap();
+   |                                    ^^^^^^^^^ ------  ----  ---- unexpected argument #3 of type `&'static str`
+   |                                              |       |
+   |                                              |       unexpected argument #2 of type `&'static str`
+   |                                              expected `TranslationRequest`, found `&str`
+   |
+note: method defined here
+  --> src\services\translation.rs:76:18
+   |
+76 |     pub async fn translate(
+   |                  ^^^^^^^^^
+77 |         &mut self,
+78 |         request: TranslationRequest,
+   |         ---------------------------
+help: remove the extra arguments
+   |
+67 -         let first_result = service.translate("Test", "en", "ru").unwrap();
+67 +         let first_result = service.translate(/* translation::TranslationRequest */).unwrap();
+   |
+
+error[E0599]: no method named `unwrap` found for opaque type `impl Future<Output = Result<TranslationResult, String>>` in the current scope
+  --> src\services\translation_test.rs:67:66
+   |
+67 |         let first_result = service.translate("Test", "en", "ru").unwrap();
+   |                                                                  ^^^^^^ method not found in `impl Future<Output = Result<TranslationResult, String>>`
+   |
+help: consider `await`ing on the `Future` and calling the method on its `Output`
+   |
+67 |         let first_result = service.translate("Test", "en", "ru").await.unwrap();
+   |                                                                  ++++++
+
+error[E0599]: no method named `set_offline_mode` found for struct `translation::TranslationService` in the current scope
+  --> src\services\translation_test.rs:70:17
+   |
+70 |         service.set_offline_mode(true);
+   |                 ^^^^^^^^^^^^^^^^ method not found in `translation::TranslationService`
+   |
+  ::: src\services\translation.rs:43:1
+   |
+43 | pub struct TranslationService {
+   | ----------------------------- method `set_offline_mode` not found for this struct
+
+error[E0061]: this method takes 1 argument but 3 arguments were supplied
+  --> src\services\translation_test.rs:73:37
+   |
+73 |         let cached_result = service.translate("Test", "en", "ru").unwrap();
+   |                                     ^^^^^^^^^ ------  ----  ---- unexpected argument #3 of type `&'static str`
+   |                                               |       |
+   |                                               |       unexpected argument #2 of type `&'static str`
+   |                                               expected `TranslationRequest`, found `&str`
+   |
+note: method defined here
+  --> src\services\translation.rs:76:18
+   |
+76 |     pub async fn translate(
+   |                  ^^^^^^^^^
+77 |         &mut self,
+78 |         request: TranslationRequest,
+   |         ---------------------------
+help: remove the extra arguments
+   |
+73 -         let cached_result = service.translate("Test", "en", "ru").unwrap();
+73 +         let cached_result = service.translate(/* translation::TranslationRequest */).unwrap();
+   |
+
+error[E0599]: no method named `unwrap` found for opaque type `impl Future<Output = Result<TranslationResult, String>>` in the current scope
+  --> src\services\translation_test.rs:73:67
+   |
+73 |         let cached_result = service.translate("Test", "en", "ru").unwrap();
+   |                                                                   ^^^^^^ method not found in `impl Future<Output = Result<TranslationResult, String>>`
+   |
+help: consider `await`ing on the `Future` and calling the method on its `Output`
+   |
+73 |         let cached_result = service.translate("Test", "en", "ru").await.unwrap();
+   |                                                                   ++++++
+
+error[E0063]: missing field `context` in initializer of `translation::TranslationRequest`
+  --> src\services\tests.rs:47:23
+   |
+47 |         let request = TranslationRequest {
+   |                       ^^^^^^^^^^^^^^^^^^ missing `context`
+
+error[E0063]: missing field `context` in initializer of `translation::TranslationRequest`
+   --> src\services\tests.rs:128:23
+    |
+128 |         let request = TranslationRequest {
+    |                       ^^^^^^^^^^^^^^^^^^ missing `context`
+
+error[E0063]: missing field `context` in initializer of `translation::TranslationRequest`
+   --> src\services\tests.rs:171:31
+    |
+171 |         let invalid_request = TranslationRequest {
+    |                               ^^^^^^^^^^^^^^^^^^ missing `context`
+
+error[E0063]: missing field `context` in initializer of `translation::TranslationRequest`
+   --> src\services\tests.rs:194:33
+    |
+194 |         let long_text_request = TranslationRequest {
+    |                                 ^^^^^^^^^^^^^^^^^^ missing `context`
+
+error[E0061]: this function takes 1 argument but 0 arguments were supplied
+   --> src\services\tests.rs:220:34
+    |
+220 |         let mut hotkey_manager = IntelligentHotkeyManager::new();
+    |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^-- argument #1 of type `AppHandle` is missing
+    |
+note: associated function defined here
+   --> src\services\intelligent_hotkey.rs:127:12
+    |
+127 |     pub fn new(app_handle: AppHandle) -> Result<Self> {
+    |            ^^^ ---------------------
+help: provide the argument
+    |
+220 |         let mut hotkey_manager = IntelligentHotkeyManager::new(/* AppHandle */);
+    |                                                                +++++++++++++++
+
+error[E0599]: no method named `initialize` found for enum `Result` in the current scope
+   --> src\services\tests.rs:222:14
+    |
+221 | /         hotkey_manager
+222 | |             .initialize()
+    | |             -^^^^^^^^^^ method not found in `Result<intelligent_hotkey::IntelligentHotkeyManager, anyhow::Error>`
+    | |_____________|
+    |
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+note: `ocr::OcrEngine` defines an item `initialize`, perhaps you need to implement it
+   --> src\core\ocr.rs:56:1
+    |
+ 56 | pub trait OcrEngine: Send + Sync {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0599]: no method named `enable_intelligent_alt_a` found for enum `Result` in the current scope
+   --> src\services\tests.rs:227:14
+    |
+226 | /         hotkey_manager
+227 | |             .enable_intelligent_alt_a()
+    | |             -^^^^^^^^^^^^^^^^^^^^^^^^ method not found in `Result<intelligent_hotkey::IntelligentHotkeyManager, anyhow::Error>`
+    | |_____________|
+    |
+
+error[E0599]: no method named `process_hotkey_event` found for enum `Result` in the current scope
+   --> src\services\tests.rs:238:14
+    |
+237 |           let action = hotkey_manager
+    |  ______________________-
+238 | |             .process_hotkey_event(quick_press_event)
+    | |             -^^^^^^^^^^^^^^^^^^^^ method not found in `Result<intelligent_hotkey::IntelligentHotkeyManager, anyhow::Error>`
+    | |_____________|
+    |
+
+error[E0599]: no variant or associated item named `SmartTranslation` found for enum `intelligent_hotkey::HotkeyAction` in the current scope
+   --> src\services\tests.rs:244:27
+    |
+244 |             HotkeyAction::SmartTranslation,
+    |                           ^^^^^^^^^^^^^^^^ variant or associated item not found in `intelligent_hotkey::HotkeyAction`
+    |
+   ::: src\services\intelligent_hotkey.rs:29:1
+    |
+ 29 | pub enum HotkeyAction {
+    | --------------------- variant or associated item `SmartTranslation` not found for this enum
+
+error[E0599]: no method named `process_hotkey_event` found for enum `Result` in the current scope
+   --> src\services\tests.rs:256:14
+    |
+255 |           let action = hotkey_manager
+    |  ______________________-
+256 | |             .process_hotkey_event(long_press_event)
+    | |             -^^^^^^^^^^^^^^^^^^^^ method not found in `Result<intelligent_hotkey::IntelligentHotkeyManager, anyhow::Error>`
+    | |_____________|
+    |
+
+error[E0599]: no variant or associated item named `ShowContextMenu` found for enum `intelligent_hotkey::HotkeyAction` in the current scope
+   --> src\services\tests.rs:262:27
+    |
+262 |             HotkeyAction::ShowContextMenu,
+    |                           ^^^^^^^^^^^^^^^ variant or associated item not found in `intelligent_hotkey::HotkeyAction`
+    |
+   ::: src\services\intelligent_hotkey.rs:29:1
+    |
+ 29 | pub enum HotkeyAction {
+    | --------------------- variant or associated item `ShowContextMenu` not found for this enum
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `ShowContextMenu`, perhaps you need to implement one of them:
+            candidate #1: `windows::Windows::Win32::UI::Accessibility::IRawElementProviderSimple2_Impl`
+            candidate #2: `windows::Windows::Win32::UI::Accessibility::ITextRangeProvider2_Impl`
+            candidate #3: `windows::Windows::Win32::UI::Accessibility::IUIAutomationElement3_Impl`
+            candidate #4: `windows::Windows::Win32::UI::Accessibility::IUIAutomationTextRange2_Impl`
+help: there is a variant with a similar name
+    |
+262 -             HotkeyAction::ShowContextMenu,
+262 +             HotkeyAction::ContextMenu,
+    |
+
+error[E0061]: this function takes 1 argument but 0 arguments were supplied
+   --> src\services\tests.rs:270:34
+    |
+270 |         let mut hotkey_manager = IntelligentHotkeyManager::new();
+    |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^-- argument #1 of type `AppHandle` is missing
+    |
+note: associated function defined here
+   --> src\services\intelligent_hotkey.rs:127:12
+    |
+127 |     pub fn new(app_handle: AppHandle) -> Result<Self> {
+    |            ^^^ ---------------------
+help: provide the argument
+    |
+270 |         let mut hotkey_manager = IntelligentHotkeyManager::new(/* AppHandle */);
+    |                                                                +++++++++++++++
+
+error[E0599]: no method named `initialize` found for enum `Result` in the current scope
+   --> src\services\tests.rs:271:24
+    |
+271 |         hotkey_manager.initialize().expect("Should initialize");
+    |                        ^^^^^^^^^^ method not found in `Result<intelligent_hotkey::IntelligentHotkeyManager, anyhow::Error>`
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+note: `ocr::OcrEngine` defines an item `initialize`, perhaps you need to implement it
+   --> src\core\ocr.rs:56:1
+    |
+ 56 | pub trait OcrEngine: Send + Sync {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0560]: struct `intelligent_hotkey::SmartTranslationRequest` has no field named `selected_text`
+   --> src\services\tests.rs:275:13
+    |
+275 |             selected_text: Some("Selected text for translation".to_string()),
+    |             ^^^^^^^^^^^^^ `intelligent_hotkey::SmartTranslationRequest` does not have this field
+    |
+    = note: available fields are: `source`, `content`, `timestamp`, `coordinates`
+
+error[E0560]: struct `intelligent_hotkey::SmartTranslationRequest` has no field named `clipboard_text`
+   --> src\services\tests.rs:276:13
+    |
+276 |             clipboard_text: Some("Clipboard text".to_string()),
+    |             ^^^^^^^^^^^^^^ `intelligent_hotkey::SmartTranslationRequest` does not have this field
+    |
+    = note: available fields are: `source`, `content`, `timestamp`, `coordinates`
+
+error[E0560]: struct `intelligent_hotkey::SmartTranslationRequest` has no field named `clipboard_image`
+   --> src\services\tests.rs:277:13
+    |
+277 |             clipboard_image: None,
+    |             ^^^^^^^^^^^^^^^ `intelligent_hotkey::SmartTranslationRequest` does not have this field
+    |
+    = note: available fields are: `source`, `content`, `timestamp`, `coordinates`
+
+error[E0560]: struct `intelligent_hotkey::SmartTranslationRequest` has no field named `previous_area`
+   --> src\services\tests.rs:278:13
+    |
+278 |             previous_area: None,
+    |             ^^^^^^^^^^^^^ `intelligent_hotkey::SmartTranslationRequest` does not have this field
+    |
+    = note: available fields are: `source`, `content`, `timestamp`, `coordinates`
+
+error[E0599]: no method named `determine_translation_source` found for enum `Result` in the current scope
+   --> src\services\tests.rs:282:14
+    |
+281 |           let source = hotkey_manager
+    |  ______________________-
+282 | |             .determine_translation_source(&request_with_selection)
+    | |             -^^^^^^^^^^^^^^^^^^^^^^^^^^^^ method not found in `Result<intelligent_hotkey::IntelligentHotkeyManager, anyhow::Error>`
+    | |_____________|
+    |
+
+error[E0560]: struct `intelligent_hotkey::SmartTranslationRequest` has no field named `selected_text`
+   --> src\services\tests.rs:293:13
+    |
+293 |             selected_text: None,
+    |             ^^^^^^^^^^^^^ `intelligent_hotkey::SmartTranslationRequest` does not have this field
+    |
+    = note: available fields are: `source`, `content`, `timestamp`, `coordinates`
+
+error[E0560]: struct `intelligent_hotkey::SmartTranslationRequest` has no field named `clipboard_text`
+   --> src\services\tests.rs:294:13
+    |
+294 |             clipboard_text: Some("Clipboard text for translation".to_string()),
+    |             ^^^^^^^^^^^^^^ `intelligent_hotkey::SmartTranslationRequest` does not have this field
+    |
+    = note: available fields are: `source`, `content`, `timestamp`, `coordinates`
+
+error[E0560]: struct `intelligent_hotkey::SmartTranslationRequest` has no field named `clipboard_image`
+   --> src\services\tests.rs:295:13
+    |
+295 |             clipboard_image: None,
+    |             ^^^^^^^^^^^^^^^ `intelligent_hotkey::SmartTranslationRequest` does not have this field
+    |
+    = note: available fields are: `source`, `content`, `timestamp`, `coordinates`
+
+error[E0560]: struct `intelligent_hotkey::SmartTranslationRequest` has no field named `previous_area`
+   --> src\services\tests.rs:296:13
+    |
+296 |             previous_area: None,
+    |             ^^^^^^^^^^^^^ `intelligent_hotkey::SmartTranslationRequest` does not have this field
+    |
+    = note: available fields are: `source`, `content`, `timestamp`, `coordinates`
+
+error[E0599]: no method named `determine_translation_source` found for enum `Result` in the current scope
+   --> src\services\tests.rs:300:14
+    |
+299 |           let source = hotkey_manager
+    |  ______________________-
+300 | |             .determine_translation_source(&request_with_clipboard)
+    | |             -^^^^^^^^^^^^^^^^^^^^^^^^^^^^ method not found in `Result<intelligent_hotkey::IntelligentHotkeyManager, anyhow::Error>`
+    | |_____________|
+    |
+
+error[E0560]: struct `intelligent_hotkey::SmartTranslationRequest` has no field named `selected_text`
+   --> src\services\tests.rs:311:13
+    |
+311 |             selected_text: None,
+    |             ^^^^^^^^^^^^^ `intelligent_hotkey::SmartTranslationRequest` does not have this field
+    |
+    = note: available fields are: `source`, `content`, `timestamp`, `coordinates`
+
+error[E0560]: struct `intelligent_hotkey::SmartTranslationRequest` has no field named `clipboard_text`
+   --> src\services\tests.rs:312:13
+    |
+312 |             clipboard_text: None,
+    |             ^^^^^^^^^^^^^^ `intelligent_hotkey::SmartTranslationRequest` does not have this field
+    |
+    = note: available fields are: `source`, `content`, `timestamp`, `coordinates`
+
+error[E0560]: struct `intelligent_hotkey::SmartTranslationRequest` has no field named `clipboard_image`
+   --> src\services\tests.rs:313:13
+    |
+313 |             clipboard_image: Some(vec![1, 2, 3, 4]), // Mock image data
+    |             ^^^^^^^^^^^^^^^ `intelligent_hotkey::SmartTranslationRequest` does not have this field
+    |
+    = note: available fields are: `source`, `content`, `timestamp`, `coordinates`
+
+error[E0560]: struct `intelligent_hotkey::SmartTranslationRequest` has no field named `previous_area`
+   --> src\services\tests.rs:314:13
+    |
+314 |             previous_area: None,
+    |             ^^^^^^^^^^^^^ `intelligent_hotkey::SmartTranslationRequest` does not have this field
+    |
+    = note: available fields are: `source`, `content`, `timestamp`, `coordinates`
+
+error[E0599]: no method named `determine_translation_source` found for enum `Result` in the current scope
+   --> src\services\tests.rs:318:14
+    |
+317 |           let source = hotkey_manager
+    |  ______________________-
+318 | |             .determine_translation_source(&request_with_image)
+    | |             -^^^^^^^^^^^^^^^^^^^^^^^^^^^^ method not found in `Result<intelligent_hotkey::IntelligentHotkeyManager, anyhow::Error>`
+    | |_____________|
+    |
+
+error[E0560]: struct `intelligent_hotkey::SmartTranslationRequest` has no field named `selected_text`
+   --> src\services\tests.rs:329:13
+    |
+329 |             selected_text: None,
+    |             ^^^^^^^^^^^^^ `intelligent_hotkey::SmartTranslationRequest` does not have this field
+    |
+    = note: available fields are: `source`, `content`, `timestamp`, `coordinates`
+
+error[E0560]: struct `intelligent_hotkey::SmartTranslationRequest` has no field named `clipboard_text`
+   --> src\services\tests.rs:330:13
+    |
+330 |             clipboard_text: None,
+    |             ^^^^^^^^^^^^^^ `intelligent_hotkey::SmartTranslationRequest` does not have this field
+    |
+    = note: available fields are: `source`, `content`, `timestamp`, `coordinates`
+
+error[E0560]: struct `intelligent_hotkey::SmartTranslationRequest` has no field named `clipboard_image`
+   --> src\services\tests.rs:331:13
+    |
+331 |             clipboard_image: None,
+    |             ^^^^^^^^^^^^^^^ `intelligent_hotkey::SmartTranslationRequest` does not have this field
+    |
+    = note: available fields are: `source`, `content`, `timestamp`, `coordinates`
+
+error[E0560]: struct `intelligent_hotkey::SmartTranslationRequest` has no field named `previous_area`
+   --> src\services\tests.rs:332:13
+    |
+332 |             previous_area: Some((100, 100, 300, 200)),
+    |             ^^^^^^^^^^^^^ `intelligent_hotkey::SmartTranslationRequest` does not have this field
+    |
+    = note: available fields are: `source`, `content`, `timestamp`, `coordinates`
+
+error[E0599]: no method named `determine_translation_source` found for enum `Result` in the current scope
+   --> src\services\tests.rs:336:14
+    |
+335 |           let source = hotkey_manager
+    |  ______________________-
+336 | |             .determine_translation_source(&request_with_previous)
+    | |             -^^^^^^^^^^^^^^^^^^^^^^^^^^^^ method not found in `Result<intelligent_hotkey::IntelligentHotkeyManager, anyhow::Error>`
+    | |_____________|
+    |
+
+error[E0560]: struct `intelligent_hotkey::SmartTranslationRequest` has no field named `selected_text`
+   --> src\services\tests.rs:347:13
+    |
+347 |             selected_text: None,
+    |             ^^^^^^^^^^^^^ `intelligent_hotkey::SmartTranslationRequest` does not have this field
+    |
+    = note: available fields are: `source`, `content`, `timestamp`, `coordinates`
+
+error[E0560]: struct `intelligent_hotkey::SmartTranslationRequest` has no field named `clipboard_text`
+   --> src\services\tests.rs:348:13
+    |
+348 |             clipboard_text: None,
+    |             ^^^^^^^^^^^^^^ `intelligent_hotkey::SmartTranslationRequest` does not have this field
+    |
+    = note: available fields are: `source`, `content`, `timestamp`, `coordinates`
+
+error[E0560]: struct `intelligent_hotkey::SmartTranslationRequest` has no field named `clipboard_image`
+   --> src\services\tests.rs:349:13
+    |
+349 |             clipboard_image: None,
+    |             ^^^^^^^^^^^^^^^ `intelligent_hotkey::SmartTranslationRequest` does not have this field
+    |
+    = note: available fields are: `source`, `content`, `timestamp`, `coordinates`
+
+error[E0560]: struct `intelligent_hotkey::SmartTranslationRequest` has no field named `previous_area`
+   --> src\services\tests.rs:350:13
+    |
+350 |             previous_area: None,
+    |             ^^^^^^^^^^^^^ `intelligent_hotkey::SmartTranslationRequest` does not have this field
+    |
+    = note: available fields are: `source`, `content`, `timestamp`, `coordinates`
+
+error[E0599]: no method named `determine_translation_source` found for enum `Result` in the current scope
+   --> src\services\tests.rs:354:14
+    |
+353 |           let source = hotkey_manager
+    |  ______________________-
+354 | |             .determine_translation_source(&empty_request)
+    | |             -^^^^^^^^^^^^^^^^^^^^^^^^^^^^ method not found in `Result<intelligent_hotkey::IntelligentHotkeyManager, anyhow::Error>`
+    | |_____________|
+    |
+
+error[E0061]: this function takes 1 argument but 0 arguments were supplied
+   --> src\services\tests.rs:367:34
+    |
+367 |         let mut hotkey_manager = IntelligentHotkeyManager::new();
+    |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^-- argument #1 of type `AppHandle` is missing
+    |
+note: associated function defined here
+   --> src\services\intelligent_hotkey.rs:127:12
+    |
+127 |     pub fn new(app_handle: AppHandle) -> Result<Self> {
+    |            ^^^ ---------------------
+help: provide the argument
+    |
+367 |         let mut hotkey_manager = IntelligentHotkeyManager::new(/* AppHandle */);
+    |                                                                +++++++++++++++
+
+error[E0599]: no method named `initialize` found for enum `Result` in the current scope
+   --> src\services\tests.rs:368:24
+    |
+368 |         hotkey_manager.initialize().expect("Should initialize");
+    |                        ^^^^^^^^^^ method not found in `Result<intelligent_hotkey::IntelligentHotkeyManager, anyhow::Error>`
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+note: `ocr::OcrEngine` defines an item `initialize`, perhaps you need to implement it
+   --> src\core\ocr.rs:56:1
+    |
+ 56 | pub trait OcrEngine: Send + Sync {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0599]: no method named `add_previous_area` found for enum `Result` in the current scope
+   --> src\services\tests.rs:381:18
+    |
+380 | /             hotkey_manager
+381 | |                 .add_previous_area(*area, "Test area".to_string())
+    | |                 -^^^^^^^^^^^^^^^^^ method not found in `Result<intelligent_hotkey::IntelligentHotkeyManager, anyhow::Error>`
+    | |_________________|
+    |
+
+error[E0599]: no method named `get_previous_areas` found for enum `Result` in the current scope
+   --> src\services\tests.rs:387:14
+    |
+386 |           let remembered_areas = hotkey_manager
+    |  ________________________________-
+387 | |             .get_previous_areas(None)
+    | |             -^^^^^^^^^^^^^^^^^^ method not found in `Result<intelligent_hotkey::IntelligentHotkeyManager, anyhow::Error>`
+    | |_____________|
+    |
+
+error[E0599]: no method named `clear_previous_areas` found for enum `Result` in the current scope
+   --> src\services\tests.rs:404:14
+    |
+403 | /         hotkey_manager
+404 | |             .clear_previous_areas()
+    | |             -^^^^^^^^^^^^^^^^^^^^ method not found in `Result<intelligent_hotkey::IntelligentHotkeyManager, anyhow::Error>`
+    | |_____________|
+    |
+    |
+note: the method `clear_previous_areas` exists on the type `intelligent_hotkey::IntelligentHotkeyManager`
+   --> src\services\intelligent_hotkey.rs:507:5
+    |
+507 |     pub fn clear_previous_areas(&self) -> Result<()> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: consider using `Result::expect` to unwrap the `intelligent_hotkey::IntelligentHotkeyManager` value, panicking if the value is a `Result::Err`
+    |
+403 |         hotkey_manager.expect("REASON")
+    |                       +++++++++++++++++
+
+error[E0599]: no method named `get_previous_areas` found for enum `Result` in the current scope
+   --> src\services\tests.rs:407:14
+    |
+406 |           let cleared_areas = hotkey_manager
+    |  _____________________________-
+407 | |             .get_previous_areas(None)
+    | |             -^^^^^^^^^^^^^^^^^^ method not found in `Result<intelligent_hotkey::IntelligentHotkeyManager, anyhow::Error>`
+    | |_____________|
+    |
+
+error[E0061]: this function takes 1 argument but 0 arguments were supplied
+   --> src\services\tests.rs:418:34
+    |
+418 |         let mut hotkey_manager = IntelligentHotkeyManager::new();
+    |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^-- argument #1 of type `AppHandle` is missing
+    |
+note: associated function defined here
+   --> src\services\intelligent_hotkey.rs:127:12
+    |
+127 |     pub fn new(app_handle: AppHandle) -> Result<Self> {
+    |            ^^^ ---------------------
+help: provide the argument
+    |
+418 |         let mut hotkey_manager = IntelligentHotkeyManager::new(/* AppHandle */);
+    |                                                                +++++++++++++++
+
+error[E0599]: no method named `initialize` found for enum `Result` in the current scope
+   --> src\services\tests.rs:419:24
+    |
+419 |         hotkey_manager.initialize().expect("Should initialize");
+    |                        ^^^^^^^^^^ method not found in `Result<intelligent_hotkey::IntelligentHotkeyManager, anyhow::Error>`
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+note: `ocr::OcrEngine` defines an item `initialize`, perhaps you need to implement it
+   --> src\core\ocr.rs:56:1
+    |
+ 56 | pub trait OcrEngine: Send + Sync {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0599]: no variant or associated item named `SmartTranslation` found for enum `intelligent_hotkey::HotkeyAction` in the current scope
+   --> src\services\tests.rs:423:56
+    |
+423 |             (Duration::from_millis(999), HotkeyAction::SmartTranslation), // Just under 1 second
+    |                                                        ^^^^^^^^^^^^^^^^ variant or associated item not found in `intelligent_hotkey::HotkeyAction`
+    |
+   ::: src\services\intelligent_hotkey.rs:29:1
+    |
+ 29 | pub enum HotkeyAction {
+    | --------------------- variant or associated item `SmartTranslation` not found for this enum
+
+error[E0599]: no variant or associated item named `ShowContextMenu` found for enum `intelligent_hotkey::HotkeyAction` in the current scope
+   --> src\services\tests.rs:424:57
+    |
+424 |             (Duration::from_millis(1000), HotkeyAction::ShowContextMenu), // Exactly 1 second
+    |                                                         ^^^^^^^^^^^^^^^ variant or associated item not found in `intelligent_hotkey::HotkeyAction`
+    |
+   ::: src\services\intelligent_hotkey.rs:29:1
+    |
+ 29 | pub enum HotkeyAction {
+    | --------------------- variant or associated item `ShowContextMenu` not found for this enum
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `ShowContextMenu`, perhaps you need to implement one of them:
+            candidate #1: `windows::Windows::Win32::UI::Accessibility::IRawElementProviderSimple2_Impl`
+            candidate #2: `windows::Windows::Win32::UI::Accessibility::ITextRangeProvider2_Impl`
+            candidate #3: `windows::Windows::Win32::UI::Accessibility::IUIAutomationElement3_Impl`
+            candidate #4: `windows::Windows::Win32::UI::Accessibility::IUIAutomationTextRange2_Impl`
+help: there is a variant with a similar name
+    |
+424 -             (Duration::from_millis(1000), HotkeyAction::ShowContextMenu), // Exactly 1 second
+424 +             (Duration::from_millis(1000), HotkeyAction::ContextMenu), // Exactly 1 second
+    |
+
+error[E0599]: no variant or associated item named `ShowContextMenu` found for enum `intelligent_hotkey::HotkeyAction` in the current scope
+   --> src\services\tests.rs:425:57
+    |
+425 |             (Duration::from_millis(1001), HotkeyAction::ShowContextMenu), // Just over 1 second
+    |                                                         ^^^^^^^^^^^^^^^ variant or associated item not found in `intelligent_hotkey::HotkeyAction`
+    |
+   ::: src\services\intelligent_hotkey.rs:29:1
+    |
+ 29 | pub enum HotkeyAction {
+    | --------------------- variant or associated item `ShowContextMenu` not found for this enum
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `ShowContextMenu`, perhaps you need to implement one of them:
+            candidate #1: `windows::Windows::Win32::UI::Accessibility::IRawElementProviderSimple2_Impl`
+            candidate #2: `windows::Windows::Win32::UI::Accessibility::ITextRangeProvider2_Impl`
+            candidate #3: `windows::Windows::Win32::UI::Accessibility::IUIAutomationElement3_Impl`
+            candidate #4: `windows::Windows::Win32::UI::Accessibility::IUIAutomationTextRange2_Impl`
+help: there is a variant with a similar name
+    |
+425 -             (Duration::from_millis(1001), HotkeyAction::ShowContextMenu), // Just over 1 second
+425 +             (Duration::from_millis(1001), HotkeyAction::ContextMenu), // Just over 1 second
+    |
+
+error[E0599]: no method named `process_hotkey_event` found for enum `Result` in the current scope
+   --> src\services\tests.rs:436:18
+    |
+435 |               let action = hotkey_manager
+    |  __________________________-
+436 | |                 .process_hotkey_event(event)
+    | |                 -^^^^^^^^^^^^^^^^^^^^ method not found in `Result<intelligent_hotkey::IntelligentHotkeyManager, anyhow::Error>`
+    | |_________________|
+    |
+
+error[E0599]: no method named `get_performance_stats` found for enum `Result` in the current scope
+   --> src\services\tests.rs:448:14
+    |
+447 |           let stats = hotkey_manager
+    |  _____________________-
+448 | |             .get_performance_stats()
+    | |             -^^^^^^^^^^^^^^^^^^^^^ method not found in `Result<intelligent_hotkey::IntelligentHotkeyManager, anyhow::Error>`
+    | |_____________|
+    |
+    |
+note: the method `get_performance_stats` exists on the type `intelligent_hotkey::IntelligentHotkeyManager`
+   --> src\services\intelligent_hotkey.rs:474:5
+    |
+474 |     pub fn get_performance_stats(&self) -> Result<HotkeyPerformanceStats> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: consider using `Result::expect` to unwrap the `intelligent_hotkey::IntelligentHotkeyManager` value, panicking if the value is a `Result::Err`
+    |
+447 |         let stats = hotkey_manager.expect("REASON")
+    |                                   +++++++++++++++++
+
+error[E0560]: struct `cache::CacheConfig` has no field named `max_entries`
+   --> src\services\tests.rs:465:13
+    |
+465 |             max_entries: 3,
+    |             ^^^^^^^^^^^ `cache::CacheConfig` does not have this field
+    |
+    = note: available fields are: `cache_capacity`, `cache_ttl_hours`, `history_max_entries`, `auto_cleanup_enabled`, `cleanup_interval_hours`, `export_format`
+
+error[E0560]: struct `cache::CacheConfig` has no field named `ttl_seconds`
+   --> src\services\tests.rs:466:13
+    |
+466 |             ttl_seconds: 2, // Short TTL for testing
+    |             ^^^^^^^^^^^ `cache::CacheConfig` does not have this field
+    |
+    = note: available fields are: `cache_capacity`, `cache_ttl_hours`, `history_max_entries`, `auto_cleanup_enabled`, `cleanup_interval_hours`, `export_format`
+
+error[E0560]: struct `cache::CacheConfig` has no field named `enable_persistence`
+   --> src\services\tests.rs:467:13
+    |
+467 |             enable_persistence: false,
+    |             ^^^^^^^^^^^^^^^^^^ `cache::CacheConfig` does not have this field
+    |
+    = note: available fields are: `cache_capacity`, `cache_ttl_hours`, `history_max_entries`, `auto_cleanup_enabled`, `cleanup_interval_hours`, `export_format`
+
+error[E0599]: no method named `initialize` found for enum `Result` in the current scope
+   --> src\services\tests.rs:471:23
+    |
+471 |         cache_service.initialize().expect("Should initialize cache");
+    |                       ^^^^^^^^^^ method not found in `Result<cache::TranslationCacheService, anyhow::Error>`
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+note: `ocr::OcrEngine` defines an item `initialize`, perhaps you need to implement it
+   --> src\core\ocr.rs:56:1
+    |
+ 56 | pub trait OcrEngine: Send + Sync {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `source_lang`
+   --> src\services\tests.rs:479:17
+    |
+479 |                 source_lang: "en".to_string(),
+    |                 ^^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+    |
+    = note: available fields are: `source_language`, `target_language`, `translation_service`, `context_type`, `source_type` ... and 6 others
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `target_lang`
+   --> src\services\tests.rs:480:17
+    |
+480 |                 target_lang: "es".to_string(),
+    |                 ^^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+    |
+    = note: available fields are: `source_language`, `target_language`, `translation_service`, `context_type`, `source_type` ... and 6 others
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `created_at`
+   --> src\services\tests.rs:482:17
+    |
+482 |                 created_at: chrono::Utc::now(),
+    |                 ^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+    |
+    = note: available fields are: `source_language`, `target_language`, `translation_service`, `context_type`, `source_type` ... and 6 others
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `source_lang`
+   --> src\services\tests.rs:489:17
+    |
+489 |                 source_lang: "en".to_string(),
+    |                 ^^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+    |
+    = note: available fields are: `source_language`, `target_language`, `translation_service`, `context_type`, `source_type` ... and 6 others
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `target_lang`
+   --> src\services\tests.rs:490:17
+    |
+490 |                 target_lang: "es".to_string(),
+    |                 ^^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+    |
+    = note: available fields are: `source_language`, `target_language`, `translation_service`, `context_type`, `source_type` ... and 6 others
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `created_at`
+   --> src\services\tests.rs:492:17
+    |
+492 |                 created_at: chrono::Utc::now(),
+    |                 ^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+    |
+    = note: available fields are: `source_language`, `target_language`, `translation_service`, `context_type`, `source_type` ... and 6 others
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `source_lang`
+   --> src\services\tests.rs:499:17
+    |
+499 |                 source_lang: "en".to_string(),
+    |                 ^^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+    |
+    = note: available fields are: `source_language`, `target_language`, `translation_service`, `context_type`, `source_type` ... and 6 others
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `target_lang`
+   --> src\services\tests.rs:500:17
+    |
+500 |                 target_lang: "es".to_string(),
+    |                 ^^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+    |
+    = note: available fields are: `source_language`, `target_language`, `translation_service`, `context_type`, `source_type` ... and 6 others
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `created_at`
+   --> src\services\tests.rs:502:17
+    |
+502 |                 created_at: chrono::Utc::now(),
+    |                 ^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+    |
+    = note: available fields are: `source_language`, `target_language`, `translation_service`, `context_type`, `source_type` ... and 6 others
+
+error[E0599]: no method named `add_translation` found for enum `Result` in the current scope
+   --> src\services\tests.rs:510:18
+    |
+509 | /             cache_service
+510 | |                 .add_translation(entry.clone())
+    | |                 -^^^^^^^^^^^^^^^ method not found in `Result<cache::TranslationCacheService, anyhow::Error>`
+    | |_________________|
+    |
+    |
+note: the method `add_translation` exists on the type `cache::TranslationCacheService`
+   --> src\services\cache.rs:270:5
+    |
+270 |     pub fn add_translation(&self, mut entry: TranslationEntry) -> Result<()> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: consider using `Result::expect` to unwrap the `cache::TranslationCacheService` value, panicking if the value is a `Result::Err`
+    |
+509 |             cache_service.expect("REASON")
+    |                          +++++++++++++++++
+
+error[E0599]: no method named `get_stats` found for enum `Result` in the current scope
+   --> src\services\tests.rs:515:35
+    |
+515 |         let stats = cache_service.get_stats().expect("Should get stats");
+    |                                   ^^^^^^^^^ method not found in `Result<cache::TranslationCacheService, anyhow::Error>`
+    |
+note: the method `get_stats` exists on the type `cache::TranslationCacheService`
+   --> src\services\cache.rs:622:5
+    |
+622 |     pub fn get_stats(&self) -> Result<CacheStats> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: consider using `Result::expect` to unwrap the `cache::TranslationCacheService` value, panicking if the value is a `Result::Err`
+    |
+515 |         let stats = cache_service.expect("REASON").get_stats().expect("Should get stats");
+    |                                  +++++++++++++++++
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `source_lang`
+   --> src\services\tests.rs:523:13
+    |
+523 |             source_lang: "en".to_string(),
+    |             ^^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+    |
+    = note: available fields are: `source_language`, `target_language`, `translation_service`, `context_type`, `source_type` ... and 6 others
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `target_lang`
+   --> src\services\tests.rs:524:13
+    |
+524 |             target_lang: "es".to_string(),
+    |             ^^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+    |
+    = note: available fields are: `source_language`, `target_language`, `translation_service`, `context_type`, `source_type` ... and 6 others
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `created_at`
+   --> src\services\tests.rs:526:13
+    |
+526 |             created_at: chrono::Utc::now(),
+    |             ^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+    |
+    = note: available fields are: `source_language`, `target_language`, `translation_service`, `context_type`, `source_type` ... and 6 others
+
+error[E0599]: no method named `add_translation` found for enum `Result` in the current scope
+   --> src\services\tests.rs:531:14
+    |
+530 | /         cache_service
+531 | |             .add_translation(fourth_entry)
+    | |             -^^^^^^^^^^^^^^^ method not found in `Result<cache::TranslationCacheService, anyhow::Error>`
+    | |_____________|
+    |
+    |
+note: the method `add_translation` exists on the type `cache::TranslationCacheService`
+   --> src\services\cache.rs:270:5
+    |
+270 |     pub fn add_translation(&self, mut entry: TranslationEntry) -> Result<()> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: consider using `Result::expect` to unwrap the `cache::TranslationCacheService` value, panicking if the value is a `Result::Err`
+    |
+530 |         cache_service.expect("REASON")
+    |                      +++++++++++++++++
+
+error[E0599]: no method named `get_stats` found for enum `Result` in the current scope
+   --> src\services\tests.rs:536:14
+    |
+535 |           let stats = cache_service
+    |  _____________________-
+536 | |             .get_stats()
+    | |             -^^^^^^^^^ method not found in `Result<cache::TranslationCacheService, anyhow::Error>`
+    | |_____________|
+    |
+    |
+note: the method `get_stats` exists on the type `cache::TranslationCacheService`
+   --> src\services\cache.rs:622:5
+    |
+622 |     pub fn get_stats(&self) -> Result<CacheStats> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: consider using `Result::expect` to unwrap the `cache::TranslationCacheService` value, panicking if the value is a `Result::Err`
+    |
+535 |         let stats = cache_service.expect("REASON")
+    |                                  +++++++++++++++++
+
+error[E0599]: no method named `cleanup_expired` found for enum `Result` in the current scope
+   --> src\services\tests.rs:545:14
+    |
+544 |           let expired_count = cache_service
+    |  _____________________________-
+545 | |             .cleanup_expired()
+    | |             -^^^^^^^^^^^^^^^ method not found in `Result<cache::TranslationCacheService, anyhow::Error>`
+    | |_____________|
+    |
+    |
+note: the method `cleanup_expired` exists on the type `cache::TranslationCacheService`
+   --> src\services\cache.rs:650:5
+    |
+650 |     pub fn cleanup_expired(&self) -> Result<usize> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: consider using `Result::expect` to unwrap the `cache::TranslationCacheService` value, panicking if the value is a `Result::Err`
+    |
+544 |         let expired_count = cache_service.expect("REASON")
+    |                                          +++++++++++++++++
+
+error[E0599]: no method named `get_stats` found for enum `Result` in the current scope
+   --> src\services\tests.rs:551:14
+    |
+550 |           let stats_after_ttl = cache_service
+    |  _______________________________-
+551 | |             .get_stats()
+    | |             -^^^^^^^^^ method not found in `Result<cache::TranslationCacheService, anyhow::Error>`
+    | |_____________|
+    |
+    |
+note: the method `get_stats` exists on the type `cache::TranslationCacheService`
+   --> src\services\cache.rs:622:5
+    |
+622 |     pub fn get_stats(&self) -> Result<CacheStats> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: consider using `Result::expect` to unwrap the `cache::TranslationCacheService` value, panicking if the value is a `Result::Err`
+    |
+550 |         let stats_after_ttl = cache_service.expect("REASON")
+    |                                            +++++++++++++++++
+
+error[E0599]: no method named `initialize` found for enum `Result` in the current scope
+   --> src\services\tests.rs:564:23
+    |
+564 |         cache_service.initialize().expect("Should initialize cache");
+    |                       ^^^^^^^^^^ method not found in `Result<cache::TranslationCacheService, anyhow::Error>`
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+note: `ocr::OcrEngine` defines an item `initialize`, perhaps you need to implement it
+   --> src\core\ocr.rs:56:1
+    |
+ 56 | pub trait OcrEngine: Send + Sync {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `source_lang`
+   --> src\services\tests.rs:571:17
+    |
+571 |                 source_lang: "en".to_string(),
+    |                 ^^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+    |
+    = note: available fields are: `id`, `source_language`, `target_language`, `confidence`, `translation_service` ... and 7 others
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `target_lang`
+   --> src\services\tests.rs:572:17
+    |
+572 |                 target_lang: "es".to_string(),
+    |                 ^^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+    |
+    = note: available fields are: `id`, `source_language`, `target_language`, `confidence`, `translation_service` ... and 7 others
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `is_favorite`
+   --> src\services\tests.rs:574:17
+    |
+574 |                 is_favorite: true,
+    |                 ^^^^^^^^^^^ unknown field
+    |
+help: a field with a similar name exists
+    |
+574 -                 is_favorite: true,
+574 +                 favorite: true,
+    |
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `source_lang`
+   --> src\services\tests.rs:580:17
+    |
+580 |                 source_lang: "en".to_string(),
+    |                 ^^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+    |
+    = note: available fields are: `id`, `source_language`, `target_language`, `confidence`, `translation_service` ... and 7 others
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `target_lang`
+   --> src\services\tests.rs:581:17
+    |
+581 |                 target_lang: "es".to_string(),
+    |                 ^^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+    |
+    = note: available fields are: `id`, `source_language`, `target_language`, `confidence`, `translation_service` ... and 7 others
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `is_favorite`
+   --> src\services\tests.rs:583:17
+    |
+583 |                 is_favorite: false,
+    |                 ^^^^^^^^^^^ unknown field
+    |
+help: a field with a similar name exists
+    |
+583 -                 is_favorite: false,
+583 +                 favorite: false,
+    |
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `source_lang`
+   --> src\services\tests.rs:589:17
+    |
+589 |                 source_lang: "en".to_string(),
+    |                 ^^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+    |
+    = note: available fields are: `id`, `source_language`, `target_language`, `confidence`, `translation_service` ... and 7 others
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `target_lang`
+   --> src\services\tests.rs:590:17
+    |
+590 |                 target_lang: "fr".to_string(),
+    |                 ^^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+    |
+    = note: available fields are: `id`, `source_language`, `target_language`, `confidence`, `translation_service` ... and 7 others
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `is_favorite`
+   --> src\services\tests.rs:592:17
+    |
+592 |                 is_favorite: false,
+    |                 ^^^^^^^^^^^ unknown field
+    |
+help: a field with a similar name exists
+    |
+592 -                 is_favorite: false,
+592 +                 favorite: false,
+    |
+
+error[E0599]: no method named `add_translation` found for enum `Result` in the current scope
+   --> src\services\tests.rs:599:18
+    |
+598 | /             cache_service
+599 | |                 .add_translation(entry.clone())
+    | |                 -^^^^^^^^^^^^^^^ method not found in `Result<cache::TranslationCacheService, anyhow::Error>`
+    | |_________________|
+    |
+    |
+note: the method `add_translation` exists on the type `cache::TranslationCacheService`
+   --> src\services\cache.rs:270:5
+    |
+270 |     pub fn add_translation(&self, mut entry: TranslationEntry) -> Result<()> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: consider using `Result::expect` to unwrap the `cache::TranslationCacheService` value, panicking if the value is a `Result::Err`
+    |
+598 |             cache_service.expect("REASON")
+    |                          +++++++++++++++++
+
+error[E0560]: struct `cache::HistorySearchFilter` has no field named `source_lang`
+   --> src\services\tests.rs:606:13
+    |
+606 |             source_lang: None,
+    |             ^^^^^^^^^^^ `cache::HistorySearchFilter` does not have this field
+    |
+    = note: available fields are: `source_language`, `target_language`, `context_type`, `source_type`, `date_from` ... and 2 others
+
+error[E0560]: struct `cache::HistorySearchFilter` has no field named `target_lang`
+   --> src\services\tests.rs:607:13
+    |
+607 |             target_lang: None,
+    |             ^^^^^^^^^^^ `cache::HistorySearchFilter` does not have this field
+    |
+    = note: available fields are: `source_language`, `target_language`, `context_type`, `source_type`, `date_from` ... and 2 others
+
+error[E0560]: struct `cache::HistorySearchFilter` has no field named `date_range`
+   --> src\services\tests.rs:610:13
+    |
+610 |             date_range: None,
+    |             ^^^^^^^^^^ `cache::HistorySearchFilter` does not have this field
+    |
+    = note: available fields are: `source_language`, `target_language`, `context_type`, `source_type`, `date_from` ... and 2 others
+
+error[E0560]: struct `PaginationParams` has no field named `page_size`
+   --> src\services\tests.rs:615:13
+    |
+615 |             page_size: 10,
+    |             ^^^^^^^^^ `PaginationParams` does not have this field
+    |
+    = note: available fields are: `per_page`, `sort_by`, `sort_order`
+
+error[E0599]: no method named `search_history` found for enum `Result` in the current scope
+   --> src\services\tests.rs:619:14
+    |
+618 |           let search_result = cache_service
+    |  _____________________________-
+619 | |             .search_history(&text_filter, &pagination)
+    | |             -^^^^^^^^^^^^^^ method not found in `Result<cache::TranslationCacheService, anyhow::Error>`
+    | |_____________|
+    |
+    |
+note: the method `search_history` exists on the type `cache::TranslationCacheService`
+   --> src\services\cache.rs:313:5
+    |
+313 | /     pub fn search_history(
+314 | |         &self,
+315 | |         filter: &HistorySearchFilter,
+316 | |         pagination: &PaginationParams,
+317 | |     ) -> Result<HistorySearchResult> {
+    | |____________________________________^
+help: consider using `Result::expect` to unwrap the `cache::TranslationCacheService` value, panicking if the value is a `Result::Err`
+    |
+618 |         let search_result = cache_service.expect("REASON")
+    |                                          +++++++++++++++++
+
+error[E0560]: struct `cache::HistorySearchFilter` has no field named `source_lang`
+   --> src\services\tests.rs:634:13
+    |
+634 |             source_lang: Some("en".to_string()),
+    |             ^^^^^^^^^^^ `cache::HistorySearchFilter` does not have this field
+    |
+    = note: available fields are: `source_language`, `target_language`, `context_type`, `source_type`, `date_from` ... and 2 others
+
+error[E0560]: struct `cache::HistorySearchFilter` has no field named `target_lang`
+   --> src\services\tests.rs:635:13
+    |
+635 |             target_lang: Some("fr".to_string()),
+    |             ^^^^^^^^^^^ `cache::HistorySearchFilter` does not have this field
+    |
+    = note: available fields are: `source_language`, `target_language`, `context_type`, `source_type`, `date_from` ... and 2 others
+
+error[E0560]: struct `cache::HistorySearchFilter` has no field named `date_range`
+   --> src\services\tests.rs:638:13
+    |
+638 |             date_range: None,
+    |             ^^^^^^^^^^ `cache::HistorySearchFilter` does not have this field
+    |
+    = note: available fields are: `source_language`, `target_language`, `context_type`, `source_type`, `date_from` ... and 2 others
+
+error[E0599]: no method named `search_history` found for enum `Result` in the current scope
+   --> src\services\tests.rs:642:14
+    |
+641 |           let lang_result = cache_service
+    |  ___________________________-
+642 | |             .search_history(&lang_filter, &pagination)
+    | |             -^^^^^^^^^^^^^^ method not found in `Result<cache::TranslationCacheService, anyhow::Error>`
+    | |_____________|
+    |
+    |
+note: the method `search_history` exists on the type `cache::TranslationCacheService`
+   --> src\services\cache.rs:313:5
+    |
+313 | /     pub fn search_history(
+314 | |         &self,
+315 | |         filter: &HistorySearchFilter,
+316 | |         pagination: &PaginationParams,
+317 | |     ) -> Result<HistorySearchResult> {
+    | |____________________________________^
+help: consider using `Result::expect` to unwrap the `cache::TranslationCacheService` value, panicking if the value is a `Result::Err`
+    |
+641 |         let lang_result = cache_service.expect("REASON")
+    |                                        +++++++++++++++++
+
+error[E0560]: struct `cache::HistorySearchFilter` has no field named `source_lang`
+   --> src\services\tests.rs:651:13
+    |
+651 |             source_lang: None,
+    |             ^^^^^^^^^^^ `cache::HistorySearchFilter` does not have this field
+    |
+    = note: available fields are: `source_language`, `target_language`, `context_type`, `source_type`, `date_from` ... and 2 others
+
+error[E0560]: struct `cache::HistorySearchFilter` has no field named `target_lang`
+   --> src\services\tests.rs:652:13
+    |
+652 |             target_lang: None,
+    |             ^^^^^^^^^^^ `cache::HistorySearchFilter` does not have this field
+    |
+    = note: available fields are: `source_language`, `target_language`, `context_type`, `source_type`, `date_from` ... and 2 others
+
+error[E0560]: struct `cache::HistorySearchFilter` has no field named `date_range`
+   --> src\services\tests.rs:655:13
+    |
+655 |             date_range: None,
+    |             ^^^^^^^^^^ `cache::HistorySearchFilter` does not have this field
+    |
+    = note: available fields are: `source_language`, `target_language`, `context_type`, `source_type`, `date_from` ... and 2 others
+
+error[E0599]: no method named `search_history` found for enum `Result` in the current scope
+   --> src\services\tests.rs:659:14
+    |
+658 |           let favorites_result = cache_service
+    |  ________________________________-
+659 | |             .search_history(&favorites_filter, &pagination)
+    | |             -^^^^^^^^^^^^^^ method not found in `Result<cache::TranslationCacheService, anyhow::Error>`
+    | |_____________|
+    |
+    |
+note: the method `search_history` exists on the type `cache::TranslationCacheService`
+   --> src\services\cache.rs:313:5
+    |
+313 | /     pub fn search_history(
+314 | |         &self,
+315 | |         filter: &HistorySearchFilter,
+316 | |         pagination: &PaginationParams,
+317 | |     ) -> Result<HistorySearchResult> {
+    | |____________________________________^
+help: consider using `Result::expect` to unwrap the `cache::TranslationCacheService` value, panicking if the value is a `Result::Err`
+    |
+658 |         let favorites_result = cache_service.expect("REASON")
+    |                                             +++++++++++++++++
+
+error[E0560]: struct `cache::HistorySearchFilter` has no field named `source_lang`
+   --> src\services\tests.rs:672:13
+    |
+672 |             source_lang: None,
+    |             ^^^^^^^^^^^ `cache::HistorySearchFilter` does not have this field
+    |
+    = note: available fields are: `source_language`, `target_language`, `context_type`, `source_type`, `date_from` ... and 2 others
+
+error[E0560]: struct `cache::HistorySearchFilter` has no field named `target_lang`
+   --> src\services\tests.rs:673:13
+    |
+673 |             target_lang: None,
+    |             ^^^^^^^^^^^ `cache::HistorySearchFilter` does not have this field
+    |
+    = note: available fields are: `source_language`, `target_language`, `context_type`, `source_type`, `date_from` ... and 2 others
+
+error[E0560]: struct `cache::HistorySearchFilter` has no field named `date_range`
+   --> src\services\tests.rs:676:13
+    |
+676 |             date_range: None,
+    |             ^^^^^^^^^^ `cache::HistorySearchFilter` does not have this field
+    |
+    = note: available fields are: `source_language`, `target_language`, `context_type`, `source_type`, `date_from` ... and 2 others
+
+error[E0599]: no method named `search_history` found for enum `Result` in the current scope
+   --> src\services\tests.rs:680:14
+    |
+679 |           let tag_result = cache_service
+    |  __________________________-
+680 | |             .search_history(&tag_filter, &pagination)
+    | |             -^^^^^^^^^^^^^^ method not found in `Result<cache::TranslationCacheService, anyhow::Error>`
+    | |_____________|
+    |
+    |
+note: the method `search_history` exists on the type `cache::TranslationCacheService`
+   --> src\services\cache.rs:313:5
+    |
+313 | /     pub fn search_history(
+314 | |         &self,
+315 | |         filter: &HistorySearchFilter,
+316 | |         pagination: &PaginationParams,
+317 | |     ) -> Result<HistorySearchResult> {
+    | |____________________________________^
+help: consider using `Result::expect` to unwrap the `cache::TranslationCacheService` value, panicking if the value is a `Result::Err`
+    |
+679 |         let tag_result = cache_service.expect("REASON")
+    |                                       +++++++++++++++++
+
+error[E0599]: no method named `initialize` found for enum `Result` in the current scope
+   --> src\services\tests.rs:695:23
+    |
+695 |         cache_service.initialize().expect("Should initialize cache");
+    |                       ^^^^^^^^^^ method not found in `Result<cache::TranslationCacheService, anyhow::Error>`
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+note: `ocr::OcrEngine` defines an item `initialize`, perhaps you need to implement it
+   --> src\core\ocr.rs:56:1
+    |
+ 56 | pub trait OcrEngine: Send + Sync {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `source_lang`
+   --> src\services\tests.rs:701:13
+    |
+701 |             source_lang: "en".to_string(),
+    |             ^^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+    |
+    = note: available fields are: `id`, `source_language`, `target_language`, `confidence`, `translation_service` ... and 8 others
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `target_lang`
+   --> src\services\tests.rs:702:13
+    |
+702 |             target_lang: "es".to_string(),
+    |             ^^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+    |
+    = note: available fields are: `id`, `source_language`, `target_language`, `confidence`, `translation_service` ... and 8 others
+
+error[E0599]: no method named `add_translation` found for enum `Result` in the current scope
+   --> src\services\tests.rs:707:14
+    |
+706 | /         cache_service
+707 | |             .add_translation(base_entry)
+    | |             -^^^^^^^^^^^^^^^ method not found in `Result<cache::TranslationCacheService, anyhow::Error>`
+    | |_____________|
+    |
+    |
+note: the method `add_translation` exists on the type `cache::TranslationCacheService`
+   --> src\services\cache.rs:270:5
+    |
+270 |     pub fn add_translation(&self, mut entry: TranslationEntry) -> Result<()> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: consider using `Result::expect` to unwrap the `cache::TranslationCacheService` value, panicking if the value is a `Result::Err`
+    |
+706 |         cache_service.expect("REASON")
+    |                      +++++++++++++++++
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `source_lang`
+   --> src\services\tests.rs:723:17
+    |
+723 |                 source_lang: "en".to_string(),
+    |                 ^^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+    |
+    = note: available fields are: `id`, `source_language`, `target_language`, `confidence`, `translation_service` ... and 8 others
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `target_lang`
+   --> src\services\tests.rs:724:17
+    |
+724 |                 target_lang: "es".to_string(),
+    |                 ^^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+    |
+    = note: available fields are: `id`, `source_language`, `target_language`, `confidence`, `translation_service` ... and 8 others
+
+error[E0599]: no method named `add_translation` found for enum `Result` in the current scope
+   --> src\services\tests.rs:728:18
+    |
+727 | /             cache_service
+728 | |                 .add_translation(entry)
+    | |                 -^^^^^^^^^^^^^^^ method not found in `Result<cache::TranslationCacheService, anyhow::Error>`
+    | |_________________|
+    |
+    |
+note: the method `add_translation` exists on the type `cache::TranslationCacheService`
+   --> src\services\cache.rs:270:5
+    |
+270 |     pub fn add_translation(&self, mut entry: TranslationEntry) -> Result<()> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: consider using `Result::expect` to unwrap the `cache::TranslationCacheService` value, panicking if the value is a `Result::Err`
+    |
+727 |             cache_service.expect("REASON")
+    |                          +++++++++++++++++
+
+error[E0599]: no method named `get_similar_translations` found for enum `Result` in the current scope
+   --> src\services\tests.rs:734:14
+    |
+733 |           let similar = cache_service
+    |  _______________________-
+734 | |             .get_similar_translations("Hello world", 3)
+    | |             -^^^^^^^^^^^^^^^^^^^^^^^^ method not found in `Result<cache::TranslationCacheService, anyhow::Error>`
+    | |_____________|
+    |
+    |
+note: the method `get_similar_translations` exists on the type `cache::TranslationCacheService`
+   --> src\services\cache.rs:681:5
+    |
+681 | /     pub fn get_similar_translations(
+682 | |         &self,
+683 | |         text: &str,
+684 | |         limit: usize,
+685 | |     ) -> Result<Vec<TranslationEntry>> {
+    | |______________________________________^
+help: consider using `Result::expect` to unwrap the `cache::TranslationCacheService` value, panicking if the value is a `Result::Err`
+    |
+733 |         let similar = cache_service.expect("REASON")
+    |                                    +++++++++++++++++
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `source_lang`
+   --> src\services\tests.rs:991:13
+    |
+991 |             source_lang: String::new(),
+    |             ^^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+    |
+    = note: available fields are: `source_language`, `target_language`, `translation_service`, `context_type`, `source_type` ... and 5 others
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `target_lang`
+   --> src\services\tests.rs:992:13
+    |
+992 |             target_lang: String::new(),
+    |             ^^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+    |
+    = note: available fields are: `source_language`, `target_language`, `translation_service`, `context_type`, `source_type` ... and 5 others
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `created_at`
+   --> src\services\tests.rs:994:13
+    |
+994 |             created_at: chrono::Utc::now(),
+    |             ^^^^^^^^^^ `cache::TranslationEntry` does not have this field
+    |
+    = note: available fields are: `source_language`, `target_language`, `translation_service`, `context_type`, `source_type` ... and 5 others
+
+error[E0560]: struct `cache::TranslationEntry` has no field named `is_favorite`
+   --> src\services\tests.rs:996:13
+    |
+996 |             is_favorite: false,
+    |             ^^^^^^^^^^^ unknown field
+    |
+help: a field with a similar name exists
+    |
+996 -             is_favorite: false,
+996 +             favorite: false,
+    |
+
+warning: unused variable: `image_type`
+   --> src\ai\tests.rs:740:34
+    |
+740 |     fn create_test_image_by_type(image_type: &str) -> Vec<u8> {
+    |                                  ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_image_type`
+    |
+    = note: `#[warn(unused_variables)]` on by default
+
+warning: unused variable: `image`
+   --> src\core\ocr.rs:237:38
+    |
+237 |     fn extract_with_tesseract(&self, image: &DynamicImage) -> Result<TesseractResult, OcrError> {
+    |                                      ^^^^^ help: if this is intentional, prefix it with an underscore: `_image`
+
+warning: unused variable: `x`
+   --> src\core\ocr.rs:389:9
+    |
+389 |         x: u32,
+    |         ^ help: if this is intentional, prefix it with an underscore: `_x`
+
+warning: unused variable: `y`
+   --> src\core\ocr.rs:390:9
+    |
+390 |         y: u32,
+    |         ^ help: if this is intentional, prefix it with an underscore: `_y`
+
+warning: unused variable: `image`
+   --> src\core\ocr.rs:493:9
+    |
+493 |         image: &DynamicImage,
+    |         ^^^^^ help: if this is intentional, prefix it with an underscore: `_image`
+
+Some errors have detailed explanations: E0034, E0061, E0063, E0119, E0308, E0432, E0433, E0560, E0592...
+For more information about an error, try `rustc --explain E0034`.
+warning: `screen-translator` (lib test) generated 5 warnings
+error: could not compile `screen-translator` (lib test) due to 278 previous errors; 5 warnings emitted
+warning: build failed, waiting for other jobs to finish...
+warning: unused variable: `image`
+   --> src\core\ocr.rs:237:38
+    |
+237 |     fn extract_with_tesseract(&self, image: &DynamicImage) -> Result<TesseractResult, OcrError> {
+    |                                      ^^^^^ help: if this is intentional, prefix it with an underscore: `_image`
+    |
+    = note: `#[warn(unused_variables)]` on by default
+
+warning: `screen-translator` (lib) generated 4 warnings (3 duplicates)
