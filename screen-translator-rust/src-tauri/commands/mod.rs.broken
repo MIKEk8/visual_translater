@@ -1,0 +1,526 @@
+// Tauri commands for frontend-backend communication
+use crate::types::*;
+
+use crate::ai::{
+    ContextAwareTranslator, DetectionResult, LanguageDetection, SmartAreaDetector,
+    TranslationSuggestion,
+};
+#[cfg(feature = "image_processing")]
+use crate::core::{ocr::OcrResult, screenshot::CaptureArea};
+use futures_util::future::TryFutureExt;
+
+// Stub types for when image_processing is disabled
+#[cfg(not(feature = "image_processing"))]
+#[derive(Debug, serde::Serialize, serde::Deserialize)]
+pub struct CaptureArea {
+    pub x: u32,
+    pub y: u32,
+    pub width: u32,
+    pub height: u32,
+}
+
+#[cfg(not(feature = "image_processing"))]
+#[derive(Debug, serde::Serialize, serde::Deserialize)]
+pub struct OcrResult {
+    pub text: String,
+    pub confidence: f32,
+    pub regions: Vec<TextRegion>,
+}
+
+#[cfg(not(feature = "image_processing"))]
+#[derive(Debug, serde::Serialize, serde::Deserialize)]
+pub struct TextRegion {
+    pub text: String,
+    pub confidence: f32,
+    pub bounds: BoundingBox,
+}
+
+#[cfg(not(feature = "image_processing"))]
+#[derive(Debug, serde::Serialize, serde::Deserialize)]
+pub struct BoundingBox {
+    pub x: u32,
+    pub y: u32,
+    pub width: u32,
+    pub height: u32,
+}
+use crate::services::cache::{
+    CacheConfig, CacheStats, HistorySearchFilter, HistorySearchResult, PaginationParams,
+    TranslationCacheService, TranslationEntry,
+};
+use crate::services::intelligent_hotkey::{
+    get_default_context_menu, ContextMenuItem, HotkeyAction, IntelligentHotkeyManager,
+};
+use crate::services::translation::{TranslationRequest, TranslationResult};
+use crate::services::{AppConfiguration, AppState};
+use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
+use std::sync::Arc;
+use tauri::State;
+
+// Include test modules when testing
+#[cfg(test)]
+mod command_tests;
+
+// Global state wrapper
+pub type AppStateWrapper = Arc<AppState>;
+
+// Translation Service Commands
+#[tauri::command]
+pub async fn translate_text(request: TranslationRequest) -> Result<TranslationResult, String> {
+    // TODO: Implement actual translation
+    Err("not yet implemented".to_string())
+}
+
+#[tauri::command]
+pub async fn translate_from_clipboard(
+    source_lang: &str,
+    target_lang: &str,
+) -> Result<TranslationResult, String> {
+    // TODO: Implement clipboard translation
+    Err("not yet implemented".to_string())
+}
+
+#[tauri::command]
+pub async fn smart_translate_with_context(
+    text: &str,
+    context: Option<&str>,
+) -> Result<SmartTranslationResult, String> {
+    // TODO: Implement smart context-aware translation
+    Err("not yet implemented".to_string())
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct SmartTranslationResult {
+    pub original_text: String,
+    pub translated_text: String,
+    pub source_lang: String,
+    pub target_lang: String,
+    pub confidence: f32,
+    pub cached: bool,
+    pub context_type: String,
+    pub detection_confidence: f32,
+    pub suggestions: Vec<String>,
+    pub processing_time_ms: u64,
+}
+
+// Cache Service Commands
+#[tauri::command]
+pub async fn get_cached_translation(
+    text: &str,
+    source_lang: &str,
+    target_lang: &str,
+) -> Result<Option<TranslationEntry>, String> {
+    // TODO: Implement cache lookup
+    Err("not yet implemented".to_string())
+}
+
+#[tauri::command]
+pub async fn add_translation_to_cache(entry: TranslationEntry) -> Result<(), String> {
+    // TODO: Implement cache addition
+    Err("not yet implemented".to_string())
+}
+
+#[tauri::command]
+pub async fn search_translation_history(
+    filter: HistorySearchFilter,
+) -> Result<HistorySearchResult, String> {
+    log::info!("Searching translation history with filter: {:?}", filter);
+    // TODO: Implement actual history search
+    Ok(HistorySearchResult {
+        entries: vec![],
+        total_count: 0,
+        page: 0,
+        per_page: 10,
+        per_page: 10,
+        total_pages: 0,
+        search_time_ms: 0,
+    })
+}
+
+#[tauri::command]
+pub async fn add_translation_to_history(entry: TranslationEntry) -> Result<(), String> {
+    log::info!("Adding translation to history: {:?}", entry.id);
+    // TODO: Implement actual history storage
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn toggle_translation_favorite(entry_id: &str) -> Result<bool, String> {
+    log::info!("Toggling favorite status for entry: {}", entry_id);
+    // TODO: Implement favorite toggle
+    Ok(true)
+}
+
+#[tauri::command]
+pub async fn export_translation_history(format: &str) -> Result<String, String> {
+    log::info!("Exporting translation history in format: {}", format);
+    // TODO: Implement history export
+    match format {
+        "json" => Ok("{}".to_string()),
+        "csv" => Ok("original,translated,source_lang,target_lang\n".to_string()),
+        _ => Err(format!("Unsupported export format: {}", format)),
+    }
+}
+
+#[tauri::command]
+pub async fn get_cache_statistics() -> Result<CacheStats, String> {
+    log::info!("Getting cache statistics");
+    // TODO: Implement cache statistics
+    Ok(CacheStats {
+        cache_size: 0,
+        cache_capacity: 0,
+        hit_count: 0,
+        hit_rate: 0.0,
+        history_size: 0,
+        oldest_entry: None,
+        newest_entry: None,
+        total_translations: 0,
+}
+
+// Screenshot and OCR Commands
+#[tauri::command]
+pub async fn capture_screenshot(area: Option<CaptureArea>) -> Result<String, String> {
+    log::info!("Capturing screenshot with area: {:?}", area);
+    #[cfg(feature = "image_processing")]
+    {
+        // TODO: Implement actual screenshot capture
+        Err("Screenshot capture not yet implemented".to_string())
+    }
+    #[cfg(not(feature = "image_processing"))]
+    {
+        // Return mock data for testing
+        Ok("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==".to_string())
+    }
+}
+
+#[tauri::command]
+pub async fn get_monitors() -> Result<Vec<MonitorInfo>, String> {
+    log::info!("Getting monitor information");
+    #[cfg(feature = "image_processing")]
+    {
+        // TODO: Implement actual monitor enumeration
+        Err("Monitor enumeration not yet implemented".to_string())
+    }
+    #[cfg(not(feature = "image_processing"))]
+    {
+        // Return mock monitor data
+        Ok(vec![MonitorInfo {
+            id: 0,
+            name: "Primary Monitor".to_string(),
+            width: 1920,
+            height: 1080,
+            x: 0,
+            y: 0,
+            scale_factor: 1.0,
+            is_primary: true,
+        }])
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct MonitorInfo {
+    pub id: u32,
+    pub name: String,
+    pub width: u32,
+    pub height: u32,
+    pub x: i32,
+    pub y: i32,
+    pub scale_factor: f64,
+    pub is_primary: bool,
+}
+
+#[tauri::command]
+pub async fn validate_capture_area(area: CaptureArea) -> Result<bool, String> {
+    log::info!("Validating capture area: {:?}", area);
+    // Basic validation - area should have positive dimensions
+    let is_valid = area.width > 0 && area.height > 0;
+    Ok(is_valid)
+}
+
+#[tauri::command]
+pub async fn perform_ocr(image_data: &str, config: Option<OcrConfig>) -> Result<OcrResult, String> {
+    log::info!("Performing OCR with config: {:?}", config);
+    #[cfg(feature = "image_processing")]
+    {
+        // TODO: Implement actual OCR
+        Err("OCR not yet implemented".to_string())
+    }
+    #[cfg(not(feature = "image_processing"))]
+    {
+        // Return mock OCR result
+        Ok(OcrResult {
+            text: "Mock OCR result".to_string(),
+            confidence: 0.95,
+            regions: vec![],
+        })
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct OcrConfig {
+    pub language: String,
+    pub psm: u8, // Page segmentation mode
+    pub oem: u8, // OCR Engine mode
+    pub whitelist: Option<String>,
+    pub blacklist: Option<String>,
+}
+
+#[tauri::command]
+pub async fn preprocess_image(
+    image_data: &str,
+    options: PreprocessOptions,
+) -> Result<String, String> {
+    log::info!("Preprocessing image with options: {:?}", options);
+    // TODO: Implement image preprocessing
+    Ok(image_data.to_string()) // Return unchanged for now
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct PreprocessOptions {
+    pub enhance_contrast: bool,
+    pub remove_noise: bool,
+    pub straighten: bool,
+    pub scale_factor: f32,
+}
+
+#[tauri::command]
+pub async fn detect_text_regions(image_data: &str) -> Result<Vec<TextRegion>, String> {
+    log::info!("Detecting text regions in image");
+    // TODO: Implement text region detection
+    Ok(vec![])
+}
+
+#[tauri::command]
+pub async fn get_ocr_languages() -> Result<Vec<String>, String> {
+    log::info!("Getting available OCR languages");
+    // TODO: Get actual OCR language packs from Tesseract
+    Ok(vec![
+        "eng".to_string(),
+        "rus".to_string(),
+        "deu".to_string(),
+        "fra".to_string(),
+        "spa".to_string(),
+        "jpn".to_string(),
+        "chi_sim".to_string(),
+    ])
+}
+
+// Hotkey System Commands
+#[tauri::command]
+pub async fn initialize_intelligent_hotkey() -> Result<(), String> {
+    log::info!("Initializing intelligent hotkey system");
+    // TODO: Implement hotkey system initialization
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn register_global_hotkey(hotkey: &str, action: &str) -> Result<(), String> {
+    log::info!("Registering global hotkey: {} for action: {}", hotkey, action);
+    // TODO: Implement global hotkey registration
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn get_context_menu_items() -> Result<Vec<ContextMenuItem>, String> {
+    log::info!("Getting context menu items");
+    Ok(get_default_context_menu())
+}
+
+#[tauri::command]
+pub async fn execute_context_action(action: &str) -> Result<(), String> {
+    log::info!("Executing context action: {}", action);
+    // TODO: Implement context action execution
+    match action {
+        "screenshot_area" => {
+            log::info!("Executing screenshot area action");
+            Ok(())
+        }
+        "clipboard_translation" => {
+            log::info!("Executing clipboard translation action");
+            Ok(())
+        }
+        "region_selection" => {
+            log::info!("Executing region selection action");
+            Ok(())
+        }
+        "repeat_last" => {
+            log::info!("Executing repeat last action");
+            Ok(())
+        }
+        "show_history" => {
+            log::info!("Executing show history action");
+            Ok(())
+        }
+        "show_settings" => {
+            log::info!("Executing show settings action");
+            Ok(())
+        }
+        _ => Err(format!("Unknown action: {}", action)),
+    }
+}
+
+// Configuration Commands
+#[tauri::command]
+pub async fn get_app_config(state: State<'_, AppStateWrapper>) -> Result<AppConfiguration, String> {
+    log::info!("Getting application configuration");
+    match state.load_config() {
+        Ok(config) => Ok(config),
+        Err(e) => {
+            log::error!("Failed to load config: {}", e);
+            Ok(AppConfiguration::default())
+        }
+    }
+}
+
+#[tauri::command]
+pub async fn set_app_config(
+    config: AppConfiguration,
+    state: State<'_, AppStateWrapper>,
+) -> Result<(), String> {
+    log::info!("Setting application configuration");
+    match state.save_config(&config) {
+        Ok(_) => Ok(()),
+        Err(e) => {
+            log::error!("Failed to save config: {}", e);
+            Err(format!("Failed to save configuration: {}", e))
+        }
+    }
+}
+
+#[tauri::command]
+pub async fn get_available_languages() -> Result<Vec<LanguageOption>, String> {
+    log::info!("Getting available languages");
+    Ok(vec![
+        LanguageOption {
+            code: "auto".to_string(),
+            name: "Auto-detect".to_string(),
+            native_name: "Auto-detect".to_string(),
+        },
+        LanguageOption {
+            code: "en".to_string(),
+            name: "English".to_string(),
+            native_name: "English".to_string(),
+        },
+        LanguageOption {
+            code: "ru".to_string(),
+            name: "Russian".to_string(),
+            native_name: "Русский".to_string(),
+        },
+        LanguageOption {
+            code: "de".to_string(),
+            name: "German".to_string(),
+            native_name: "Deutsch".to_string(),
+        },
+        LanguageOption {
+            code: "fr".to_string(),
+            name: "French".to_string(),
+            native_name: "Français".to_string(),
+        },
+        LanguageOption {
+            code: "es".to_string(),
+            name: "Spanish".to_string(),
+            native_name: "Español".to_string(),
+        },
+        LanguageOption {
+            code: "ja".to_string(),
+            name: "Japanese".to_string(),
+            native_name: "日本語".to_string(),
+        },
+        LanguageOption {
+            code: "zh".to_string(),
+            name: "Chinese".to_string(),
+            native_name: "中文".to_string(),
+        },
+    ])
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct LanguageOption {
+    pub code: String,
+    pub name: String,
+    pub native_name: String,
+}
+
+#[tauri::command]
+pub async fn validate_hotkey_combination(hotkey: &str) -> Result<bool, String> {
+    log::info!("Validating hotkey combination: {}", hotkey);
+    // Basic validation - check if hotkey format is valid
+    let is_valid = hotkey.contains('+') && !hotkey.is_empty();
+    Ok(is_valid)
+}
+
+// AI and Detection Commands
+#[tauri::command]
+pub async fn detect_language_and_context(text: &str) -> Result<LanguageDetection, String> {
+    log::info!("Detecting language and context for text: {:.50}...", text);
+    // TODO: Implement actual language detection
+    Ok(LanguageDetection {
+        language: "en".to_string(),
+        context_confidence: 0.95,
+        processing_time_ms: 1,
+        confidence: 0.95,
+        // context_type: ContextType::General, // Commented out for MVP
+}
+
+#[tauri::command]
+pub async fn get_translation_suggestions(
+    text: &str,
+    context: &str,
+) -> Result<Vec<TranslationSuggestion>, String> {
+    log::info!(
+        "Getting translation suggestions for text: {:.50}... with context: {}",
+        text,
+        context
+    );
+    // TODO: Implement suggestion generation
+    Ok(vec![])
+}
+
+// Utility Commands
+#[tauri::command]
+pub async fn log_debug_info(message: &str) -> Result<(), String> {
+    log::debug!("Frontend debug: {}", message);
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn get_app_version() -> Result<String, String> {
+    Ok(env!("CARGO_PKG_VERSION").to_string())
+}
+
+#[tauri::command]
+pub async fn check_dependencies() -> Result<HashMap<String, bool>, String> {
+    log::info!("Checking dependencies");
+    let mut deps = HashMap::new();
+
+    // Check Tesseract OCR
+    #[cfg(feature = "image_processing")]
+    {
+        // TODO: Actually check if Tesseract is installed
+        deps.insert("tesseract".to_string(), false);
+    }
+    #[cfg(not(feature = "image_processing"))]
+    {
+        deps.insert("tesseract".to_string(), false);
+    }
+
+    // Check network connectivity
+    deps.insert("network".to_string(), true); // Assume true for now
+
+    // Check system permissions
+    deps.insert("global_hotkeys".to_string(), true); // Assume true for now
+
+    Ok(deps)
+}
+
+// Helper function to set clipboard content for testing
+#[cfg(test)]
+pub fn set_clipboard_content(_content: &str) {
+    // Mock function for testing
+}
+
+// Helper function to get clipboard content
+pub fn get_clipboard_content() -> Result<String, String> {
+    // TODO: Implement actual clipboard reading
+    Err("Clipboard reading not yet implemented".to_string())
+}
