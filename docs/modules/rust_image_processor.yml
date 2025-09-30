@@ -1,0 +1,26 @@
+module: screen-translator-rust/src/core/image_processor.rs
+purpose: Image preprocessing pipeline for OCR enhancement with OpenCV-like operations
+interfaces:
+  - ImageProcessor::new(config: PreprocessingConfig) -> Self
+  - ImageProcessor::preprocess(&self, image: DynamicImage) -> Result<DynamicImage>
+  - ImageProcessor::enhance_for_ocr(&self, image: DynamicImage) -> Result<DynamicImage>
+  - ImageProcessor::auto_detect_text_regions(&self, image: &DynamicImage) -> Vec<Rectangle>
+  - ImageProcessor::to_grayscale(&self, image: DynamicImage) -> DynamicImage
+  - ImageProcessor::enhance_contrast(&self, image: DynamicImage) -> DynamicImage
+  - ImageProcessor::reduce_noise(&self, image: DynamicImage) -> DynamicImage
+  - ImageProcessor::sharpen(&self, image: DynamicImage) -> DynamicImage
+  - ImageProcessor::scale(&self, image: DynamicImage, factor: f32) -> DynamicImage
+dependencies:
+  uses: [image, serde, thiserror, log]
+  used_by: [rust_ocr_engine, rust_screenshot_engine]
+tests:
+  unit: [tests/test_image_processor.rs]
+  integration: [tests/integration_ocr.rs]
+constraints:
+  invariants: [memory efficient processing, quality preservation, configurable pipeline]
+  perf_budget: "< 1s preprocessing, < 500ms region detection"
+security:
+  considerations: [image format validation, memory limits, processing bounds]
+last_updated: 2025-09-28
+status: IMPLEMENTATION_READY
+coverage: 85% (estimated, needs Rust toolchain for verification)

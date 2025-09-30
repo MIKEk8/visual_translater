@@ -28,10 +28,11 @@ model: inherit
 
 # Итеративная петля
 - Запусти:
-  - Python: `pytest -q` (+ `--cov` если доступно)
-  - PHP: `vendor/bin/pest` (или phpunit)
-  - Ren’Py: `./scripts/run-renpy-lint.sh`
-  - Линтеры: если включены (flake8/mypy/phpstan/phpcs…)
+  - Rust: `cargo test` (+ `cargo test --all-features`)
+  - Rust backend: `cd screen-translator-rust && cargo test`
+  - Minimal demo: `cd screen-translator-minimal && cargo test`
+  - Frontend: `cd screen-translator-rust/ui && npm test`
+  - Линтеры: `cargo clippy`, `cargo fmt --check`
 - Если есть **критические** падения → локализуй причину → минимальный фикс → перезапусти.
 - Повтор до зелёного либо до лимита MAX_FIX_LOOPS (в этом случае — зафиксируй остатки).
 

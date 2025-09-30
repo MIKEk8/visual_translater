@@ -22,9 +22,10 @@ model: inherit
 - Для Ren’Py выноси вычислимую логику в `game/py/*` — это упростит pytest.
 
 # Команды
-- Python: `pytest -q -k <затронутые>`
-- PHP: `vendor/bin/pest --filter <pattern>` (или phpunit filter)
-- Ren’Py: `./scripts/run-renpy-lint.sh`
+- Rust: `cargo test <затронутые>` или `cargo check`
+- Tauri: `cd screen-translator-rust && npm run tauri:dev`
+- Frontend: `cd screen-translator-rust/ui && npm test`
+- Formatting: `cargo fmt` и `cargo clippy`
 
 # Критерий завершения
 - Локально крит-ветки тестов по затронутому коду — зелёные.

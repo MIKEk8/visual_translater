@@ -1,6 +1,6 @@
 ---
 name: test-writer
-description: Test Writer. Создаёт минимально достаточные ПАДАЮЩИЕ тесты под план/контракты. Не правит прод-код.
+description: Test Writer. Создаёт минимально достаточные ПАДАЮЩИЕ Rust тесты под план/контракты. Не правит прод-код.
 tools: Read, Write, Bash, Grep, Glob
 model: inherit
 ---
@@ -15,10 +15,10 @@ model: inherit
 
 # Выход (обязательные артефакты)
 - Новые/обновлённые тесты:
-  - Python/pytest: `tests/test_*.py`
-  - PHP/Pest или PHPUnit: `tests/*`
-  - Ren’Py: как минимум lint-сценарий + pytest для логики в `game/py/*` или smoke-label.
-- Маркировка критичности: `@pytest.mark.critical` или комментарий `// [critical]`.
+  - Rust: `src/**/tests.rs` или `tests/*.rs`
+  - Unit tests: `#[cfg(test)]` модули в каждом файле
+  - Integration tests: `tests/integration/` directory
+- Маркировка критичности: `#[test]` с комментарием `// [critical]`.
 - `docs/_tdd_failures.md`: краткий список ожидаемых падений (что должно провалиться до реализации).
 - Запуск тестов/линта и сохранение краткой сводки в конце файла.
 
@@ -28,9 +28,10 @@ model: inherit
 - Не подгонять тесты под текущую реализацию; ориентир — контракты/план.
 
 # Команды
-- Python: `pytest -q`
-- PHP: `vendor/bin/pest` (или `vendor/bin/phpunit`)
-- Ren’Py: `./scripts/run-renpy-lint.sh` (+ опциональный smoke)
+- Rust: `cargo test` (run all tests)
+- Rust specific: `cargo test --package screen-translator`
+- Frontend: `cd screen-translator-rust/ui && npm test`
+- Linting: `cargo clippy` (+ `cargo fmt --check`)
 
 # Критерий завершения
 - Есть падающие **критические** тесты, фиксирующие требования.

@@ -18,7 +18,7 @@ description: End-to-end orchestration of Plan→Implement→Test→Fix→Report 
 
 # Параметры (подставлены вызывающей стороной)
 - TASK = {{task}}
-- STACKS = {{stacks}}            # one of: python, php, renpy (через запятую)
+- STACKS = {{stacks}}            # one of: rust, tauri, react, python, php, renpy (через запятую)
 - COVERAGE_MIN = {{coverage_min}}# напр. "80"
 - RUN_LINTERS = {{run_linters}}  # "true"/"false"
 - FULL_SUITE = {{full_suite}}    # "true"/"false"
@@ -45,6 +45,9 @@ Use the architect subagent to draft a concise, actionable plan for:
 # Этап 2 — Тесты вперёд (TDD)
 Use the test-writer subagent to create **failing** tests strictly per docs/plan.md.
 - Для STACKS включает:
+  - rust ∷ cargo test в src/ и tests/
+  - tauri ∷ Rust backend + React frontend тесты
+  - react ∷ Jest/Testing Library в ui/src/
   - python ∷ pytest в tests/
   - php ∷ Pest/PHPUnit в tests/
   - renpy ∷ подготовь хотя бы проверку lint/smoke (скрипт/label) или тестируемую Python-логику в game/py/*
@@ -68,10 +71,13 @@ Use the coder subagent to implement docs/plan.md.
 ПОВТОРЯЙ ПОКА (FIX_LOOP < MAX_FIX_LOOPS):
   4.1 Запуск тестов/линтов
       Use the test-runner subagent to:
+      - Rust: cargo test (FULL_SUITE ? --all-features : таргетно по модулям).
+      - Tauri: cd screen-translator-rust && cargo test + npm test в ui/
+      - React: cd screen-translator-rust/ui && npm test
       - Python: pytest (FULL_SUITE ? полный набор : таргетно по изменённым).
       - PHP: vendor/bin/pest или phpunit (FULL_SUITE аналогично).
-      - Ren’Py: ./scripts/run-renpy-lint.sh
-      - Если RUN_LINTERS=true → запусти проектные линтеры/статику (flake8/mypy, phpstan/phpcs и т.п.) если настроены.
+      - Ren'Py: ./scripts/run-renpy-lint.sh
+      - Если RUN_LINTERS=true → запусти линтеры: cargo clippy, cargo fmt --check, eslint (для React)
       - Собери coverage (если доступно), сохрани отчёт (xml/txt) в docs/_coverage/.
       - Сформируй сводку статусов и список фейлов крит/некрит в docs/_verification_summary.md.
 

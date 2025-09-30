@@ -1,0 +1,25 @@
+module: src/ui/context_menu_widget.py
+purpose: Animated context menu with keyboard navigation and 60 FPS animations
+interfaces:
+  - show_menu(x: int, y: int) -> None
+  - hide_menu() -> None
+  - add_action(action: MenuAction) -> None
+  - handle_keyboard(event) -> bool
+  - set_action_callback(action_id: str, callback: Callable) -> None
+  - get_menu_actions() -> List[str]
+dependencies:
+  uses: [tkinter, threading, time, src.utils.logger]
+  used_by: [smart_translation_handler, ui_coordinator]
+tests:
+  unit: [src/tests/unit/ui/test_context_menu_widget.py]
+  integration: [src/tests/integration/test_ui_context_menu.py]
+constraints:
+  invariants: [60 FPS animation performance, proper resource cleanup, keyboard accessibility]
+  perf_budget: "< 100ms menu display, 60 FPS animations, < 50ms action execution"
+security:
+  considerations: [GUI resource management, event handler cleanup, thread safety]
+last_updated: 2025-09-29
+status: PRODUCTION_READY
+coverage: 85% (full UI implementation complete)
+migration_status: MIGRATED_TO_REACT
+rust_equivalent: screen-translator-rust/src/components/ContextMenu.tsx

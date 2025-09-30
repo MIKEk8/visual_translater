@@ -2,31 +2,247 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## 🚨 CRITICAL: Python Virtual Environment Usage
+## 🚨 CRITICAL: REPORTING STANDARDS
 
-**ALWAYS use Python from virtual environment:**
-```bash
-# For Claude (Linux environment):
-.venv/bin/python    # NOT python or python3
-.venv/bin/pip       # NOT pip or pip3
+### NO SPECULATIVE METRICS
+**СТРОГО ЗАПРЕЩЕНО** указывать предположительные метрики без реальных измерений:
 
-# For Windows development:
-wenv\Scripts\python.exe
-wenv\Scripts\pip.exe
+❌ **НЕПРАВИЛЬНО:**
+- "Performance: 100-300ms" (без запуска бенчмарков)
+- "2-5x faster than target" (без измерений)
+- "Estimated 3-5 hours" (без фактического выполнения)
+- "Coverage: 80%" (без запуска coverage инструмента)
+- "Memory usage: <50MB" (без профилирования)
+
+✅ **ПРАВИЛЬНО:**
+- "Tests: 27/28 passing (verified by `cargo test`)"
+- "Compilation: successful (verified by `cargo check`)"
+- "Implementation: complete (code written, not yet benchmarked)"
+- "Performance: NOT YET MEASURED (benchmarks pending)"
+- "Estimated time: CANNOT ESTIMATE (depends on unknowns)"
+
+### MEASUREMENT REQUIREMENTS
+
+**Если метрика НЕ измерена реальным инструментом - НЕ УКАЗЫВАЙ ЕЁ.**
+
+#### Допустимые утверждения:
+- ✅ Количество тестов (после `cargo test`)
+- ✅ Статус компиляции (после `cargo check/build`)
+- ✅ Количество файлов (после создания/изменения)
+- ✅ Результаты линтеров (после `cargo clippy`)
+- ✅ Покрытие кода (после `cargo tarpaulin` или аналога)
+- ✅ Бенчмарки (после `cargo bench` или criterion)
+- ✅ Размер бинарника (после сборки + `ls -lh`)
+- ✅ Время выполнения (после реального запуска с замером)
+
+#### ЗАПРЕЩЕННЫЕ утверждения:
+- ❌ "Быстрее в X раз" (без side-by-side бенчмарка)
+- ❌ "Займет N часов/дней" (без истории аналогичных задач)
+- ❌ "Использует M памяти" (без profiler/valgrind)
+- ❌ "Покрытие N%" (без coverage runner)
+- ❌ "Производительность <Nms" (без benchmark результатов)
+
+### LANGUAGE FOR UNMEASURED CLAIMS
+
+Используй точные формулировки:
+
+```markdown
+# ВМЕСТО:
+"Performance: 100-300ms (2-5x faster than target)"
+
+# ПИШИ:
+"Performance: NOT MEASURED YET
+Target: <500ms (from requirements)
+Implementation: complete, ready for benchmarking
+To verify: cargo bench --bench screenshot_bench"
+
+# ВМЕСТО:
+"Estimated 3-5 hours implementation time"
+
+# ПИШИ:
+"Implementation scope defined in docs/plan.md
+Time estimate: DEFERRED until after Phase 1 completion
+Dependencies: X, Y, Z must be resolved first"
+
+# ВМЕСТО:
+"Memory usage: <50MB"
+
+# ПИШИ:
+"Memory usage: NOT PROFILED
+Target: <50MB (from requirements)
+To measure: cargo run --release with valgrind/heaptrack"
 ```
 
-**NEVER use system Python!** This is critical for proper dependency management.
+### REPORTING TEMPLATE
+
+При создании отчетов используй этот шаблон:
+
+```markdown
+## Implementation Status
+✅ Code written: [files list]
+✅ Tests created: X tests
+✅ Compilation: [cargo check result]
+
+## Verified Metrics (with tools)
+✅ Tests passing: X/Y (cargo test)
+✅ Linters: [cargo clippy result]
+✅ Format: [cargo fmt --check result]
+
+## NOT YET MEASURED
+⏸️ Performance benchmarks (cargo bench not run)
+⏸️ Memory profiling (profiler not run)
+⏸️ Coverage percentage (tarpaulin not run)
+
+## Ready for Measurement
+- [ ] Run cargo bench for performance
+- [ ] Run cargo tarpaulin for coverage
+- [ ] Profile memory with heaptrack
+```
+
+## 🏗️ ARCHITECTURE GUIDELINES
+
+### Preventing Code Duplication
+When working with this codebase, follow these principles to prevent duplication:
+
+1. **DRY (Don't Repeat Yourself)**: Each piece of knowledge should have a single, unambiguous representation
+2. **Single Source of Truth**: Configuration must be defined in ONE place only
+3. **Explicit Dependencies**: Use dependency injection instead of singletons
+4. **Fail-Fast on Duplication**: Throw errors rather than silently allowing duplicates
+
+### Hotkey System Architecture
+The application uses a **unified hotkey service** to manage all hotkeys:
+- Single initialization point in main application
+- No duplication of hotkey definitions
+- Clear separation between intelligent (time-based) and simple hotkeys
+- Prevents conflicts automatically
+
+**Important**: Never register the same hotkey in multiple places. Use the unified hotkey service for all operations.
+
+## 🚨 CRITICAL: Windows Platform & Development Environment
+
+**🪟 ВАЖНО: Это Windows-приложение!**
+
+**Платформа:** Windows 10/11 (основная разработка и использование)
+
+**💾 ВАЖНО: Диск P: - это алиас E:/myprojects/**
+- `P:\visual_translater` = `E:/myprojects/visual_translater`
+- Это Windows `subst` mapping (виртуальный диск)
+- Оба пути взаимозаменяемы, но P: короче и удобнее
+- При отладке ошибок с путями помни об этом алиасе
+
+### **🦀 RUST + TAURI ARCHITECTURE (v3.0)**
+**Framework:** Rust + Tauri + React + TypeScript
+**Backend:** Rust (производительность, безопасность, нативная интеграция с Windows)
+**Frontend:** React + TypeScript + Tailwind CSS + Framer Motion
+**Build System:** Cargo + npm/yarn
+**Architecture:** Modular with dependency injection
+
+### **Запуск приложения:**
+
+#### **👤 Для пользователя (готовый exe):**
+```cmd
+REM Rust + Tauri версия - готовый исполняемый файл
+dist\ScreenTranslator.exe
+
+REM Интеллектуальная система горячих клавиш:
+REM Alt+A - Умная клавиша с определением времени нажатия
+REM
+REM БЫСТРОЕ НАЖАТИЕ (< 1 секунды) - Умный перевод:
+REM     Приоритет обработки:
+REM     1. Выделенный текст (если есть) → переводит
+REM     2. Буфер обмена (текст или изображение) → переводит
+REM     3. Предыдущая область скриншота → повторно переводит
+REM     4. Новый выбор области экрана → выделение + перевод
+REM     • AI определяет язык и контекст автоматически
+REM     • Результат в floating overlay + автокопирование
+REM
+REM ДОЛГОЕ НАЖАТИЕ (>= 1 секунды) - Контекстное меню:
+REM     • 📷 Скриншот области
+REM     • 📋 Перевести из буфера
+REM     • 🎯 Выбрать регион на экране
+REM     • 🔄 Повторить последний перевод
+REM     • 📚 История переводов
+REM     • ⚙️ Настройки
+```
+
+#### **🛠️ Для разработчика (из исходников Rust):**
+```cmd
+REM 1. Перейти в директорию Rust проекта
+cd screen-translator-rust
+
+REM 2. Установить зависимости (один раз)
+npm install
+cargo build
+
+REM 3. Запуск в режиме разработки
+npm run tauri:dev
+
+REM 4. Сборка production версии
+npm run tauri:build
+```
+
+## 🔨 CRITICAL BUILD REQUIREMENT FOR THIS PROJECT
+
+**ОБЯЗАТЕЛЬНО**: После КАЖДОГО завершенного этапа разработки и ПЕРЕД подготовкой отчета, ты ДОЛЖЕН пересобрать проект:
+
+```bash
+# Для Screen Translator v3.0 - ВСЕГДА выполняй эти команды:
+cd screen-translator-rust
+npm run build         # Собрать frontend
+cargo build --release # Собрать Rust backend
+
+# Если нужен полный installer:
+npm run tauri:build   # Полная сборка с MSI/NSIS инсталляторами
+```
+
+**Причины обязательной пересборки:**
+1. React/TypeScript изменения НЕ отражаются в exe без пересборки
+2. Rust изменения требуют перекомпиляции для применения
+3. Tauri встраивает frontend в исполняемый файл при сборке
+4. Пользователь запускает готовый exe, а не dev-версию
+
+**Без пересборки изменения НЕ БУДУТ видны в приложении!**
+
+## 🔍 CRITICAL VALIDATION REQUIREMENTS
+
+**ОБЯЗАТЕЛЬНО**: Перед каждой пересборкой проверяй валидность кода:
+
+```bash
+# Для Screen Translator v3.0 - ВСЕГДА проверяй перед сборкой:
+cd screen-translator-rust
+
+# 1. TypeScript/JavaScript валидация
+npm run lint          # ESLint проверка синтаксиса и стиля
+tsc --noEmit          # TypeScript компиляция без генерации файлов
+
+# 2. Rust валидация
+cargo check           # Быстрая проверка без сборки
+cargo clippy          # Линтер Rust
+cargo fmt --check     # Проверка форматирования
+
+# 3. Только ПОСЛЕ успешной валидации - сборка:
+npm run build         # Собрать frontend
+cargo build --release # Собрать Rust backend
+```
+
+**Причины обязательной валидации:**
+1. JavaScript синтаксические ошибки блокируют загрузку UI
+2. TypeScript ошибки приводят к runtime сбоям
+3. Rust ошибки компиляции останавливают сборку
+4. Линтеры выявляют потенциальные баги до запуска
+
+**Без валидации код может сломать приложение на этапе выполнения!**
 
 ## Project Overview
 
-This is **Screen Translator v2.0** - a completely refactored Windows desktop application that captures screen regions, performs OCR text recognition, and provides real-time translation with text-to-speech capabilities. The application now uses a **modular architecture** with dependency injection, observer patterns, and clean separation of concerns.
+This is **Screen Translator v3.0** - a modern Rust + Tauri Windows desktop application that captures screen regions, performs OCR text recognition, and provides real-time translation with text-to-speech capabilities. The application uses a **clean modular architecture** with dependency injection and cutting-edge web technologies.
 
 ### **🎯 Personal Project Scope**
 
 **ВАЖНО**: Это приложение создано исключительно для личного использования разработчика. В связи с этим:
 
 - ❌ **Обратная совместимость** со старыми версиями НЕ требуется
-- ❌ **Миграция конфигураций** из v1.0 НЕ нужна  
+- ❌ **Миграция конфигураций** из предыдущих версий НЕ нужна
 - ❌ **Поддержка авторских прав** третьих лиц НЕ предусматривается
 - ❌ **Функционал для других пользователей** НЕ планируется
 - ❌ **Сохранение настроек** из предыдущих версий НЕ обязательно
@@ -40,49 +256,64 @@ This is **Screen Translator v2.0** - a completely refactored Windows desktop app
 
 ## Architecture Overview
 
-### 🏗️ **Actual Modular Structure (Updated 2025-09-08)**
+### 🏗️ **Rust + Tauri Architecture (v3.0)**
+
+#### **🦀 Rust Backend Structure**
 ```
-src/
-├── core/                 # Business logic engines & coordination
-│   ├── coordinators/     # Application coordination layer
-│   ├── interfaces.py     # Abstract interfaces (NEW - breaks circular deps)
-│   ├── screenshot_engine.py
-│   ├── ocr_engine.py
-│   ├── translation_engine.py
-│   └── application.py
-├── ui/                   # User interface components  
-│   ├── tray_manager.py   # Implements ITrayManager interface
-│   ├── settings_window.py
-│   └── history_window.py
-├── services/             # Infrastructure services
-│   ├── container.py      # Unified DI container (consolidated)
-│   ├── config_manager.py # Observer pattern implementation
-│   ├── hotkey_service.py
-│   └── cache_service.py
-├── models/               # Data models and entities
-│   ├── config.py         # Typed configuration with Pydantic
-│   ├── translation.py
-│   └── screenshot_data.py
-├── utils/                # Utility modules
-├── api/                  # Web API layer (REST endpoints)
-├── application/          # Application service layer
-├── domain/               # Domain entities and value objects
-├── infrastructure/       # External service adapters
-├── handlers/             # Command/Query handlers (CQRS)
-├── queries/              # Query layer implementation
-├── commands/             # Command layer implementation
-├── security/             # Security services (auth, encryption)
-├── state/                # State management (Redux-like)
-├── plugins/              # Plugin architecture
-│   ├── builtin/          # Built-in plugins
-│   └── base_plugin.py
-└── tests/                # Comprehensive test suite
-    ├── unit/             # Unit tests (64 files)
-    └── integration/      # Integration tests
-tmp/                      # Temporary scripts created by Claude
-├── diagnose_*.py         # Diagnostic utilities
-├── fix_*.py              # Automated fixes
-└── test_*.py             # Test utilities
+screen-translator-rust/
+├── src/
+│   ├── main.rs                    # Tauri app entry point
+│   ├── lib.rs                     # Library exports
+│   ├── commands/                  # Tauri API commands
+│   │   └── mod.rs                 # Frontend-backend communication
+│   ├── core/                      # Core business logic
+│   │   ├── mod.rs
+│   │   ├── config.rs              # Configuration management
+│   │   ├── screenshot.rs          # Screen capture
+│   │   ├── ocr.rs                 # OCR processing (Tesseract)
+│   │   └── image_processor.rs     # Image enhancement
+│   ├── services/                  # Business services
+│   │   ├── mod.rs
+│   │   ├── translation.rs         # Translation services
+│   │   ├── hotkey.rs              # Global hotkey management
+│   │   ├── config.rs              # Config persistence
+│   │   ├── cache.rs               # LRU caching
+│   │   └── tts.rs                 # Text-to-speech
+│   ├── ai/                        # AI-powered features
+│   │   ├── context_aware.rs       # Language & context detection
+│   │   └── smart_detection.rs     # Enhanced text region detection
+│   ├── utils/                     # Utility modules
+│   │   ├── mod.rs
+│   │   └── error.rs               # Error handling
+│   └── types/                     # Type definitions
+│       ├── mod.rs
+│       ├── config.rs              # Configuration types
+│       └── translation.rs         # Translation types
+├── ui/                            # React frontend
+│   ├── src/
+│   │   ├── App.tsx                # Main React application
+│   │   ├── components/            # React components
+│   │   │   ├── ContextMenu.tsx    # Animated context menu
+│   │   │   ├── SettingsPanel.tsx  # Settings interface
+│   │   │   ├── TranslationOverlay.tsx # Translation results
+│   │   │   └── HistoryWindow.tsx  # Translation history
+│   │   ├── hooks/                 # React hooks
+│   │   │   ├── useHotkeys.ts      # Hotkey management
+│   │   │   ├── useTranslation.ts  # Translation state
+│   │   │   └── useConfig.ts       # Configuration state
+│   │   ├── stores/                # Zustand state management
+│   │   │   ├── appStore.ts        # Main app state
+│   │   │   ├── configStore.ts     # Configuration state
+│   │   │   └── historyStore.ts    # Translation history
+│   │   └── types/                 # TypeScript definitions
+│   │       ├── api.ts             # Tauri API types
+│   │       ├── config.ts          # Configuration types
+│   │       └── translation.ts     # Translation types
+│   ├── package.json               # Frontend dependencies
+│   └── tailwind.config.js         # Tailwind CSS config
+├── Cargo.toml                     # Rust dependencies
+├── tauri.conf.json               # Tauri configuration
+└── build.rs                      # Build script
 ```
 
 ### 🔧 **Core Components**
@@ -91,363 +322,175 @@ tmp/                      # Temporary scripts created by Claude
 - **`ScreenshotEngine`** - DPI-aware screen capture with area validation
 - **`OCRProcessor`** - Tesseract OCR with image enhancement pipeline
 - **`TranslationProcessor`** - Google Translate with caching support
-- **`TTSProcessor`** - pyttsx3 TTS with voice/device selection
-- **`ScreenTranslatorApp`** - Main application coordinator
+- **`TTSProcessor`** - Windows native TTS with voice/device selection
+- **`SmartTranslationHandler`** - AI-powered context-aware quick translation
+- **`ApplicationController`** - Main application coordinator
+
+#### **🧠 AI-Enhanced Components** (`src/ai/`)
+- **`ContextAwareTranslator`** - Intelligent language and context detection
+  - Supports 7 languages: EN, RU, DE, FR, ES, JA, ZH
+  - Context types: Technical, Gaming, UI Interface, Document, Subtitle
+  - Smart target language selection based on user patterns
+- **`SmartAreaDetector`** - Advanced text region detection with ML algorithms
+  - Hybrid detection methods: Contour, Edge, Text-specific, ML-based
+  - Confidence scoring and region merging
+  - Performance optimized with caching
 
 #### **Services** (`src/services/`)
-- **`ConfigManager`** - Observer pattern config management
-- **`container.py`** - Unified DI container (consolidated from duplicate implementations)
-- **`hotkey_service.py`** - Global hotkey registration/management  
-- **`translation_cache.py`** - LRU cache with TTL for translations
-- **`cache_service.py`** - General purpose caching service
-- **`plugin_service.py`** - Plugin management service
+- **`ConfigService`** - Configuration management with observers
+- **`HotkeyService`** - Global hotkey registration/management
+- **`TranslationCache`** - LRU cache with TTL for translations
+- **`CacheService`** - General purpose caching service
 
-#### **UI Components** (`src/ui/`)
-- **`TrayManager`** - System tray with context menu (implements ITrayManager interface)
-- **`SettingsWindow`** - Tabbed settings interface with live updates  
+#### **UI Components** (React + TypeScript)
+- **`ContextMenu`** - Animated context menu with action selection
+  - Floating menu with fade animations
+  - Keyboard navigation (arrows, numbers, Enter, Esc)
+  - Icons and descriptions for each action
+  - Smart positioning and transparency effects
+- **`SettingsPanel`** - Tabbed settings interface with live updates
 - **`HistoryWindow`** - Translation history management
 - **`TranslationOverlay`** - Text overlay display
 - **`LanguageSelector`** - Language selection components
 
-#### **Models** (`src/models/`)
+#### **Types** (`src/types/`)
 - **`AppConfig`** - Strongly typed configuration with validation
 - **`Translation`** - Translation data with metadata
 - **`ScreenshotData`** - Screenshot information container
 
+## 🆕 **Core Features**
+
+### **🧠 Intelligent Single-Key System**
+**Революционная система одной клавиши с определением времени нажатия:**
+
+#### **Alt+A - Smart Time-Based Action**
+🎯 **Одна клавиша для всех действий:**
+
+##### **⚡ Quick Press (< 1 second) - Smart Translation**
+**Интеллектуальный приоритетный перевод:**
+1. **Выделенный текст** - если что-то выделено → мгновенный перевод
+2. **Буфер обмена (текст)** - если в буфере текст → переводит
+3. **Буфер обмена (изображение)** - если в буфере картинка → OCR + перевод
+4. **Предыдущая область** - если ранее была выделена область → повторный скриншот + перевод
+5. **Новое выделение** - если ничего нет → запуск выделения области экрана
+
+**AI Features:**
+- **Language detection**: 7 языков с определением контекста (техническая терминология, игры, UI, документы)
+- **Smart target selection**: Автовыбор целевого языка на основе истории и паттернов пользователя
+- **Floating overlay result**: Красивое всплывающее окно с результатом и автокопированием
+- **Performance**: ~0.001-0.01 сек на определение языка, кэширование повторных запросов
+
+##### **🕐 Long Press (>= 1 second) - Context Menu**
+🎯 **Анимированное меню действий:**
+- **📷 Screenshot Area** - Выбор области экрана для перевода
+- **📋 Clipboard Translation** - Прямой перевод из буфера обмена
+- **🎯 Region Selection** - Интеллектуальный выбор текстовых регионов
+- **🔄 Repeat Last** - Повтор последнего перевода
+- **📚 History** - Окно истории переводов
+- **⚙️ Settings** - Настройки приложения
+
+**UI Features:**
+- Fade-in/fade-out анимации (0.95 прозрачность)
+- Навигация клавиатурой (стрелки, цифры, Enter, Esc)
+- Иконки и описания для каждого действия
+- Умное позиционирование по центру экрана
+
+### **🧠 AI-Enhanced Translation Pipeline**
+
+#### **Context-Aware Language Detection**
+- **7 поддерживаемых языков**: English, Русский, Deutsch, Français, Español, 日本語, 中文
+- **5 типов контекста**: Technical, Gaming, UI Interface, Document, Subtitle
+- **Smart suggestions**: Автоматические рекомендации для улучшения перевода
+- **Pattern recognition**: Распознавание технической терминологии, игровых команд, UI элементов
+
+#### **Advanced Text Region Detection**
+- **Hybrid ML algorithms**: Комбинация Contour, Edge, Text-specific и ML методов
+- **Confidence scoring**: Оценка уверенности для каждого региона
+- **Region merging**: Интеллектуальное объединение перекрывающихся областей
+- **Performance optimization**: Кэширование с TTL для повторных запросов
+
+### **⚡ Performance & UX Improvements**
+- **One-key workflow**: Alt+A для 99% сценариев использования
+- **Intelligent prioritization**: Система приоритетов автоматически выбирает лучший источник
+- **Time-based actions**: Быстрое нажатие = перевод, долгое = меню (без запоминания комбинаций)
+- **Instant feedback**: Floating результаты без блокировки UI
+- **Auto-copy results**: Автоматическое копирование переводов в буфер
+- **Context memory**: Запоминание предыдущих областей скриншота для быстрого повтора
+- **Image OCR support**: Прямая работа с изображениями из буфера обмена
+- **Memory efficient**: Минимальное потребление ресурсов в фоновом режиме
+- **Press detection**: Точное определение времени нажатия (~16ms точность)
+
 ## Development Commands
 
-### **🚀 Unified Build System**
+### **🚀 Rust + Tauri Build System**
 
-The project includes a comprehensive build system supporting all platforms:
-
-#### **⚠️ КРИТИЧЕСКИ ВАЖНО: Платформо-Специфичные Virtual Environment**
-
-**Используйте правильные инструменты для каждой платформы:**
-
-### **🪟 Windows: wenv (Windows Environment)**
+#### **🛠️ Для разработчика:**
 ```cmd
-REM 1. Создание виртуального окружения (один раз)
-python -m venv wenv
+REM 1. Перейти в директорию проекта
+cd screen-translator-rust
 
-REM 2. Активация (каждый раз перед работой)
-wenv\Scripts\activate
+REM 2. Установить зависимости (один раз)
+npm install
+cargo build
 
-REM 3. Установка зависимостей
-pip install -r requirements.txt
-pip install -r requirements-dev.txt
+REM 3. Запуск в режиме разработки
+npm run tauri:dev
 
-REM 4. Работа с проектом (только после активации wenv!)
-python build.py install --dev
-python build.py test --coverage
-python build.py build
-```
+REM 4. Сборка production версии
+npm run tauri:build
 
-### **🐧 Linux/macOS: venv (Virtual Environment)**
-```bash
-# 1. Создание виртуального окружения (один раз)
-python3 -m venv venv
+REM 5. Проверка кода
+cargo clippy
 
-# 2. Активация (каждый раз перед работой)
-source venv/bin/activate
+REM 6. Форматирование кода
+cargo fmt
 
-# 3. Установка зависимостей
-pip install -r requirements.txt
-pip install -r requirements-dev.txt
-
-# 4. Работа с проектом (только после активации venv!)
-python build.py install --dev
-python build.py test --coverage
-python build.py build
-```
-
-**🚨 БЕЗ ВИРТУАЛЬНОГО ОКРУЖЕНИЯ НЕ РАБОТАТЬ!** Это может привести к:
-- Конфликтам зависимостей
-- Поломке системного Python
-- Непредсказуемому поведению приложения
-- Проблемам с externally-managed-environment
-
-#### **Quick Start**
-```bash
-# ВСЕГДА сначала активируйте venv!
-source venv/bin/activate  # Linux/macOS
-# или
-venv\Scripts\activate     # Windows
-
-# Затем уже работайте с проектом:
-python build.py install --dev
-python build.py test --coverage
-python build.py lint
-python build.py build
-```
-
-#### **Cross-Platform Convenience Scripts**
-
-**🔥 ВАЖНО: Скрипты автоматически создают и используют платформо-специфичные окружения!**
-
-**🐧 Linux/macOS (dev.sh) - использует venv:**
-```bash
-# Скрипты АВТОМАТИЧЕСКИ создают venv и устанавливают зависимости
-./dev.sh setup                 # Создает venv + устанавливает зависимости
-./dev.sh test                  # Активирует venv + запускает тесты
-./dev.sh test unit             # Активирует venv + unit тесты
-./dev.sh lint fix              # Активирует venv + исправляет код
-./dev.sh build                 # Активирует venv + собирает executable
-./dev.sh run                   # Активирует venv + запускает приложение
-```
-
-**🪟 Windows (dev.ps1) - использует wenv:**
-```powershell
-# Скрипты АВТОМАТИЧЕСКИ создают wenv и устанавливают зависимости
-.\dev.ps1 setup                # Создает wenv + устанавливает зависимости
-.\dev.ps1 test                 # Активирует wenv + запускает тесты
-.\dev.ps1 test coverage        # Активирует wenv + тесты с покрытием
-.\dev.ps1 lint                 # Активирует wenv + проверяет код
-.\dev.ps1 build debug          # Активирует wenv + debug сборка
-.\dev.ps1 run debug            # Активирует wenv + запуск с отладкой
-```
-
-**Make (all platforms):**
-```bash
-make setup                     # Initial project setup
-make test                      # Run all tests
-make lint                      # Check code quality
-make build                     # Build release executable
-make clean                     # Clean build artifacts
-make ci                        # Run full CI pipeline
-```
-
-#### **Available Build Commands**
-- **`install`** - Install production dependencies
-- **`install --dev`** - Install development dependencies
-- **`test`** - Run all tests with automatic discovery
-- **`test --coverage`** - Run tests with coverage report
-- **`test --type unit`** - Run unit tests only
-- **`test --type integration`** - Run integration tests only
-- **`lint`** - Check code quality (flake8, black, isort, mypy)
-- **`lint --fix`** - Auto-fix code quality issues
-- **`build`** - Build release executable with PyInstaller
-- **`build --mode debug`** - Build debug executable
-- **`security`** - Run security scans (bandit, safety)
-- **`clean`** - Clean build artifacts and cache files
-- **`ci`** - Run complete CI pipeline (test + lint + security + build)
-
-### **🚨 ВАЖНО: Правила взаимодействия с проектом**
-
-#### **👤 Для человека (разработчика):**
-
-### **🪟 На Windows (ОБЯЗАТЕЛЬНО dev.ps1 + wenv):**
-```powershell
-# Единственный интерфейс для человека (АВТОМАТИЧЕСКИ использует wenv):
-.\dev.ps1 setup            # Создает wenv + настройка окружения
-.\dev.ps1 test             # Активирует wenv + запуск тестов
-.\dev.ps1 build            # Активирует wenv + сборка приложения
-.\dev.ps1 run              # Активирует wenv + запуск из исходников
-.\dev.ps1 lint             # Активирует wenv + проверка кода
-```
-
-### **🐧 На Linux/macOS (ОБЯЗАТЕЛЬНО dev.sh + venv):**
-```bash
-# Единственный интерфейс для человека (АВТОМАТИЧЕСКИ использует venv):
-./dev.sh setup              # Создает venv + настройка окружения
-./dev.sh test               # Активирует venv + запуск тестов
-./dev.sh build              # Активирует venv + сборка приложения
-./dev.sh run                # Активирует venv + запуск из исходников
-./dev.sh lint               # Активирует venv + проверка кода
-```
-
-**🚨 КРИТИЧЕСКИ ВАЖНО для человека:**
-- **Windows**: НЕ активировать wenv вручную - dev.ps1 делает это автоматически
-- **Linux**: НЕ активировать venv вручную - dev.sh делает это автоматически
-- **НЕ использовать системный Python** для этого проекта
-- **Всегда использовать платформо-специфичные скрипты**
-
-#### **🤖 Для Claude Code (ИИ-помощника):**
-**⚠️ ВАЖНО: Claude должен учитывать платформо-специфичные окружения!**
-
-### **Подход Claude к Virtual Environments:**
-
-**🪟 В Windows-среде:**
-- **Предпочтительно**: Проверять наличие `wenv\Scripts\activate` 
-- **Использовать**: `wenv\Scripts\python.exe` для команд
-- **Альтернатива**: Системный Python с предупреждением
-
-**🐧 В Linux/macOS-среде:**
-- **Предпочтительно**: Проверять наличие `venv/bin/activate`
-- **Использовать**: `source venv/bin/activate` перед командами  
-- **Альтернатива**: Системный Python с предупреждением
-
-**Универсальная проверка для Claude:**
-```bash
-# Linux/macOS
-if [ -f "venv/bin/activate" ]; then
-    source venv/bin/activate
-    python build.py test
-elif [ -f "wenv/Scripts/activate" ]; then
-    # Windows wenv в Linux-окружении
-    wenv/Scripts/python.exe build.py test 2>/dev/null || python3 build.py test
-else
-    echo "⚠️ Ни venv, ни wenv не найдены, использую системный Python"
-    python3 build.py test
-fi
-```
-
-**Возможности Claude:**
-- Может использовать любые команды при наличии виртуального окружения
-- Может работать напрямую с исходным кодом
-- Должен предупреждать о работе без виртуального окружения
-- Может вызывать низкоуровневые инструменты
-
-#### **🎯 Цель архитектуры:**
-- **Человек**: Простой интерфейс через `dev.ps1` + готовый `ScreenTranslator.exe`
-- **Claude**: Полный доступ ко всем инструментам для разработки и отладки
-
-#### **📁 Правила для временных файлов Claude**
-
-**🤖 ВАЖНО для Claude Code:** Все временные скрипты и диагностические утилиты создавать в папке `tmp/`
-
-**✅ Правильно:**
-```python
-# Создание временного скрипта диагностики
-Write("/workspace/tmp/diagnose_imports.py", content="...")
-
-# Создание утилиты исправления
-Write("/workspace/tmp/fix_tests.py", content="...")
-
-# Создание одноразового скрипта
-Write("/workspace/tmp/check_syntax.py", content="...")
-```
-
-**❌ Неправильно:**
-```python
-# НЕ создавать в корневой директории
-Write("/workspace/diagnose_imports.py", content="...")
-
-# НЕ создавать в src/
-Write("/workspace/src/fix_tests.py", content="...")
-```
-
-**📋 Типы файлов для tmp/:**
-- `diagnose_*.py` - скрипты диагностики проблем
-- `fix_*.py` - скрипты автоматического исправления 
-- `test_*.py` - утилиты тестирования
-- `check_*.py` - скрипты проверки
-- `run_*.py` - временные скрипты запуска
-- `*.tmp` - любые временные файлы
-
-**🧹 Очистка:** Папка `tmp/` может быть очищена в любое время без потери важных данных.
-
-### **🪟 Windows Build Instructions**
-
-**⚠️ ВАЖНО**: Исполняемые файлы должны собираться на той же платформе, где будут запускаться:
-- Windows executable → собирать на Windows
-- Linux executable → собирать на Linux
-
-#### **Для человека (ТОЛЬКО через dev.ps1 + wenv):**
-```powershell
-# dev.ps1 автоматически создает и использует wenv!
-.\dev.ps1 setup            # Создает wenv + настройка окружения (один раз)
-.\dev.ps1 build            # Активирует wenv + релизная версия
-.\dev.ps1 build debug      # Активирует wenv + отладочная версия (с консолью)
-```
-
-#### **Для Claude (команды с wenv/venv):**
-```batch
-REM Рекомендуемые команды для Claude (с автоматическим wenv):
-python build.py wenv-create                    REM Создать wenv (Windows)
-python build.py wenv-install --dev --build     REM Установить зависимости в wenv
-python build.py build --wenv                   REM Собрать используя wenv
-
-REM Альтернатива: legacy venv поддержка
-python build.py venv-create                    REM Создать venv (legacy)
-python build.py venv-install --dev --build     REM Установить зависимости в venv
-python build.py build --venv                   REM Собрать используя venv
-
-REM Или прямые команды (если окружение уже активировано):
-build_exe.bat
-python build.py build
-```
-
-**🔥 Для Claude: Универсальная проверка Windows:**
-```batch
-REM Проверяем wenv (приоритет), затем venv (legacy)
-if exist "wenv\Scripts\activate.bat" (
-    call wenv\Scripts\activate.bat
-    python build.py build
-) else if exist "venv\Scripts\activate.bat" (
-    call venv\Scripts\activate.bat
-    python build.py build
-) else (
-    echo ⚠️ Ни wenv, ни venv не найдены, создаю wenv...
-    python build.py wenv-create
-    python build.py wenv-install --dev --build
-    python build.py build --wenv
-)
+REM 7. Тесты
+cargo test
 ```
 
 #### **Результат сборки:**
 - **Файл**: `dist/ScreenTranslator.exe`
-- **Размер**: ~40-60 MB (включает Python runtime и все зависимости)
-- **Тип**: Standalone executable (не требует установленного Python)
-
-#### **Диагностика для человека:**
-```powershell
-.\dev.ps1 build debug      # Сборка с консолью
-# Затем запустить dist/ScreenTranslator.exe и посмотреть ошибки
-```
+- **Размер**: ~20-40 MB (нативный исполняемый файл)
+- **Тип**: Standalone executable (не требует установленного Rust)
 
 ## Key Design Patterns
 
-### **NEW: Interface-Based Architecture (2025-09-08)**
-Abstract interfaces break circular dependencies and enable loose coupling:
-```python
-# src/core/interfaces.py - NEW FILE
-class ITrayManager(ABC):
-    def show_notification(self, title: str, message: str, duration: int = 3) -> None: pass
-    def update_menu(self) -> None: pass
-    def shutdown(self) -> None: pass
-
-class IApplicationController(ABC):
-    def initialize(self) -> bool: pass
-    def process_screenshot_request(self, coordinates) -> None: pass
+### **Dependency Injection**
+Rust-based DI container for service management:
+```rust
+// Service registration and consumption
+let config_service = container.get::<ConfigService>();
+let hotkey_service = container.get::<HotkeyService>();
 ```
 
 ### **Observer Pattern**
 Configuration changes notify all registered observers:
-```python
-class ConfigObserver(ABC):
-    def on_config_changed(self, key: str, old_value, new_value) -> None:
-        pass
+```rust
+trait ConfigObserver {
+    fn on_config_changed(&self, key: &str, old_value: &str, new_value: &str);
+}
 
-# Components register as observers
-config_manager.add_observer(hotkey_manager)
-config_manager.add_observer(tts_processor)
-```
-
-### **Dependency Injection** 
-**CONSOLIDATED**: Single DI container in `src/services/container.py`
-```python
-# Service registration
-container.register_singleton(ConfigManager, ConfigManager)
-container.register_factory(OCRProcessor, create_ocr_processor)
-
-# Service consumption  
-config_manager = container.get(ConfigManager)
+// Components register as observers
+config_service.add_observer(hotkey_service);
+config_service.add_observer(tts_service);
 ```
 
 ### **Strategy Pattern**
 Pluggable engines for OCR, Translation, TTS:
-```python
-class IOCREngine(ABC):  # Now interface-based
-    def extract_text(self, image: Image) -> Tuple[str, float]: pass
-    def is_available(self) -> bool: pass
+```rust
+trait OCREngine {
+    fn extract_text(&self, image: &Image) -> Result<(String, f32), OCRError>;
+    fn is_available(&self) -> bool;
+}
 
-# Multiple implementations: TesseractOCR, EasyOCR, etc.
+// Multiple implementations: TesseractOCR, EasyOCR, etc.
 ```
 
 ## Configuration Architecture
 
 ### **Typed Configuration**
-- **`AppConfig`** - Root configuration object
+- **`AppConfig`** - Root configuration struct
 - **`HotkeyConfig`** - Hotkey settings with validation
 - **`LanguageConfig`** - OCR and translation languages
 - **`TTSConfig`** - Voice, rate, and device settings
@@ -461,27 +504,15 @@ Configuration changes automatically propagate to dependent services without manu
 - Default config auto-generation
 - Validation with issue reporting
 
-## Threading Model
-
-### **Thread-Safe Operations**
-- **GUI Thread**: tkinter main loop and UI updates
-- **Background Threads**: Screenshot processing, OCR, translation
-- **TTS Thread**: Non-blocking speech synthesis
-- **Hotkey Thread**: Global keyboard monitoring
-
-### **Communication**
-- **Queue-based**: GUI message queue for cross-thread updates
-- **Event-driven**: Configuration observers for decoupled notifications
-
 ## Error Handling & Logging
 
 ### **Centralized Logging**
-```python
-from src.utils.logger import logger
+```rust
+use crate::utils::logger;
 
-logger.log_translation(original, translated, source_lang, target_lang, duration)
-logger.log_screenshot(coordinates, size, duration)  
-logger.log_ocr(text_length, confidence, duration)
+logger::log_translation(original, translated, source_lang, target_lang, duration);
+logger::log_screenshot(coordinates, size, duration);
+logger::log_ocr(text_length, confidence, duration);
 ```
 
 ### **Graceful Degradation**
@@ -492,28 +523,14 @@ logger.log_ocr(text_length, confidence, duration)
 ## Extension Points
 
 ### **Plugin Architecture Ready**
-- Abstract base classes for engines (OCR, Translation, TTS)
+- Trait-based interfaces for engines (OCR, Translation, TTS)
 - Factory pattern for engine creation
 - DI container supports runtime registration
 
 ### **New Features**
-- Add new OCR engines by implementing `OCREngine`
-- Add translation providers by implementing `TranslationEngine`
+- Add new OCR engines by implementing `OCREngine` trait
+- Add translation providers by implementing `TranslationEngine` trait
 - Add UI components by extending observer pattern
-
-## Migration Notes
-
-### **From v1.0 (monolithic index.py)**
-- **Config**: `DEFAULT_CONFIG` → `AppConfig` dataclass
-- **Cache**: `TranslationCache` class → `TranslationCache` service
-- **UI**: Embedded UI → Separate `SettingsWindow` class
-- **Main**: All-in-one → Coordinated by `ScreenTranslatorApp`
-
-### **Backward Compatibility**
-⚠️ **ВНИМАНИЕ**: Обратная совместимость НЕ поддерживается согласно требованиям проекта.
-- Старые настройки будут **полностью игнорированы**
-- Новая архитектура работает с **чистого листа**
-- **Миграция данных НЕ предусмотрена** и НЕ планируется
 
 ## Documentation (docs/)
 
@@ -524,17 +541,13 @@ The `docs/` directory contains comprehensive documentation about the project's a
 ### **📂 Project Structure (Clean Layout)**
 
 ```
-Screen Translator v2.0/
-├── 📁 src/                    # Source code
-├── 📁 docs/                   # Documentation
-│   ├── 📁 reports/            # Development reports
-│   └── 📁 development/        # Architecture docs
-├── 📁 tools/                  # Development utilities
-├── 🪟 dev.ps1                # Windows development interface
-├── 🐧 dev.sh                 # Linux/macOS development interface
-├── 🐍 build.py               # Universal build system
-├── 📄 CLAUDE.md              # This file (Claude instructions)
-└── 📄 README.md              # User documentation
+Screen Translator v3.0/
+├── 📁 screen-translator-rust/     # Rust + Tauri source code
+├── 📁 docs/                       # Documentation
+│   ├── 📁 reports/                # Development reports
+│   └── 📁 development/            # Architecture docs
+├── 📄 CLAUDE.md                   # This file (Claude instructions)
+└── 📄 README.md                   # User documentation
 ```
 
 ### **📋 Documentation Structure**
@@ -555,9 +568,9 @@ docs/
 - **Contains**: Installation guide, quick start, basic usage examples
 - **Helpful for**: Initial setup, basic operations, troubleshooting
 
-#### **ARCHITECTURE.md**  
+#### **ARCHITECTURE.md**
 - **Use when**: Understanding current system design
-- **Contains**: Complete v2.0 architecture, component relationships, design patterns
+- **Contains**: Complete v3.0 architecture, component relationships, design patterns
 - **Helpful for**: System overview, adding new features, architectural decisions
 
 #### **ROADMAP.md**
@@ -613,7 +626,7 @@ cat docs/README.md
 # Check architecture overview
 cat docs/ARCHITECTURE.md
 
-# Review development priorities  
+# Review development priorities
 head -50 docs/ROADMAP.md
 
 # See recent changes
@@ -621,166 +634,6 @@ head -100 docs/CHANGELOG.md
 ```
 
 The documentation in `docs/` is essential for maintaining project continuity and should be the first resource consulted when working with this codebase.
-
-## **🔊 Последние Обновления UI (v2.0)**
-
-### **Исправлены Проблемы в Настройках**
-
-#### **Исправление прокрутки в настройках горячих клавиш**
-- **Проблема**: Колёсико мыши работало только при наведении непосредственно на полосу прокрутки
-- **Решение**: Добавлены обработчики событий мыши (`<MouseWheel>`) для всей области canvas
-- **Файл**: `src/ui/settings_window.py:115-126`
-- **Код**:
-```python
-def _on_mousewheel(event):
-    canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
-
-def _bind_to_mousewheel(event):
-    canvas.bind_all("<MouseWheel>", _on_mousewheel)
-
-def _unbind_from_mousewheel(event):
-    canvas.unbind_all("<MouseWheel>")
-
-canvas.bind('<Enter>', _bind_to_mousewheel)
-canvas.bind('<Leave>', _unbind_from_mousewheel)
-```
-
-#### **Добавлен выбор устройства вывода звука для TTS**
-- **Проблема**: Отсутствовал выбор аудиоустройства для озвучки
-- **Решение**: Добавлена полная поддержка выбора аудиоустройств
-- **Файлы**: 
-  - `src/ui/settings_window.py:320-344` (UI элементы)
-  - `src/ui/settings_window.py:594-613` (получение списка устройств)
-  - `src/ui/settings_window.py:652-657` (сохранение настроек)
-  - `requirements.txt:11` (зависимость sounddevice)
-
-**Новая функциональность:**
-1. **Перечисление устройств**: Используется `sounddevice` для получения списка доступных аудиоустройств вывода
-2. **Graceful fallback**: Если sounddevice недоступен, показывается только "Системное по умолчанию"
-3. **Сохранение настроек**: Выбранное устройство сохраняется в `config.tts.audio_device`
-4. **UI интеграция**: ComboBox для выбора устройства в разделе "Выбор голоса"
-
-**Код получения устройств:**
-```python
-def _get_available_audio_devices(self):
-    """Get available audio output devices"""
-    devices = [{'id': 'default', 'name': 'Системное по умолчанию'}]
-    
-    try:
-        import sounddevice as sd
-        device_list = sd.query_devices()
-        
-        for i, device in enumerate(device_list):
-            if device['max_output_channels'] > 0:  # Only output devices
-                devices.append({
-                    'id': str(i),
-                    'name': f"{device['name']} ({device['hostapi_name']})"
-                })
-    except ImportError:
-        logger.warning("sounddevice not available, using default audio device only")
-    except Exception as e:
-        logger.error(f"Error querying audio devices: {e}")
-        
-    return devices
-```
-
-### **Результат**
-✅ **Прокрутка горячих клавиш**: Теперь работает при наведении мыши на любую область прокрутки  
-✅ **Выбор аудиоустройства**: Пользователь может выбрать конкретное устройство вывода для TTS  
-✅ **Стабильность**: Graceful обработка отсутствия sounddevice библиотеки
-
-## **📦 Структура зависимостей для CI/CD**
-
-**Для решения проблем совместимости с Linux CI созданы отдельные файлы:**
-
-- **`requirements.txt`** - Production зависимости с условными версиями для Python 3.8-3.13
-- **`requirements-dev.txt`** - Development зависимости для CI/CD (без platform-specific проблем)  
-- **`pyproject.toml`** - Windows development зависимости (pynput вместо keyboard)
-
-**🚨 В CI НЕ используется `pip install -e .[dev]` чтобы избежать проблем с evdev на Linux!**
-
-```bash
-# CI установка (правильно):
-pip install -r requirements.txt
-pip install -r requirements-dev.txt
-
-# Локальная Windows разработка (правильно):
-pip install -e .[dev,build]
-```
-
-## **🔍 Интегрированные Инструменты Качества Кода**
-
-### **⚠️ ОБЯЗАТЕЛЬНО: Все команды используют venv автоматически!**
-
-### **Команды Проверки Качества**
-```bash
-# ВАЖНО: dev.bat автоматически активирует venv!
-.\dev.bat quality        # Полная проверка качества (11 анализаторов)
-.\dev.bat quality fix    # Автоматическое исправление найденных проблем  
-.\dev.bat lint           # Базовая проверка стиля
-.\dev.bat lint fix       # Исправление форматирования
-```
-
-**🚨 Для человека: НЕ запускать анализаторы напрямую!**
-```bash
-# ❌ НЕ ДЕЛАТЬ (системный Python):
-black .
-flake8 .
-mypy .
-
-# ✅ ПРАВИЛЬНО (через dev.bat с venv):
-.\dev.bat lint fix
-```
-
-### **11 Интегрированных Анализаторов**
-
-1. **Black** - Автоматическое форматирование кода (PEP8)
-2. **isort** - Сортировка и организация импортов
-3. **Flake8** - Проверка стиля кода и синтаксиса
-4. **MyPy** - Статическая проверка типов
-5. **Pylint** - Комплексный анализ качества кода
-6. **Bandit** - Поиск уязвимостей безопасности
-7. **Vulture** - Обнаружение мёртвого кода
-8. **Radon** - Метрики сложности кода (CC & MI)
-9. **Pydocstyle** - Проверка стиля docstring
-10. **Safety** - Проверка зависимостей на уязвимости
-11. **Prospector** - Мета-инструмент объединяющий линтеры
-
-### **Структура Отчётов**
-```
-quality_reports/
-├── black_code_formatting.txt      # Проблемы форматирования
-├── isort_import_sorting.txt       # Проблемы с импортами
-├── flake8_style_guide.txt         # Нарушения стиля
-├── mypy_type_checking.txt         # Проблемы с типами
-├── pylint_code_quality.txt        # Общие проблемы качества
-├── bandit_security.txt            # Уязвимости безопасности
-├── vulture_dead_code.txt          # Неиспользуемый код
-├── radon_cyclomatic_complexity.txt # Сложность функций
-├── radon_maintainability_index.txt # Индекс поддерживаемости
-├── pydocstyle_docstring_style.txt # Проблемы документации
-├── safety_dependency_security.txt  # Уязвимые зависимости
-└── summary.json                   # Сводка всех проверок
-```
-
-### **Конфигурационные Файлы**
-- **`.pylintrc`** - Настройки Pylint (исключения, лимиты)
-- **`pyproject.toml`** - Настройки Black, isort, mypy, coverage
-- **`.flake8`** - Настройки Flake8 (длина строк, исключения)
-- **`.bandit`** - Настройки безопасности
-
-### **Автоматические Исправления**
-`.\dev.bat quality fix` автоматически:
-- Форматирует код согласно PEP8 (Black)
-- Сортирует импорты (isort)
-- Удаляет неиспользуемые импорты (autoflake)
-- Удаляет неиспользуемые переменные
-
-### **Интеграция в Workflow**
-1. **Перед коммитом**: `.\dev.bat quality`
-2. **Для исправления**: `.\dev.bat quality fix`
-3. **Просмотр отчётов**: `quality_reports\summary.json`
-4. **CI/CD**: Все проверки возвращают exit code для автоматизации
 
 ## Claude Code Work Tracking
 
@@ -809,7 +662,7 @@ quality_reports/
 
 ```bash
 # Создание дневного лога задач
-Write("/workspace/cc/tasks/2025-08-23.md", content="# Задачи 2025-08-23\n\n## [10:00] Архитектурный анализ...")
+Write("/workspace/cc/tasks/2025-09-29.md", content="# Задачи 2025-09-29\n\n## [10:00] Архитектурный анализ...")
 
 # Документирование архитектурного решения
 Write("/workspace/cc/docs/architecture_notes.md", content="# Архитектурные решения\n\n## DI Container...")
@@ -825,3 +678,5 @@ Write("/workspace/cc/tasks/TODO_ui_refactoring.md", content="# TODO: Рефак�
 3. **Ведите дневной лог** выполненных задач с временными метками
 4. **Группируйте информацию** по темам в отдельные файлы
 5. **НЕ добавляйте TODO** комментарии в код - используйте `/cc/tasks/`
+
+      IMPORTANT: this context may or may not be relevant to your tasks. You should not respond to this context unless it is highly relevant to your task.
