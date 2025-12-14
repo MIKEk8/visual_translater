@@ -1,0 +1,98 @@
+warning: unused variable: `image`
+   --> src\core\ocr.rs:237:38
+    |
+237 |     fn extract_with_tesseract(&self, image: &DynamicImage) -> Result<TesseractResult, OcrError> {
+    |                                      ^^^^^ help: if this is intentional, prefix it with an underscore: `_image`
+    |
+    = note: `#[warn(unused_variables)]` on by default
+
+warning: unused variable: `x`
+   --> src\core\ocr.rs:389:9
+    |
+389 |         x: u32,
+    |         ^ help: if this is intentional, prefix it with an underscore: `_x`
+
+warning: unused variable: `y`
+   --> src\core\ocr.rs:390:9
+    |
+390 |         y: u32,
+    |         ^ help: if this is intentional, prefix it with an underscore: `_y`
+
+warning: unused variable: `image`
+   --> src\core\ocr.rs:493:9
+    |
+493 |         image: &DynamicImage,
+    |         ^^^^^ help: if this is intentional, prefix it with an underscore: `_image`
+
+warning: `screen-translator` (lib) generated 4 warnings
+   Compiling screen-translator v3.0.0 (P:\visual_translater\screen-translator-rust)
+error[E0599]: no method named `set_config` found for struct `WindowsScreenshot` in the current scope
+   --> tests\unit_screenshot_sync.rs:107:29
+    |
+107 |     let result = screenshot.set_config(config);
+    |                             ^^^^^^^^^^ method not found in `WindowsScreenshot`
+    |
+   ::: P:\visual_translater\screen-translator-rust\src\core\screenshot.rs:86:8
+    |
+ 86 |     fn set_config(&mut self, config: ScreenshotConfig) -> Result<(), ScreenshotError>;
+    |        ---------- the method is available for `WindowsScreenshot` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `ScreenshotCapture` which provides `set_config` is implemented but not in scope; perhaps you want to import it
+    |
+  5 + use screen_translator::core::ScreenshotCapture;
+    |
+
+error[E0599]: no method named `set_config` found for struct `WindowsScreenshot` in the current scope
+   --> tests\unit_screenshot_sync.rs:125:29
+    |
+125 |     let result = screenshot.set_config(config);
+    |                             ^^^^^^^^^^ method not found in `WindowsScreenshot`
+    |
+   ::: P:\visual_translater\screen-translator-rust\src\core\screenshot.rs:86:8
+    |
+ 86 |     fn set_config(&mut self, config: ScreenshotConfig) -> Result<(), ScreenshotError>;
+    |        ---------- the method is available for `WindowsScreenshot` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `ScreenshotCapture` which provides `set_config` is implemented but not in scope; perhaps you want to import it
+    |
+  5 + use screen_translator::core::ScreenshotCapture;
+    |
+
+error[E0599]: no method named `is_available` found for struct `WindowsScreenshot` in the current scope
+   --> tests\unit_screenshot_sync.rs:181:33
+    |
+181 |     let _available = screenshot.is_available();
+    |                                 ^^^^^^^^^^^^ method not found in `WindowsScreenshot`
+    |
+   ::: P:\visual_translater\screen-translator-rust\src\core\screenshot.rs:80:8
+    |
+ 80 |     fn is_available(&self) -> bool;
+    |        ------------ the method is available for `WindowsScreenshot` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `ScreenshotCapture` which provides `is_available` is implemented but not in scope; perhaps you want to import it
+    |
+  5 + use screen_translator::core::ScreenshotCapture;
+    |
+
+error[E0599]: no method named `get_info` found for struct `WindowsScreenshot` in the current scope
+   --> tests\unit_screenshot_sync.rs:188:27
+    |
+188 |     let info = screenshot.get_info();
+    |                           ^^^^^^^^ method not found in `WindowsScreenshot`
+    |
+   ::: P:\visual_translater\screen-translator-rust\src\core\screenshot.rs:83:8
+    |
+ 83 |     fn get_info(&self) -> HashMap<String, String>;
+    |        -------- the method is available for `WindowsScreenshot` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `ScreenshotCapture` which provides `get_info` is implemented but not in scope; perhaps you want to import it
+    |
+  5 + use screen_translator::core::ScreenshotCapture;
+    |
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `screen-translator` (test "unit_screenshot_sync") due to 4 previous errors

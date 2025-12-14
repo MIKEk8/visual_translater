@@ -1,32 +1,23 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
+# Rust
+screen-translator-rust/target/
+screen-translator-rust/Cargo.lock
+*.rs.bk
 
-# Virtual Environment
-.venv/
-venv/
-ENV/
-env/
-.env
+# Node.js (for Tauri frontend)
+screen-translator-rust/ui/node_modules/
+screen-translator-rust/ui/dist/
+screen-translator-rust/ui/.next/
+screen-translator-rust/ui/.turbo/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build outputs
+dist/
+target/
+build/
+out/
 
 # IDE
 .vscode/
@@ -35,60 +26,9 @@ env/
 *.swo
 *~
 
-# Testing
-.coverage
-.pytest_cache/
-htmlcov/
-.tox/
-.nox/
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-.hypothesis/
-
-# MyPy
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# pyenv
-.python-version
-
-# pipenv
-Pipfile.lock
-
-# PEP 582
-__pypackages__/
-
-# Celery stuff
-celerybeat-schedule
-celerybeat.pid
-
-# SageMath parsed files
-*.sage.py
-
-# Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-
-# Spyder project settings
-.spyderproject
-.spyproject
-
-# Rope project settings
-.ropeproject
-
-# mkdocs documentation
-/site
+# OS specific
+.DS_Store
+Thumbs.db
 
 # Application specific
 config.json
@@ -98,41 +38,40 @@ temp/
 tmp/
 logs/
 cache/
-data/audit/
-data/critical_alerts.jsonl
-coverage.json
-performance_analysis.json
-quality_reports/
 
-# Build artifacts  
-ScreenTranslator-*.exe
-ScreenTranslator-*.app
-ScreenTranslator-*.dmg
-*.spec
-build/
-dist/
-*.egg-info/
+# Tauri specific
+screen-translator-rust/src-tauri/target/
+screen-translator-rust/src-tauri/Cargo.lock
+screen-translator-rust/gen/
 
-# Virtual environments
-venv/
-wenv/
-test_venv/
-test_env/
-
-# Backup files
+# Development artifacts
 *.backup
 *.bak
+*_original.*
+*_backup.*
+*_old.*
 
-# Test reports and temporary scripts
-test_report.md
-fix_*.py
-fix_*.ps1
-setup_*.py
-install_*.py
-patch_*.py
-quick_test.py
-test_setup.py
-build_wrapper.py
+# Windows artifacts
+*.exe
+*.msi
+*.dmg
+*.app
+*.deb
+*.rpm
+*.AppImage
+
+# Temporary files
+*.tmp
+*.orig
+*.rej
+*.patch
+
+# Claude Code temporary files (always recreatable)
+tmp/**
+diagnose_*
+check_*
+run_*
+test_*.tmp
 
 # Documentation that was auto-generated
 FINAL_*.md
@@ -144,20 +83,18 @@ FINAL_*.json
 *_PLAN.md
 *_ANALYSIS.md
 *_CHECKLIST.md
+CLEANUP_COMPLETE.md
+MIGRATION_COMPLETE.md
+PROJECT_STATUS.md
+PYTHON_FILES_AUDIT.md
 
-# Windows/Python temporary files
-python
+# Rust analyzer
+.rust-analyzer/
 
-# Development specific
-sonar-project.properties
-screen_translator.egg-info/
+# Coverage reports
+coverage/
+*.coverage
 
-# Language files (keep only if needed)
-languages/
-
-# Temporary Markdown files in Russian
-ИТОГИ_*.md
-ИСПРАВЛЕНИЕ_*.md
-ОТЧЕТ_*.md
-ПРОВЕРКА_*.md
-КАЧЕСТВО_*.md
+# Lock files (keep package-lock.json for npm)
+Cargo.lock
+yarn.lock

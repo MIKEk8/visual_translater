@@ -1,0 +1,129 @@
+[package]
+name = "screen-translator"
+version = "3.0.0"
+edition = "2021"
+authors = ["Screen Translator Team"]
+description = "Advanced screen translation tool with OCR"
+license = "MIT"
+repository = "https://github.com/your-repo/screen-translator-rust"
+
+[dependencies]
+# Tauri Framework v2 for modern web-based GUI
+tauri = { version = "2", features = [] }
+
+# Basic functionality for Phase 1
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+toml = "0.8"
+
+# Error Handling
+anyhow = "1.0"
+thiserror = "1.0"
+
+# Logging
+log = "0.4"
+env_logger = "0.11"
+
+# Basic utilities
+dirs = "5.0"
+
+# Image processing - required for screenshot capture (P0 feature)
+image = { version = "0.24", features = ["png", "jpeg", "bmp"] }
+
+# Screenshot dependencies (cross-platform implementation)
+screenshots = "0.8"  # Cross-platform screenshot
+winapi = { version = "0.3", features = ["winuser", "wingdi", "winnt", "processthreadsapi"] }  # Windows-specific features
+
+# Global hotkey support
+global-hotkey = "0.4"
+
+# Clipboard support for intelligent hotkey system (FR-4)
+clipboard-win = "5.0"  # Windows clipboard API
+arboard = "3.3"  # Cross-platform clipboard (fallback)
+
+# OCR dependencies (optional)
+leptess = { version = "0.13", optional = true }  # Tesseract OCR bindings
+
+# Additional Tauri dependencies (basic tokio for async)
+tokio = { version = "1.0", features = ["rt-multi-thread", "time", "sync", "macros"] }
+async-trait = "0.1"
+futures-util = "0.3"
+
+# Network dependencies (optional for lighter builds)
+reqwest = { version = "0.11", features = ["json"], optional = true }
+
+# AI and ML dependencies for context-aware features
+chrono = { version = "0.4", features = ["serde"] }  # Date/time handling for user patterns
+
+# Cache and performance
+lru = "0.12"  # LRU cache implementation
+
+# Encoding/decoding
+base64 = "0.21"  # Base64 encoding for image data
+
+# UUID generation and hashing
+uuid = { version = "1.5", features = ["v4", "serde"] }  # UUID generation
+md5 = "0.7"  # MD5 hashing for cache keys
+levenshtein = "1.0"  # Text similarity calculation
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dev-dependencies]
+tempfile = "3.8"
+tokio-test = "0.4"
+
+# Test utilities
+
+[features]
+default = []  # NO heavy dependencies by default (fix leptonica-sys blocker)
+# Core features for basic functionality (no heavy dependencies)
+basic = ["network"]
+# Full features including heavy dependencies
+full = ["network", "tesseract"]
+# Individual feature flags
+tesseract = ["leptess"]
+network = ["reqwest"]
+image_processing = []
+# Experimental functionality
+experimental_ocr = ["tesseract", "image_processing"]
+experimental_ml = []
+# Phase-specific features for test gating
+phase4_services = []  # Enable Phase 4 service tests (disabled by default)
+# Tauri custom protocol (required by CLI)
+custom-protocol = []
+
+# [[bench]]
+# name = "ocr_benchmark"
+# harness = false
+
+[profile.dev]
+opt-level = 0
+debug = true
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "unwind"  # Changed from "abort" for safer error handling and data preservation
+strip = true
+
+[profile.bench]
+inherits = "release"
+debug = true
+
+[profile.test]
+opt-level = 1
+debug = true
+
+
+[lib]
+name = "screen_translator"
+path = "src-tauri/lib.rs"
+
+[[example]]
+name = "test_mvp"
+path = "test_mvp.rs"
+[[bin]]
+name = "screen-translator"
+path = "src-tauri/main.rs"

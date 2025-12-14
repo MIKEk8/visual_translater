@@ -1,115 +1,258 @@
-# Screen Translator v2.0 - Навигация по документации
+# Screen Translator v3.0 - Documentation Index
 
-## 📚 Основная документация
-
-### 🎯 [README.md](README.md) - Пользовательская документация
-**Основная документация проекта**
-- Обзор архитектуры и возможностей
-- Инструкции по запуску и разработке  
-- Конфигурация и настройка
-- Плагиновая система
-- Горячие клавиши и расширенные возможности
-
-### 🏗️ [ARCHITECTURE.md](ARCHITECTURE.md) - Техническая архитектура
-**Детальная техническая документация**
-- Полное описание архитектуры v2.0
-- Паттерны проектирования и взаимодействия
-- Performance optimizations
-- Security considerations
-- Testing strategy
-
-### 🚀 [ROADMAP.md](ROADMAP.md) - План развития
-**Будущее развитие проекта**
-- Планируемые версии и возможности
-- Краткосрочные и долгосрочные задачи
-- Техническая roadmap
-- Приоритеты разработки
-
-### 📝 [CHANGELOG.md](CHANGELOG.md) - История изменений
-**Детальная история разработки**
-- Все изменения в версии v2.0
-- Исправленные критические проблемы
-- Новые возможности и улучшения
-- Метрики производительности
-
-## 📋 Дополнительная документация
-
-### 👥 [USER_GUIDE.md](USER_GUIDE.md) - Руководство пользователя
-- Подробное руководство по использованию
-- Настройка и конфигурация
-- Решение частых проблем
-
-### 🏗️ [BUILD_WINDOWS.md](BUILD_WINDOWS.md) - Сборка под Windows
-- Инструкции по сборке executable
-- Настройка среды разработки
-- Troubleshooting сборки
-
-## 📊 Отчёты разработки
-
-### 📁 [reports/](reports/) - Отчёты о выполненной работе
-- `AUDIT_REPORT.md` - Первоначальный аудит проекта
-- `FINAL_PROJECT_SUMMARY.md` - Итоговый отчёт по проекту
-- `FINAL_STATUS_REPORT.md` - Финальный статус всех задач
-- `FIXES_REPORT.md` - Отчёт об исправлениях
-- `PHASE1_IMPLEMENTATION_REPORT.md` - Отчёт Phase 1
-- `PHASE_1_TEST_EXECUTION_REPORT.md` - Отчёт по тестам Phase 1
-- `PHASE_1_TEST_INFRASTRUCTURE_REPORT.md` - Тестовая инфраструктура
-- `ENHANCED_MONITORING_REPORT.md` - Система мониторинга
-- `CRITICAL_PRIORITIES_IMPLEMENTATION_REPORT.md` - Критические приоритеты
-- `ИТОГИ_РЕШЕНИЯ.md` - Итоги на русском языке
-
-### 📁 [development/](development/) - Планы и анализы
-- `ARCHITECTURAL_IMPROVEMENTS.md` - Архитектурные улучшения
-- `ARCHITECTURAL_IMPROVEMENTS_COMPLETE.md` - Завершённые улучшения
-- `COMPREHENSIVE_IMPROVEMENT_ANALYSIS.md` - Комплексный анализ
-- `PERFORMANCE_OPTIMIZATION_PLAN.md` - План оптимизации
-- `REMAINING_TASKS_ANALYSIS.md` - Анализ оставшихся задач
-- `TEST_EXPANSION_PLAN.md` - План расширения тестов
-- `UI_MODERNIZATION_ROADMAP.md` - Модернизация UI
-
-## 🔗 Быстрые ссылки
-
-### Для пользователей
-- **Установка**: [README.md#запуск-и-разработка](README.md#🚀-запуск-и-разработка)
-- **Конфигурация**: [README.md#конфигурация](README.md#⚙️-конфигурация)
-- **Горячие клавиши**: [README.md#горячие-клавиши](README.md#🎮-горячие-клавиши-по-умолчанию)
-- **Руководство**: [USER_GUIDE.md](USER_GUIDE.md)
-
-### Для разработчиков  
-- **Архитектура**: [ARCHITECTURE.md](ARCHITECTURE.md)
-- **Плагины**: [README.md#плагиновая-система](README.md#🔌-плагиновая-система)
-- **Тестирование**: [README.md#тестирование](README.md#тестирование)
-- **Сборка**: [BUILD_WINDOWS.md](BUILD_WINDOWS.md)
-
-### Для участников проекта
-- **Roadmap**: [ROADMAP.md](ROADMAP.md)
-- **Отчёты**: [reports/](reports/)
-- **Планы**: [development/](development/)
-- **Contributing**: [README.md#участие-в-разработке](README.md#🤝-участие-в-разработке)
-
-## 📊 Текущий статус проекта
-
-### ✅ Завершённые задачи
-- **Архитектура**: Полностью переработана на модульную v2.0
-- **Тестирование**: 311 тестов, 31% покрытие
-- **Качество кода**: Все инструменты настроены (11 анализаторов)
-- **Документация**: Структурирована и актуализирована
-- **CI/CD**: Автоматизированная сборка и тесты
-
-### 🔄 В процессе
-- **Покрытие тестами**: Цель 40-50% (текущее: 31%)
-- **Системные зависимости**: OpenGL, tkinter для полных тестов
-
-### 🛠️ Техническая информация
-- **Версия**: v2.0.0 Production Ready
-- **Язык**: Python 3.11+
-- **Архитектура**: Modular with DI + Observer patterns
-- **UI**: tkinter with async processing
-- **Тестирование**: pytest + coverage (311 тестов)
-- **Качество**: 11 анализаторов кода
-- **Сборка**: PyInstaller executable
+**Version:** 3.0.0 (Rust + Tauri + React)
+**Last Updated:** 2025-09-29
+**Status:** Requirements Specification Complete
 
 ---
 
-*Документация обновлена: 2025-01-29*
-*Структура проекта приведена в порядок согласно CLAUDE.md*
+## 📚 **Available Documentation**
+
+### 🎯 **REQUIREMENTS.md** - Technical Specifications
+**Purpose:** Comprehensive technical requirements for Rust v3.0 implementation
+
+**Contents:**
+- Project goals and success criteria
+- Architecture requirements (Rust backend, React frontend, DI)
+- Complete feature requirements (FR-1 through FR-10)
+- Performance requirements (response times, resource usage)
+- Security requirements (validation, privacy, dependencies)
+- Testing requirements (unit, integration, performance)
+- Build & deployment requirements
+- Implementation priorities and roadmap
+
+**When to Use:**
+- ✅ Planning new features
+- ✅ Understanding system requirements
+- ✅ Clarifying acceptance criteria
+- ✅ Tracking implementation progress
+
+**Target Audience:** Developers, Technical Leads
+
+---
+
+## 🗂️ **Module Specifications** (docs/modules/)
+
+### Purpose
+YAML specifications for each major system module, documenting:
+- Module purpose and interfaces
+- Dependencies and relationships
+- Test coverage and status
+- Migration status from Python v2.0
+- Performance constraints
+
+### Available Modules
+
+#### **AI Features**
+- `context_aware_translation.yml` - AI language detection and context classification
+- `intelligent_hotkey_handler.yml` - Time-based hotkey detection
+- `smart_translation_handler.yml` - Priority-based translation logic
+
+#### **UI Components**
+- `context_menu_widget.yml` - Animated context menu
+- `minimal_ui_foundation.yml` - React application foundation
+
+#### **Rust Core**
+- `rust_core_types.yml` - Type system with serde support
+- `rust_image_processor.yml` - Image preprocessing pipeline
+- `rust_ocr_engine.yml` - Tesseract OCR integration
+- `rust_screenshot_engine.yml` - Cross-platform screenshot capture
+- `rust_translation_service.yml` - Multi-provider translation
+- `tauri_commands_integration.yml` - Tauri API commands
+
+**When to Use:**
+- ✅ Understanding specific module implementation
+- ✅ Checking module status and test coverage
+- ✅ Reviewing dependencies between modules
+- ✅ Planning module refactoring
+
+**Target Audience:** Developers
+
+---
+
+## 📖 **Quick Navigation**
+
+### For Developers
+
+**Getting Started:**
+1. Read `REQUIREMENTS.md` - Understand what needs to be built
+2. Review `docs/modules/*.yml` - Understand current module status
+3. Check `CLAUDE.md` - Understand build system and architecture
+4. Read `README.md` - Understand project overview
+
+**During Development:**
+1. Reference `REQUIREMENTS.md` for acceptance criteria
+2. Update `docs/modules/*.yml` when modifying modules
+3. Follow build requirements from `CLAUDE.md`
+4. Update `README.md` when features are complete
+
+**Planning Work:**
+1. Check `REQUIREMENTS.md` implementation priorities
+2. Review module status in `docs/modules/`
+3. Estimate based on Python v2.0 references
+
+### For Project Planning
+
+**Understanding Scope:**
+- `REQUIREMENTS.md` - Complete feature list with priorities
+- Implementation phases (6 phases, 13 weeks estimated)
+- Success metrics and acceptance criteria
+
+**Tracking Progress:**
+- Module status in `docs/modules/*.yml`
+- Phase completion in `REQUIREMENTS.md`
+- Test coverage and quality metrics
+
+---
+
+## 🎯 **Current Project Status**
+
+### Phase 1: Foundation ✅ COMPLETE
+- [x] Project structure and build system
+- [x] Type definitions with serde
+- [x] Tauri command layer
+- [x] React UI foundation
+- [x] Basic configuration management
+
+### Phase 2: Core Features 🚧 IN PROGRESS
+Priority focus:
+1. Screenshot capture with area selection
+2. OCR integration with Tesseract
+3. Translation service with caching
+4. Intelligent hotkey system
+5. Translation history
+6. Configuration management
+
+### Phase 3-6: Planned 📋
+- AI features (language detection, context classification)
+- UI polish (context menu, overlay, settings)
+- Testing & optimization
+- Production release
+
+---
+
+## 📝 **Documentation Standards**
+
+### When to Update Documentation
+
+**REQUIREMENTS.md:**
+- ✏️ When requirements change or are clarified
+- ✏️ When acceptance criteria are refined
+- ✏️ After major architecture decisions
+- 📅 Review after each phase completion
+
+**docs/modules/*.yml:**
+- ✏️ When module interface changes
+- ✏️ When implementation status changes
+- ✏️ When test coverage improves
+- ✏️ After migration milestones
+
+**README.md:**
+- ✏️ When features are completed
+- ✏️ When usage instructions change
+- ✏️ After version releases
+
+**CLAUDE.md:**
+- ✏️ When build system changes
+- ✏️ When architecture patterns change
+- ✏️ After major refactoring
+
+### Documentation Quality Standards
+
+**All Documents Must:**
+- ✅ Use consistent formatting (Markdown)
+- ✅ Include last updated date
+- ✅ Have clear section headers
+- ✅ Provide examples where applicable
+- ✅ Link to related documents
+- ✅ Be kept up-to-date with code
+
+---
+
+## 🔗 **Related Resources**
+
+### Internal Documentation
+- `CLAUDE.md` - Claude Code instructions and architecture
+- `README.md` - Project overview and quick start
+- `cc/README.md` - Claude Code work tracking
+
+### External Resources
+- [Tauri Documentation](https://tauri.app/)
+- [Rust Book](https://doc.rust-lang.org/book/)
+- [React Documentation](https://react.dev/)
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/)
+
+---
+
+## 🤝 **Contributing to Documentation**
+
+### Adding New Documentation
+
+1. **Determine Document Type:**
+   - Requirement specification → Update `REQUIREMENTS.md`
+   - Module documentation → Create `docs/modules/<name>.yml`
+   - Architecture decision → Update `CLAUDE.md` or create ADR
+   - User guide → Update `README.md`
+
+2. **Follow Template:**
+   - Use existing documents as templates
+   - Maintain consistent structure
+   - Include all required sections
+
+3. **Update This Index:**
+   - Add new document to relevant section
+   - Update navigation links
+   - Update status if applicable
+
+### Improving Existing Documentation
+
+1. **Identify Outdated Content:**
+   - Check last updated dates
+   - Compare with current implementation
+   - Look for TODOs or FIXMEs
+
+2. **Make Updates:**
+   - Update content with accurate information
+   - Update last updated date
+   - Add change log entry if significant
+
+3. **Review Related Documents:**
+   - Update cross-references
+   - Ensure consistency across documents
+
+---
+
+## 📊 **Documentation Metrics**
+
+### Current State
+- **Requirements Specification:** ✅ Complete (v1.0)
+- **Module Specifications:** ✅ 11 modules documented
+- **Architecture Documentation:** ✅ Up-to-date (CLAUDE.md)
+- **User Documentation:** 🚧 In progress (README.md)
+
+### Coverage
+- **Core Features:** 100% documented (10 feature requirements)
+- **Modules:** 100% covered (11 active modules)
+- **Performance Requirements:** 100% specified
+- **Testing Requirements:** 100% defined
+
+---
+
+## 🎯 **Next Steps**
+
+### Immediate Actions
+1. Begin Phase 2 implementation using `REQUIREMENTS.md`
+2. Update module status in `docs/modules/*.yml` as work progresses
+3. Track implementation in `cc/tasks/` using Claude Code work tracking
+
+### Documentation TODOs
+- [ ] Create CHANGELOG.md after Phase 2
+- [ ] Create USER_GUIDE.md after Phase 4
+- [ ] Create CONTRIBUTING.md before open sourcing
+- [ ] Create API.md with rustdoc after Phase 5
+
+---
+
+**Document Maintained By:** Development Team
+**Review Frequency:** After each phase completion
+**Last Review:** 2025-09-29
